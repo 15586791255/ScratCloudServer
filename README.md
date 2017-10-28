@@ -1,6 +1,13 @@
 
 # Server API for Gogo
 
+全局Header
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| pt | string | true | 平台，iOS和Android请填app |
+| app_key | string | true | 由服务端提供 |
+
 ## 获取Banner
 
 ### API
