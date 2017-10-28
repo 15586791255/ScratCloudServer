@@ -33,8 +33,8 @@ const sendTencentSms = (req, res) => {
     }).then(parsedBody => {
         console.log(parsedBody);
         if (parsedBody.result != 0) {
-            console.log('发送短信失败!' + parsedBody.errmsg);
-            return BaseRes.serverError(res, parsedBody);
+            console.log('发送短信失败:' + parsedBody.errmsg);
+            return BaseRes.serverError(res, parsedBody.errmsg, parsedBody);
         }
         BaseRes.success(res);
     }).catch(err => {

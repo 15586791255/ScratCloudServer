@@ -13,10 +13,11 @@ const error = (res, code, msg) => {
     });
 };
 
-const serverError = (res, msg) => {
+const serverError = (res, msg, data) => {
     return res.json({
         code: 500,
-        msg: msg || '服务异常'
+        msg: msg || '服务异常',
+        data: data
     });
 };
 

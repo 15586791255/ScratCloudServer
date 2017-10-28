@@ -191,3 +191,47 @@ Res
 ```
 {"code":404,"msg":"没有找到相关数据"}
 ```
+
+# 发送短信
+
+[POST] **application/json** `/account/sms`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| tel | string | true | 11位有效的电话号码 |
+
+### Response
+
+> 正常返回
+
+```
+curl -X POST -H "Content-type: application/json" -d '{"tel":"15018329815"}' 'http://localhost:8082/account/sms'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```
+
+> 发送失败
+
+```
+curl -X POST -H "Content-type: application/json" -d '{"tel":"150183298151"}' 'http://localhost:8082/account/sms'
+```
+
+Res
+
+```
+{
+    "code": 500,
+    "msg": "手机号格式错误",
+    "data": {
+        "result": "1016",
+        "errmsg": "手机号格式错误",
+        "ext": ""
+    }
+}
+```
