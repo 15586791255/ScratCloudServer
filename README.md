@@ -357,3 +357,27 @@ Res
 {"code":403,"msg":"登录超时"}
 ```
 
+## 获取七牛的上传凭证
+
+[GET] `/file/qiniu_token`
+
+### Response
+
+> 正常返回
+
+```
+curl 'http://localhost:8084/file/qiniu_token'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "upload_token": "pFMOp8Bx9bbuV7TxOLzq7srre69t2-KiT4qs_ia0:7HpRm7xvKEnSth0Qbz3WJq3SgIQ=:eyJzY29wZSI6InRpbnN0b25lIiwiZGVhZGxpbmUiOjE1MDkyMTY5NjZ9",
+        "domain": "https://oiu0cclvb.qnssl.com/"
+    }
+}
+```
