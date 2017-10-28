@@ -28,7 +28,7 @@ const smsLogin = (req, res) => {
         if (!app) {
             return BaseRes.paramError(res);
         }
-        
+
         const [sms] = yield SmsDao.findByTelAndCode(tel, code);
         if (!sms) {
             return BaseRes.notFoundError(res, '验证码不存在');
@@ -38,7 +38,7 @@ const smsLogin = (req, res) => {
         if (nowTs > sms.expired_ts) {
             return BaseRes.forbiddenError(res, '验证码已过期');
         }
-        
+
         let [account] = yield AccountDao.findByAppIdAndTel(app.app_id, tel);
         if (!account) {
             const accountId = yield AccountDao.addAccount(app.app_id, tel, '', tel, '', 'unknown');
@@ -72,6 +72,52 @@ const smsLogin = (req, res) => {
     });
 };
 
+const refreshToken = (req, res) => {
+    const {app_key, pt} = req.headers;
+    const {refresh_token} = req.body;
+    const {uid} = req.params;
+
+    if (!app_key || !pt || !uid || !refresh_token) {
+        return BaseRes.paramError(res);
+    }
+
+    Co(function *() {
+        const [app] = yield AppDao.findByAppKey(app_key);
+        if (!app) {
+            return BaseRes.paramError(res);
+        }
+
+        const [token_data] = yield RefreshTokenDao.getToken(uid, refresh_token, pt);
+        if (!token_data) {
+            return BaseRes.notFoundError(res, '登录信息异常');
+        }
+
+        const now_ts = new Date().getTime();
+        if (now_ts > token_data.expired_ts) {
+            return BaseRes.forbiddenError(res, '登录超时');
+        }
+
+        // TODO 单点登录需要设置token过期
+
+        const access_token = Utils.randChar(16);
+        const accessTokenId = yield AccessTokenDao.addToken(uid, access_token, pt);
+        if (accessTokenId == 0) {
+            return BaseRes.serverError(res);
+        }
+
+        const data = {
+            uid,
+            refresh_token,
+            access_token,
+            expired_in: Config.expiredTokenInTs
+        };
+
+        return BaseRes.success(res, data);
+    });
+
+
+};
+
 module.exports = {
-    login, smsLogin
+    login, smsLogin, refreshToken
 };

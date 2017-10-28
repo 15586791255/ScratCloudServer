@@ -6,6 +6,11 @@ function * addToken(uid, token, scope) {
     return insertId;
 }
 
+function * getToken(uid, token, scope) {
+    return yield Conn.query('select * from refresh_token where uid=? and token=? and scope=? order by token_id desc limit 1',
+        {replacements: [uid, token, scope], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    addToken
+    addToken, getToken
 };

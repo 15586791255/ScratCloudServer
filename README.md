@@ -158,7 +158,7 @@ Res
 
 | param | type | require | description |
 | --- | :---: | :---: | --- |
-| news_id | int | true | 新闻ID |
+| news_id | int | true | 新闻ID，属于URL参数 |
 
 ### Response
 
@@ -297,3 +297,63 @@ Res
 ```
 {"code":404,"msg":"验证码不存在"}
 ```
+
+
+## 刷新access_token
+
+[POST] **application/json** `/:uid/token`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| uid | string | true | 用户ID，属于url参数 |
+| refresh_token | string | true | 刷新令牌 |
+
+### Response
+
+> 正常返回
+
+```
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/96008684/token'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "uid": "96008684",
+        "refresh_token": "bGDep7WTLCIqjlTw",
+        "access_token": "jRC3wJ06s0ufTDch",
+        "expired_in": 86400000
+    }
+}
+```
+
+> 用户uid不存在或者refresh_token找不到
+
+```
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/960086845/token'
+```
+
+Res
+
+```
+{"code":404,"msg":"登录信息异常"}
+```
+
+> 登录超时
+
+```
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "huuWBBCRC2sO1dMk"}' 'http://localhost:8082/account/96008684/token'
+```
+
+Res
+
+```
+{"code":403,"msg":"登录超时"}
+```
+
