@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const NewsController = require('../controller/NewsController');
+const BannerController = require('../controller/BannerController');
 
 router.get('/test', function (req, res) {
     res.send({
@@ -12,5 +13,6 @@ router.get('/test', function (req, res) {
 });
 
 router.get('/news', NewsController.getNews);
+router.get('/banner', BannerController.getBanner);
 
 module.exports = router;
