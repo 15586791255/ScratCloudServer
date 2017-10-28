@@ -270,9 +270,9 @@ Res
     "msg": "ok",
     "data": {
         "uid": "96008684",
-        "refreshToken": "bGDep7WTLCIqjlTw",
-        "accessToken": "hh22evUs0RWTBqJ7",
-        "expiredIn": 86400000
+        "refresh_token": "bGDep7WTLCIqjlTw",
+        "access_token": "hh22evUs0RWTBqJ7",
+        "expired_in": 86400000
     }
 }
 ```

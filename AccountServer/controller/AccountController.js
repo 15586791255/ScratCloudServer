@@ -50,22 +50,22 @@ const smsLogin = (req, res) => {
 
         console.log(account);
         const {uid} = account;
-        const refreshToken = Utils.randChar(16);
-        const refreshTokenId = yield RefreshTokenDao.addToken(uid, refreshToken, pt);
+        const refresh_token = Utils.randChar(16);
+        const refreshTokenId = yield RefreshTokenDao.addToken(uid, refresh_token, pt);
         if (refreshTokenId == 0) {
             return BaseRes.serverError(res);
         }
-        const accessToken = Utils.randChar(16);
-        const accessTokenId = yield AccessTokenDao.addToken(uid, accessToken, pt);
+        const access_token = Utils.randChar(16);
+        const accessTokenId = yield AccessTokenDao.addToken(uid, access_token, pt);
         if (accessTokenId == 0) {
             return BaseRes.serverError(res);
         }
 
         const data = {
             uid,
-            refreshToken,
-            accessToken,
-            expiredIn: Config.expiredTokenInTs
+            refresh_token,
+            access_token,
+            expired_in: Config.expiredTokenInTs
         };
 
         return BaseRes.success(res, data);
