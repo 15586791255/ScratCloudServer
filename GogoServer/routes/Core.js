@@ -12,6 +12,7 @@ router.get('/test', function (req, res) {
     });
 });
 
+router.get('/news/:news_id', NewsController.getNewsDetail);
 router.get('/news', NewsController.getNews);
 router.get('/banner', BannerController.getBanner);
 

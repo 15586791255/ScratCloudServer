@@ -17,22 +17,33 @@ const getNews = (req, res) => {
     }
 
     Co(function *() {
-        const news = yield NewsDao.getNews(index, parseInt(size));
+        const newsList = yield NewsDao.getNews(index, parseInt(size));
         let minIndex = index;
-        for (let item of news) {
+        for (let item of newsList) {
             delete item.body;
             delete item.url;
             if (minIndex == 0 || minIndex > item.news_id) {
                 minIndex = item.news_id
             }
         }
-        if (news.length < size) {
+        if (newsList.length < size) {
             minIndex = -1;
         }
-        BaseRes.success(res, {index: minIndex, items: news});
+        BaseRes.success(res, {index: minIndex, items: newsList});
+    });
+};
+
+const getNewsDetail = (req, res) => {
+    const {news_id} = req.params;
+    Co(function *() {
+        const newsList = yield NewsDao.getNewsDetail(news_id);
+        if(newsList.length == 0) {
+            return BaseRes.notFoundError(res);
+        }
+        BaseRes.success(res, newsList[0]);
     });
 };
 
 module.exports = {
-    getNews
+    getNews, getNewsDetail
 };

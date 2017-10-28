@@ -15,6 +15,11 @@ function * getNews(news_id, size) {
         {replacements: [size], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getNewsDetail(news_id) {
+    return yield Conn.query('select * from news where news_id=? limit 1',
+        {replacements: [news_id], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getNews
+    getNews, getNewsDetail
 };
