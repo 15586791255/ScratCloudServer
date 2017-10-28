@@ -242,3 +242,57 @@ Res
     }
 }
 ```
+
+# 短信登录
+
+[POST] **application/json** `/account/sms_login`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| tel | string | true | 11位有效的电话号码 |
+| code | string | true | 验证码 |
+
+### Response
+
+> 成功返回
+
+```
+curl -X POST -H "Content-type: application/json" -d '{"tel":"15018329815", "code": "528941"}' 'http://localhost:8082/account/sms_login'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "uid": "96008684",
+        "refreshToken": "bGDep7WTLCIqjlTw",
+        "accessToken": "hh22evUs0RWTBqJ7",
+        "expiredIn": 86400000
+    }
+}
+```
+
+> 验证码实效
+
+Res
+
+```
+{"code":403,"msg":"验证码已过期"}
+```
+
+> 验证码不存在
+
+```
+curl -X POST -H "Content-type: application/json" -d '{"tel":"15018329815", "code": "not_found_code"}' 'http://localhost:8082/account/sms_login'
+```
+
+Res
+
+```
+{"code":404,"msg":"验证码不存在"}
+```
