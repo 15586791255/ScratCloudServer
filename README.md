@@ -5,8 +5,9 @@
 
 | param | type | require | description |
 | --- | :---: | :---: | --- |
-| pt | string | true | 平台，iOS和Android请填app |
+| pt | string | true | 平台，`iOS`和`Android`请填app |
 | app_key | string | true | 由服务端提供 |
+| access_token | string | false | 如果已经登录，请带上登录的时候返回的access_token |
 
 ## 获取Banner
 
