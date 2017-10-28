@@ -41,6 +41,10 @@ dbPool.authenticate()
 global.Sequelize = Sequelize;
 global.Conn = dbPool;
 
+global.BaseRes = require('../util/BaseResponse');
+
+app.use('/core', require('../routes/Core'));
+
 app.listen(Config.port, Config.host, function () {
     console.log(`Visit at http://${Config.host}:${Config.port}`);
 });

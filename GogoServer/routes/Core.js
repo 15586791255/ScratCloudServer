@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const NewsController = require('../controller/NewsController');
 
 router.get('/test', function (req, res) {
     res.send({
@@ -9,5 +10,7 @@ router.get('/test', function (req, res) {
         msg: 'ok'
     });
 });
+
+router.get('/news', NewsController.getNews);
 
 module.exports = router;
