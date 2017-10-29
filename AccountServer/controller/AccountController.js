@@ -73,9 +73,8 @@ const smsLogin = (req, res) => {
 };
 
 const refreshToken = (req, res) => {
-    const {app_key, pt} = req.headers;
+    const {app_key, pt, uid} = req.headers;
     const {refresh_token} = req.body;
-    const {uid} = req.params;
 
     if (!app_key || !pt || !uid || !refresh_token) {
         return BaseRes.paramError(res);

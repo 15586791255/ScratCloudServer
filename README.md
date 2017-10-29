@@ -7,7 +7,8 @@
 | --- | :---: | :---: | --- |
 | pt | string | true | 平台，`iOS`和`Android`请填app |
 | app_key | string | true | 由服务端提供 |
-| access_token | string | false | 如果已经登录，请带上登录的时候返回的access_token |
+| uid | string | true | 如果已经登录，请带上登录的时候返回的uid |
+| access_token | string | true | 如果已经登录，请带上登录的时候返回的access_token |
 
 ## 获取Banner
 
@@ -301,13 +302,12 @@ Res
 
 ## 刷新access_token
 
-[POST] **application/json** `/:uid/token`
+[POST] **application/json** `/token`
 
 ### Param
 
 | param | type | require | description |
 | --- | :---: | :---: | --- |
-| uid | string | true | 用户ID，属于url参数 |
 | refresh_token | string | true | 刷新令牌 |
 
 ### Response
@@ -315,7 +315,7 @@ Res
 > 正常返回
 
 ```
-curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/96008684/token'
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -H "uid: 96008684" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/token'
 ```
 
 Res
@@ -336,7 +336,7 @@ Res
 > 用户uid不存在或者refresh_token找不到
 
 ```
-curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/960086845/token'
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -H "uid: 960086845" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/token'
 ```
 
 Res
@@ -348,7 +348,7 @@ Res
 > 登录超时
 
 ```
-curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "huuWBBCRC2sO1dMk"}' 'http://localhost:8082/account/96008684/token'
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -H "uid: 96008684" -d '{"refresh_token": "huuWBBCRC2sO1dMk"}' 'http://localhost:8082/account/token'
 ```
 
 Res
