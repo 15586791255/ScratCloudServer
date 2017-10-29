@@ -15,6 +15,6 @@ router.post('/sms/move_car', SmsController.sendMoveCarSms);
 //curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"tel":"15018329815", "code": "272968"}' 'http://localhost:8082/account/sms_login'
 router.post('/sms_login', AccountController.smsLogin);
 //curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/96008684/token'
-router.post('/:uid/token', AccountController.refreshToken);
+router.post('/token', AccountController.refreshToken);
 
 module.exports = router;
