@@ -17,5 +17,6 @@ router.get('/news/:news_id', NewsController.getNewsDetail);
 router.get('/news', NewsController.getNews);
 router.get('/banner', BannerController.getBanner);
 router.post('/comment', CommentController.addComment);
+router.get('/comments', CommentController.getComments);
 
 module.exports = router;

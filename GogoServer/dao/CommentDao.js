@@ -11,6 +11,16 @@ function * getComment(comment_id) {
         {replacements: [comment_id], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getComments(comment_id, tp, target_id, size) {
+    if (comment_id > 0) {
+        return yield Conn.query('select * from comment where comment_id<? and tp=? and target_id=? order by comment_id desc limit ?',
+            {replacements: [comment_id, tp, target_id, size], type: Sequelize.QueryTypes.SELECT});
+    }
+
+    return yield Conn.query('select * from comment where tp=? and target_id=? order by comment_id desc limit ?',
+        {replacements: [tp, target_id, size], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    addComment, getComment
+    addComment, getComment, getComments
 };

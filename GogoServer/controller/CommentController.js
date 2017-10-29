@@ -1,5 +1,6 @@
 const CommentDao = require('../dao/CommentDao');
 const AccessTokenDao = require('../dao/AccessTokenDao');
+const AccountDao = require('../dao/AccountDao');
 
 const addComment = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
@@ -26,7 +27,7 @@ const addComment = (req, res) => {
         if (token.expired_ts < now_ts) {
             return BaseRes.tokenError(res);
         }
-        
+
         const comment_id = yield CommentDao.addComment(uid, target_id, replay_comment_id, tp, content);
         if (comment_id == 0) {
             return BaseRes.serverError(res, '评论失败');
@@ -41,9 +42,63 @@ const addComment = (req, res) => {
 
         return BaseRes.success(res, comment);
     });
+};
 
+const getComments = (req, res) => {
+    let {index, size, tp, target_id} = req.query;
+
+    if (!tp || !target_id) {
+        return BaseRes.paramError(res);
+    }
+
+    if (!index) {
+        index = 0
+    } else if (index < 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    if (!size) {
+        size = 20;
+    } else if (size > 60) {
+        size = 60;
+    } else if (size <= 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    Co(function *() {
+        const comments = yield CommentDao.getComments(index, tp, target_id, parseInt(size));
+        let minIndex = index;
+        let items = [];
+        for (let item of comments) {
+            delete item.delete_ts;
+            if (minIndex == 0 || minIndex > item.news_id) {
+                minIndex = item.comment_id
+            }
+            // TODO 此处可优化
+            const [account] = yield AccountDao.findByUid(item.uid);
+            if (!account) {
+                items.push({comment: item, user: {
+                    username: '未知',
+                    gender: 'unknown',
+                    uid: item.uid,
+                    avatar: ''
+                }})
+            } else {
+                items.push({comment: item, user: {
+                    username: account.username,
+                    gender: account.gender,
+                    uid: account.uid,
+                    avatar: account.avatar
+                }})
+            }
+        }
+        if (comments.length < size) {
+            minIndex = -1;
+        }
+        BaseRes.success(res, {index: minIndex, items: items});
+    });
 };
 
 module.exports = {
-    addComment
+    addComment, getComments
 };
