@@ -381,3 +381,46 @@ Res
     }
 }
 ```
+
+## 添加评论
+
+[POST] **application/json** `/comment`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| tp | string | true | 类型，首页列表的评论填 news ; 赛事评论填 race |
+| target_id | string | true | 如果是首页列表评论，对应的是news_id, 如果是赛事的评论，对应的是race_id |
+| content | string | true | 评论内容 |
+
+### Response
+
+> 正常返回
+
+```
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -H "uid: 96008684" -H "access_token: 77nslIFtnXlgfzDe" -d '{"tp": "news", "target_id": 1, "content": "测试评论"}' 'http://localhost:8083/core/comment'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "comment_id": 1,
+        "uid": "96008684",
+        "tp": "news",
+        "target_id": 1,
+        "content": "测试评论",
+        "create_ts": "1509263142027"
+    }
+}
+```
+
+> 需要重新登录
+
+```
+{"code":498,"msg":"请重新登录"}
+```

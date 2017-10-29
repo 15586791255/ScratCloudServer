@@ -78,3 +78,14 @@ unique key(nid),
 primary key(news_id)
 ) engine=InnoDB default charset=utf8;
 
+create table comment (
+comment_id int unsigned not null auto_increment comment '自增主键',
+replay_comment_id int unsigned not null default 0,
+uid char(16) not null default '',
+tp enum('news', 'race') not null default 'news' comment 'news: 新闻评论；race：赛事评论',
+target_id int unsigned not null default 0,
+content varchar(512) not null default '',
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(comment_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

@@ -42,6 +42,13 @@ const paramError = (res, msg) => {
     })
 };
 
+const tokenError = (res, msg) => {
+    return res.json({
+        code: 498,
+        msg: msg || '请重新登录'
+    });
+};
+
 module.exports = {
-    success, error, serverError, notFoundError, forbiddenError, paramError
+    success, error, serverError, notFoundError, forbiddenError, paramError, tokenError
 };
