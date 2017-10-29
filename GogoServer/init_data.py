@@ -116,6 +116,7 @@ def insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, vi
 		sql = 'update news set title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s where nid=%s'
 		print sql
 		cursor.execute(sql, (title, tp, news_ts, cover, url, body, nid, view_count, ))
+		conn.commit()
 		return
 	sql = 'insert ignore into news set nid=%s, title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s'
 	print sql
@@ -163,11 +164,79 @@ def parse_news(conn, cursor):
 			(nid, title, tp, news_ts, cover, url, body, view_count) = data
 			insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, view_count)
 
+def insert_into_team(conn, cursor, tid, team_name, description, logo, short_name):
+	sql = 'select count(1) from team where tid=%s'
+	print sql
+	cursor.execute(sql, (tid,))
+	count = cursor.fetchone()[0]
+	if count > 0:
+		sql = 'update team set team_name=%s, description=%s, logo=%s, short_name=%s where tid=%s'
+		print sql
+		cursor.execute(sql, (team_name, description, logo, short_name, tid, ))
+		conn.commit()
+		return
+	now_ts = time.time()*1000
+	sql = 'insert ignore into team set tid=%s, team_name=%s, description=%s, logo=%s, short_name=%s, create_ts=%s'
+	print sql
+	cursor.execute(sql, (tid, team_name, description, logo, short_name, now_ts, ))
+	conn.commit()
+
+def insert_into_team_member(conn, cursor, tid, mid, member_name, description, avatar):
+	sql = 'select count(1) from team_member where tid=%s and mid=%s'
+	print sql
+	cursor.execute(sql, (tid, mid, ))
+	count = cursor.fetchone()[0]
+	if count > 0:
+		sql = 'update team_member set member_name=%s, description=%s, avatar=%s where tid=%s and mid=%s'
+		print sql
+		cursor.execute(sql, (member_name, description, avatar, tid, mid, ))
+		conn.commit()
+		return
+	now_ts = time.time()*1000
+	sql = 'insert ignore into team_member set member_name=%s, description=%s, avatar=%s, tid=%s, mid=%s, create_ts=%s'
+	print sql
+	cursor.execute(sql, (member_name, description, avatar, tid, mid, now_ts, ))
+	conn.commit()
+
+def parse_team_member(conn, cursor, tid):
+	now_ts = time.time()*1000
+	lines = command("curl 'http://pvp.ingame.qq.com/php/ingame/smobamatch/guild_players.php?match_id=8&src=ingame&game=smoba&loading=true&tips=true&guildid=%s&_=%s'" % (tid, now_ts))
+	members = json.loads(lines[0]).get('data').get('memberllist')
+	for member in members:
+		mid = member.get('memberid')
+		member_name = member.get('membername')
+		description = member.get('memberdesc')
+		avatar = 'http:' + member.get('membericon')
+		insert_into_team_member(conn, cursor, tid, mid, member_name, description, avatar)
+
+def parse_team_list(conn, cursor):
+	now_ts = time.time()*1000
+	lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchteaminfo8.json?callback=%%3F&t=%s&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % now_ts)
+	datas = json.loads(lines[0])
+	teams = datas.get('teamlist')
+	for team in teams:
+		tid = team.get('id')
+		team_name = team.get('name')
+		description = team.get('descr')
+		logo = 'http:' + team.get('logo')
+		short_name = team.get('shortname')
+		if short_name == '':
+			short_name = team_name
+		insert_into_team(conn, cursor, tid, team_name, description, logo, short_name)
+		parse_team_member(conn, cursor, tid)
+
+def get_race():
+	now_ts = time.time()*1000
+
+	# lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchcate8.json?callback=%%3F&t=%s&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % now_ts)
+	# print lines[0]
+
 def main():
-	# now_ts = time.time()*1000
 	# lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchlivelist8.json?callback=%%3F&t=%.1f&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % now_ts)
 	# datas = json.loads(lines[0])
 	# for data in datas.get('matchlist'):
+	# 	print data
+	# 	data.get('status') # 1：正在直播； 0: 即将开始
 	# 	start_time = data.get('stime')
 	# 	logo_a = 'http:' + data.get('alogo')
 	# 	team_name_a = data.get('teama')
@@ -177,8 +246,10 @@ def main():
 	# 	score_b = data.get('winb')
 	# 	print start_time, team_name_a, score_a, team_name_b, score_b, logo_a
 
+# ok------------
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
-	parse_news(conn, cursor)
+	# parse_news(conn, cursor)
+	parse_team_list(conn, cursor)
 	close_mysal_conn(conn, cursor)
 
 if __name__ == '__main__':

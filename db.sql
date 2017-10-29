@@ -90,3 +90,27 @@ create_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
 primary key(comment_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table team (
+team_id int unsigned not null auto_increment comment '自增主键',
+tid varchar(16) not null default '' comment '对应id',
+team_name varchar(32) not null default '' comment '对应name',
+short_name varchar(32) not null default '' comment '对应shortname',
+description varchar(512) not null default '' comment '对应descr',
+logo varchar(512) not null default '' comment '战队封面',
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(team_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table team_member (
+member_id int unsigned not null auto_increment comment '自增主键',
+tid varchar(16) not null default '',
+mid varchar(16) not null default '' comment '对应memberid',
+member_name varchar(32) not null default '' comment '对应membername',
+avatar varchar(512) not null default '' comment '对应membericon',
+description varchar(512) not null default '' comment '对应membericon',
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(member_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
