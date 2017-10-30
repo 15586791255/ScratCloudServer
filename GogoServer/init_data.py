@@ -230,11 +230,119 @@ def parse_team_list(conn, cursor):
 		team_id = insert_into_team(conn, cursor, tid, team_name, description, logo, short_name)
 		parse_team_member(conn, cursor, team_id, tid)
 
-def get_race():
+def insert_into_game(conn, cursor, gid, title, logo, reward, rule, game_ts):
+	sql = 'select game_id from game where gid=%s'
+	print sql
+	cursor.execute(sql, (gid,))
+	game_id = 0
+	record = cursor.fetchone()
+	if record:
+		game_id = record[0]
+	if game_id > 0:
+		sql = 'update game set gid=%s, title=%s, logo=%s, reward=%s, rule=%s, game_ts=%s where game_id=%s'
+		print sql
+		cursor.execute(sql, (gid, title, logo, reward, rule, game_ts, game_id, ))
+		conn.commit()
+		return game_id
 	now_ts = time.time()*1000
+	sql = 'insert ignore into game set gid=%s, title=%s, logo=%s, reward=%s, rule=%s, game_ts=%s, create_ts=%s'
+	print sql
+	cursor.execute(sql, (gid, title, logo, reward, rule, game_ts, now_ts, ))
+	conn.commit()
+	sql = 'select game_id from game where gid=%s'
+	print sql
+	cursor.execute(sql, (gid,))
+	return cursor.fetchone()[0]
 
-	# lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchcate8.json?callback=%%3F&t=%s&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % now_ts)
-	# print lines[0]
+def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, end_ts):
+	sql = 'select race_info_id from race_info where rid=%s'
+	print sql
+	cursor.execute(sql, (rid,))
+	race_info_id = 0
+	record = cursor.fetchone()
+	if record:
+		race_info_id = record[0]
+	if race_info_id > 0:
+		sql = 'update race_info set race_name=%s, description=%s, start_ts=%s, end_ts=%s where rid=%s'
+		print sql
+		cursor.execute(sql, (race_name, description, start_ts, end_ts, rid, ))
+		conn.commit()
+		return race_info_id
+	now_ts = time.time()*1000
+	sql = 'insert ignore into race_info set race_name=%s, description=%s, start_ts=%s, end_ts=%s, rid=%s, create_ts=%s'
+	print sql
+	cursor.execute(sql, (race_name, description, start_ts, end_ts, rid, now_ts, ))
+	conn.commit()
+	sql = 'select race_info_id from race_info where rid=%s'
+	print sql
+	cursor.execute(sql, (rid,))
+	return cursor.fetchone()[0]
+
+def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts):
+	sql = 'select count(1) from race where mid=%s'
+	print sql
+	cursor.execute(sql, (mid,))
+	if cursor.fetchone()[0] > 0:
+		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s where mid=%s'
+		print sql
+		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, ))
+		conn.commit()
+		return
+	now_ts = time.time()*1000
+	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s'
+	print sql
+	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, ))
+	conn.commit()
+
+def parse_race(conn, cursor, curr_id):
+	now_ts = time.time()*1000
+	lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchcate%s.json?callback=%%3F&t=%s&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % (curr_id, now_ts))
+	datas = json.loads(lines[0])
+	game_info = datas.get('gameinfo')
+
+	gid = game_info.get('id')
+	title = game_info.get('title')
+	dt = datetime.datetime.strptime(game_info.get('mtime'), '%Y-%m-%d')
+	game_ts = '%.0f' % (time.mktime(dt.timetuple()) * 1000)
+	reward = game_info.get('reward')
+	logo = 'http:' + game_info.get('logo')
+	rule = game_info.get('rule')
+	game_id = insert_into_game(conn, cursor, gid, title, logo, reward, rule, game_ts)
+
+	catelist = datas.get('catelist')
+	for cate in catelist:
+		rid = cate.get('cid')
+		if rid == 0:
+			continue
+		race_name = cate.get('name')
+		description = cate.get('descr')
+		start_ts = long(cate.get('stime'))*1000
+		end_ts = long(cate.get('etime'))*1000
+		race_info_id = insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, end_ts)
+
+		matchlist = cate.get('matchlist')
+		for match in matchlist:
+			match_datas = match.get('list')
+			for item in match_datas:
+				mid = item.get('id')
+				dt = datetime.datetime.strptime(item.get('mtime'), '%Y-%m-%d %H:%M')
+				race_ts = '%.0f' % (time.mktime(dt.timetuple()) * 1000)
+				team_id_a = item.get('teama_id')
+				team_id_b = item.get('teamb_id')
+				score_a = item.get('wina')
+				score_b = item.get('winb')
+				# print game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts
+				insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts)
+
+def parse_race_list(conn, cursor):
+	# 8: KPL；10：第三届王者城市赛；1：2017QGC夏季赛； 9 WGC精英赛 11 第三届王者校园争霸赛 7 TGA 12 2017
+	parse_race(conn, cursor, 8)
+	parse_race(conn, cursor, 10)
+	parse_race(conn, cursor, 1)
+	parse_race(conn, cursor, 9)
+	parse_race(conn, cursor, 11)
+	parse_race(conn, cursor, 7)
+	parse_race(conn, cursor, 12)
 
 def main():
 	# lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchlivelist8.json?callback=%%3F&t=%.1f&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % now_ts)
@@ -254,7 +362,8 @@ def main():
 # ok------------
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
 	# parse_news(conn, cursor)
-	parse_team_list(conn, cursor)
+	# parse_team_list(conn, cursor)
+	parse_race_list(conn, cursor)
 	close_mysal_conn(conn, cursor)
 
 if __name__ == '__main__':

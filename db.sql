@@ -115,3 +115,43 @@ create_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
 primary key(member_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table game (
+game_id int unsigned not null auto_increment comment '自增主键',
+gid varchar(16) not null default '',
+title varchar(128) not null default '',
+logo varchar(512) not null default '',
+reward text not null,
+rule varchar(512) not null default '',
+game_ts bigint unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(game_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table race_info (
+race_info_id int unsigned not null auto_increment comment '自增主键',
+rid varchar(16) not null default '',
+race_name varchar(32) not null default '',
+description varchar(512) not null default '',
+start_ts bigint unsigned not null default 0,
+end_ts bigint unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(race_info_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table race (
+race_id int unsigned not null auto_increment comment '自增主键',
+race_info_id int unsigned not null default 0,
+game_id int unsigned not null default 0,
+mid varchar(16) not null default '',
+team_id_a int unsigned not null default 0,
+team_id_b int unsigned not null default 0,
+score_a varchar(8) not null default '0',
+score_b varchar(8) not null default '0',
+race_ts bigint unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(race_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
