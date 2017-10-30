@@ -278,21 +278,27 @@ def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, e
 	cursor.execute(sql, (rid,))
 	return cursor.fetchone()[0]
 
-def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts):
+def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, status):
 	sql = 'select count(1) from race where mid=%s'
 	print sql
 	cursor.execute(sql, (mid,))
 	if cursor.fetchone()[0] > 0:
-		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s where mid=%s'
+		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, status=%s where mid=%s'
 		print sql
-		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, ))
+		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, mid, ))
 		conn.commit()
 		return
 	now_ts = time.time()*1000
-	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s'
+	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s, status'
 	print sql
-	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, ))
+	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, status, ))
 	conn.commit()
+
+STATUS = {
+	2: 'end',
+	1: 'holding',
+	0: 'ready'
+}
 
 def parse_race(conn, cursor, curr_id):
 	now_ts = time.time()*1000
@@ -331,8 +337,9 @@ def parse_race(conn, cursor, curr_id):
 				team_id_b = item.get('teamb_id')
 				score_a = item.get('wina')
 				score_b = item.get('winb')
+				status = item.get('status')
 				# print game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts
-				insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts)
+				insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, STATUS.get(status))
 
 def parse_race_list(conn, cursor):
 	# 8: KPL；10：第三届王者城市赛；1：2017QGC夏季赛； 9 WGC精英赛 11 第三届王者校园争霸赛 7 TGA 12 2017
