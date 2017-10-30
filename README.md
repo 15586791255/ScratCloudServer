@@ -547,6 +547,8 @@ Res
 
 [GET] `/core/teams`
 
+### Response
+
 > 正常返回
 
 ```
@@ -657,6 +659,109 @@ Res
                 "short_name": "QG",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpsTEvZs_877137796_1489139248.png",
                 "create_ts": "1509302181789"
+            }
+        ]
+    }
+}
+```
+
+## 获取战队详情接口
+
+[GET] `/core/team/:team_id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| team_id | string | true | 战队ID，属于URL参数 |
+
+### Response
+
+> 正常返回
+
+```
+curl 'http://localhost:8083/core/team/1'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "team": {
+            "team_id": 1,
+            "team_name": "QGhappy",
+            "short_name": "QG",
+            "description": "QG电子竞技俱乐部成立于2015年，QGhappy暨QG王者荣耀分部成立于2017年2月8号。QGhappy以“生而无畏，战至终章”敢于拼搏的精神一路走到今天，在2017KPL王者荣耀职业联赛春季赛常规赛中获得15连胜，并获得了2017KPL王者荣耀职业联赛春季赛中总冠军。",
+            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpsTEvZs_877137796_1489139248.png",
+            "create_ts": "1509302181789"
+        },
+        "members": [
+            {
+                "member_id": 1,
+                "team_id": 1,
+                "member_name": "QGhappy.Fly",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phplCYLmo_1120950802_1489118749.png",
+                "description": "边路位置，打法稳健，擅长带线与支援。",
+                "create_ts": "1509342423373"
+            },
+            {
+                "member_id": 2,
+                "team_id": 1,
+                "member_name": "QGhappy.Cat",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php7yqNXp_1740244572_1489119367.png",
+                "description": "中路位置，沉稳冷静，发育和生存能力极强。",
+                "create_ts": "1509342423375"
+            },
+            {
+                "member_id": 3,
+                "team_id": 1,
+                "member_name": "QGhappy.Mc",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpWEtsEe_1249381964_1489119368.png",
+                "description": "队长，边路位置，经验丰富，大局观全面。",
+                "create_ts": "1509342423376"
+            },
+            {
+                "member_id": 4,
+                "team_id": 1,
+                "member_name": "QGhappy.Alan",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpd5HrWB_753583155_1489118748.png",
+                "description": "打野位置，是节奏发起者，野区掌控能力强。",
+                "create_ts": "1509342423377"
+            },
+            {
+                "member_id": 5,
+                "team_id": 1,
+                "member_name": "QGhappy.XX",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpKhCbPb_1615808906_1489119368.png",
+                "description": "中单位置，对线凶狠强势，擅长压制对手。",
+                "create_ts": "1509342423378"
+            },
+            {
+                "member_id": 6,
+                "team_id": 1,
+                "member_name": "QGhappy.Hurt",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpFjfZzM_238453227_1489118749.png",
+                "description": "边路位置，个人实力深厚，十分稳重。",
+                "create_ts": "1509342423379"
+            },
+            {
+                "member_id": 7,
+                "team_id": 1,
+                "member_name": "QGhappy.YANG",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpmBjWZ8_1016405817_1489119368.png",
+                "description": "游走位置，队内多面手，是队伍节奏的催化剂。",
+                "create_ts": "1509342423380"
+            },
+            {
+                "member_id": 8,
+                "team_id": 1,
+                "member_name": "QGhappy.Gemini（教练）",
+                "avatar": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpepJkJd_186034865_1489118748.png",
+                "description": "前风暴英雄职业选手。",
+                "create_ts": "1509342423381"
             }
         ]
     }

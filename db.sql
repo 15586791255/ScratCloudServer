@@ -105,6 +105,7 @@ primary key(team_id)
 
 create table team_member (
 member_id int unsigned not null auto_increment comment '自增主键',
+team_id int unsigned not null default 0,
 tid varchar(16) not null default '',
 mid varchar(16) not null default '' comment '对应memberid',
 member_name varchar(32) not null default '' comment '对应membername',

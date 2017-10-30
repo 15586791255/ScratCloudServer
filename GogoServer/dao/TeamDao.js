@@ -8,6 +8,11 @@ function * getTeams(team_id, size) {
         {replacements: [size], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getTeam(team_id) {
+    return yield Conn.query('select * from team where team_id =? limit 1',
+        {replacements: [team_id], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getTeams
+    getTeams, getTeam
 };

@@ -165,40 +165,45 @@ def parse_news(conn, cursor):
 			insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, view_count)
 
 def insert_into_team(conn, cursor, tid, team_name, description, logo, short_name):
-	sql = 'select count(1) from team where tid=%s'
+	sql = 'select team_id from team where tid=%s'
 	print sql
 	cursor.execute(sql, (tid,))
-	count = cursor.fetchone()[0]
-	if count > 0:
+	team_id = cursor.fetchone()[0]
+	if team_id > 0:
 		sql = 'update team set team_name=%s, description=%s, logo=%s, short_name=%s where tid=%s'
 		print sql
 		cursor.execute(sql, (team_name, description, logo, short_name, tid, ))
 		conn.commit()
-		return
+		return team_id
 	now_ts = time.time()*1000
 	sql = 'insert ignore into team set tid=%s, team_name=%s, description=%s, logo=%s, short_name=%s, create_ts=%s'
 	print sql
 	cursor.execute(sql, (tid, team_name, description, logo, short_name, now_ts, ))
 	conn.commit()
 
-def insert_into_team_member(conn, cursor, tid, mid, member_name, description, avatar):
+	sql = 'select team_id from team where tid=%s'
+	print sql
+	cursor.execute(sql, (tid,))
+	return cursor.fetchone()[0]
+
+def insert_into_team_member(conn, cursor, team_id, tid, mid, member_name, description, avatar):
 	sql = 'select count(1) from team_member where tid=%s and mid=%s'
 	print sql
 	cursor.execute(sql, (tid, mid, ))
 	count = cursor.fetchone()[0]
 	if count > 0:
-		sql = 'update team_member set member_name=%s, description=%s, avatar=%s where tid=%s and mid=%s'
+		sql = 'update team_member set team_id=%s, member_name=%s, description=%s, avatar=%s where tid=%s and mid=%s'
 		print sql
-		cursor.execute(sql, (member_name, description, avatar, tid, mid, ))
+		cursor.execute(sql, (team_id, member_name, description, avatar, tid, mid, ))
 		conn.commit()
 		return
 	now_ts = time.time()*1000
-	sql = 'insert ignore into team_member set member_name=%s, description=%s, avatar=%s, tid=%s, mid=%s, create_ts=%s'
+	sql = 'insert ignore into team_member set team_id=%s, member_name=%s, description=%s, avatar=%s, tid=%s, mid=%s, create_ts=%s'
 	print sql
-	cursor.execute(sql, (member_name, description, avatar, tid, mid, now_ts, ))
+	cursor.execute(sql, (team_id, member_name, description, avatar, tid, mid, now_ts, ))
 	conn.commit()
 
-def parse_team_member(conn, cursor, tid):
+def parse_team_member(conn, cursor, team_id, tid):
 	now_ts = time.time()*1000
 	lines = command("curl 'http://pvp.ingame.qq.com/php/ingame/smobamatch/guild_players.php?match_id=8&src=ingame&game=smoba&loading=true&tips=true&guildid=%s&_=%s'" % (tid, now_ts))
 	members = json.loads(lines[0]).get('data').get('memberllist')
@@ -207,7 +212,7 @@ def parse_team_member(conn, cursor, tid):
 		member_name = member.get('membername')
 		description = member.get('memberdesc')
 		avatar = 'http:' + member.get('membericon')
-		insert_into_team_member(conn, cursor, tid, mid, member_name, description, avatar)
+		insert_into_team_member(conn, cursor, team_id, tid, mid, member_name, description, avatar)
 
 def parse_team_list(conn, cursor):
 	now_ts = time.time()*1000
@@ -222,8 +227,8 @@ def parse_team_list(conn, cursor):
 		short_name = team.get('shortname')
 		if short_name == '':
 			short_name = team_name
-		insert_into_team(conn, cursor, tid, team_name, description, logo, short_name)
-		parse_team_member(conn, cursor, tid)
+		team_id = insert_into_team(conn, cursor, tid, team_name, description, logo, short_name)
+		parse_team_member(conn, cursor, team_id, tid)
 
 def get_race():
 	now_ts = time.time()*1000
