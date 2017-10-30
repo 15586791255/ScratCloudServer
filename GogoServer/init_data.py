@@ -292,7 +292,7 @@ def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_i
 		conn.commit()
 		return
 	now_ts = time.time()*1000
-	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s, status'
+	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s, status=%s'
 	print sql
 	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, status, ))
 	conn.commit()
