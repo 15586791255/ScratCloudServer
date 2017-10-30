@@ -20,6 +20,7 @@ const getTeams = (req, res) => {
         const teams = yield TeamDao.getTeams(index, parseInt(size));
         let min_index = index;
         for (let item of teams) {
+            delete item.description;
             delete item.delete_ts;
             if (min_index == 0 || min_index > item.team_id) {
                 min_index = item.team_id

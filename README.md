@@ -567,8 +567,6 @@ Res
                 "tid": "766",
                 "team_name": "GK",
                 "short_name": "GK",
-                "description": "GK电子竞技俱乐部，是一家来自深圳的 新兴电竞俱乐部。俱乐部拥有多个游戏分部。公司拥有雄厚的资金及优良专业电竞从业团队，炫酷的电竞体验管以及高人气的电竞自媒体等一套电竞产业链闭环资源。
-俱乐部拥有良好的赛训体系，成熟的团 队配置，超豪华的起居场所以及健身场所。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php3Vk6UO_1057408997_1504853231.png",
                 "create_ts": "1509302181810"
             },
@@ -577,7 +575,6 @@ Res
                 "tid": "2450",
                 "team_name": "RNG.M",
                 "short_name": "RNG.M",
-                "description": "电竞老牌俱乐部皇族，旗下有英雄联盟，守望先锋，炉石传说，等多个游戏分布，2017年3月成立王者荣耀，以预选赛双败淘汰赛的胜者组冠军身份进入KPL，正式更名为RNGM。曾获得上海城市赛冠军，南方大区区域赛冠军，TGA4月月赛冠军，QGC月赛冠军，WGC总决赛冠军，皇族永不言弃。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpE0o8R8_1073428518_1505269754.png",
                 "create_ts": "1509302181808"
             },
@@ -586,7 +583,6 @@ Res
                 "tid": "3112",
                 "team_name": "EDG.M",
                 "short_name": "EDG.M",
-                "description": "EDG在2017年正式成立EDGM移动电竞分部，同时将原2016WGC精英赛冠军BEST战队收入旗下。2017年6月，BEST以QGC赛区优胜战队身份再次进入KPL秋季赛·预选赛，以小组第一的好成绩脱颖而出，获得2017年KPL秋季赛入围资格，正式成为EDGM王者战队，荣耀出征！",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpmiq3GP_1104041337_1504853078.png",
                 "create_ts": "1509302181807"
             },
@@ -595,7 +591,6 @@ Res
                 "tid": "78",
                 "team_name": "sViper",
                 "short_name": "sViper",
-                "description": "sViper俱乐部成立于2016年7月，战队打法凶悍侵略性十足，成为KPL中名副其实的毒蛇。战队目标从始而终都是冠军，立志打造最好的移动电竞俱乐部。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phps09l4L_852880468_1504853493.png",
                 "create_ts": "1509302181805"
             },
@@ -604,7 +599,6 @@ Res
                 "tid": "82",
                 "team_name": "AS仙阁",
                 "short_name": "AS仙阁",
-                "description": "立足于王者荣耀项目的“新电竞”领域俱乐部，秉承竞技体育精神，力争各大赛事高峰。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpXFeqVI_915848246_1504852999.png",
                 "create_ts": "1509302181802"
             },
@@ -613,7 +607,6 @@ Res
                 "tid": "817",
                 "team_name": "YTG",
                 "short_name": "YTG",
-                "description": "YTG电子竞技俱乐部于16年8月正式成立，作为同年年初就已组建的首支王者荣耀线下专业战队，全勤参与了王者荣耀各项赛事，斩获第二届KOC冠军，并以预选赛第三的名次进入17年KPL春季赛。“不忘初心，越战越勇”是这群热血少年秉持的理念。为实现最初的电竞梦想，俱乐部团结一心，携手奋进，剑指KPL最高荣誉。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpajPuFN_253173967_1489139306.png",
                 "create_ts": "1509302181800"
             },
@@ -622,7 +615,6 @@ Res
                 "tid": "767",
                 "team_name": "JC",
                 "short_name": "JC",
-                "description": "JC电子竞技俱乐部成立于2017年初，所获成绩：2016年济南城市赛冠军；2016年北方城市区域赛亚军；2016年TGA移动大奖赛总冠军；2016年QGC上海影院联赛冠军；2016年中国电子竞技嘉年华总冠军；2016年QGC冬季联赛亚军；2017年KPL春季职业联赛预选赛小组第一出线；2017年KPL春季职业联赛季后赛八强；2017年王者荣耀冠军杯四强。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phppSw69l_1928455556_1489140572.png",
                 "create_ts": "1509302181798"
             },
@@ -631,7 +623,6 @@ Res
                 "tid": "81",
                 "team_name": "XQ",
                 "short_name": "X-QUEST",
-                "description": "探索一切未知的神秘。我们勇于挑战日异月殊的电竞世界，同时三省吾身不断探索团队自身特点。为炽热的电竞梦，我们夙兴夜寐苦心孤诣不敢旁鹜。黄沙百战穿金甲，不破楼兰终不还。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpAsQ8en_55863151_1504853133.png",
                 "create_ts": "1509302181797"
             },
@@ -640,7 +631,6 @@ Res
                 "tid": "80",
                 "team_name": "WF",
                 "short_name": "WF",
-                "description": "WeFun俱乐部成立于2016年4月，是国内最早的专注移动电竞的专业俱乐部，由爱游戏全力打造，专注于挖掘和培养有潜力的移动电竞职业选手。曾获得第一届王者荣耀职业联赛并列第五名，第二届王者荣耀职业联赛四强。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php8FoNtq_1043328301_1489139259.png",
                 "create_ts": "1509302181796"
             },
@@ -649,7 +639,6 @@ Res
                 "tid": "73",
                 "team_name": "eStarPro",
                 "short_name": "eStarPro",
-                "description": "eStar战队是王者荣耀首屈一指的顶尖力量，成立于2016年5月，作为国内首批元老级职业战队，eStar秉承着“始于电竞，忠于电竞”的核心理念，致力于为观众演绎精彩的顶尖对决。“永恒荣耀，不灭星辰”，众志成城的决心为整个队伍注入了无尽的力量！eStar成立以来的表现堪称荣耀王者之师，屡获殊荣：济南城市赛冠军、TGA月赛冠军、TGA全国总决赛冠军、2016冠军杯全国总决赛冠军、游戏多V联赛冠军、QGC夏季总决赛亚军、2016KPL职业联赛殿军、CMEG精英邀请赛冠军、2017KPL职业联赛春季赛季军等。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpufmVkV_73983205_1505115440.png",
                 "create_ts": "1509302181794"
             },
@@ -658,7 +647,6 @@ Res
                 "tid": "70",
                 "team_name": "AG超玩会",
                 "short_name": "AG",
-                "description": "AG超玩会成立于2016年中旬，励志打造中国顶尖的移动电竞俱乐部，俱乐部曾获荣誉：2016CMEG全国总决赛冠军；2016QGC全国总决赛冠军；2016王者荣耀冠军杯亚军；2016KPL王者职业联赛亚军；2016年KPL最受欢迎战队；2017KPL王者职业联赛亚军；2017荣耀名人堂年度最具人气战队；2017春季赛最佳职业俱乐部。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php2gzntz_468365754_1489057020.png",
                 "create_ts": "1509302181793"
             },
@@ -667,7 +655,6 @@ Res
                 "tid": "869",
                 "team_name": "QGhappy",
                 "short_name": "QG",
-                "description": "QG电子竞技俱乐部成立于2015年，QGhappy暨QG王者荣耀分部成立于2017年2月8号。QGhappy以“生而无畏，战至终章”敢于拼搏的精神一路走到今天，在2017KPL王者荣耀职业联赛春季赛常规赛中获得15连胜，并获得了2017KPL王者荣耀职业联赛春季赛中总冠军。",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpsTEvZs_877137796_1489139248.png",
                 "create_ts": "1509302181789"
             }
