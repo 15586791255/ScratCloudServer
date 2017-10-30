@@ -13,13 +13,13 @@ http {
 ```
 
 ```
-    location /gogo/core/ {
+    location /api/core/ {
         proxy_pass http://localhost:8083/core/;
     }
-    location /gogo/file/ {
+    location /api/file/ {
         proxy_pass http://localhost:8084/file/;
     }
-    location /gogo/account/ {
+    location /api/account/ {
         proxy_pass http://localhost:8082/account/;
     }
 ```
