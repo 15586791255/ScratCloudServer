@@ -1,6 +1,6 @@
 create database if not exists scratcloud default character set utf8;
 create user 'scrat'@'localhost' identified by 'scrat';
-grant select,insert,update,delete,create,alter on scratcloud.* to scrat@'localhost';
+grant select,insert,update on scratcloud.* to scrat@'localhost';
 flush privileges;
 use scratcloud;
 

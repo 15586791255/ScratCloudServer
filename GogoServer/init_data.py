@@ -17,8 +17,8 @@ print sys.stdout.encoding
 
 host = 'localhost'
 db = 'scratcloud'
-user = 'root'
-passwd = ''
+user = 'scrat'
+passwd = 'scrat'
 
 def http_get(url):
 	print '[GET]:', url
@@ -368,8 +368,8 @@ def main():
 
 # ok------------
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
-	# parse_news(conn, cursor)
-	# parse_team_list(conn, cursor)
+	parse_news(conn, cursor)
+	parse_team_list(conn, cursor)
 	parse_race_list(conn, cursor)
 	close_mysal_conn(conn, cursor)
 
