@@ -168,7 +168,10 @@ def insert_into_team(conn, cursor, tid, team_name, description, logo, short_name
 	sql = 'select team_id from team where tid=%s'
 	print sql
 	cursor.execute(sql, (tid,))
-	team_id = cursor.fetchone()[0]
+	team_id = 0
+	record = cursor.fetchone()
+	if record:
+		team_id = record[0]
 	if team_id > 0:
 		sql = 'update team set team_name=%s, description=%s, logo=%s, short_name=%s where tid=%s'
 		print sql
