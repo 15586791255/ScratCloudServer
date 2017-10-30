@@ -1,3 +1,28 @@
+# Config on server
+
+## nginx
+
+添加配置`underscores_in_headers on;`，忽略header中的下划线等限制
+
+```
+http {
+    ...
+    underscores_in_headers on;
+    ...
+}
+```
+
+```
+    location /gogo/core/ {
+        proxy_pass http://localhost:8083/core/;
+    }
+    location /gogo/file/ {
+        proxy_pass http://localhost:8084/file/;
+    }
+    location /gogo/account/ {
+        proxy_pass http://localhost:8082/account/;
+    }
+```
 
 # Server API for Gogo
 
