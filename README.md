@@ -566,7 +566,6 @@ Res
         "items": [
             {
                 "team_id": 12,
-                "tid": "766",
                 "team_name": "GK",
                 "short_name": "GK",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php3Vk6UO_1057408997_1504853231.png",
@@ -574,7 +573,6 @@ Res
             },
             {
                 "team_id": 11,
-                "tid": "2450",
                 "team_name": "RNG.M",
                 "short_name": "RNG.M",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpE0o8R8_1073428518_1505269754.png",
@@ -582,7 +580,6 @@ Res
             },
             {
                 "team_id": 10,
-                "tid": "3112",
                 "team_name": "EDG.M",
                 "short_name": "EDG.M",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpmiq3GP_1104041337_1504853078.png",
@@ -590,7 +587,6 @@ Res
             },
             {
                 "team_id": 9,
-                "tid": "78",
                 "team_name": "sViper",
                 "short_name": "sViper",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phps09l4L_852880468_1504853493.png",
@@ -598,7 +594,6 @@ Res
             },
             {
                 "team_id": 8,
-                "tid": "82",
                 "team_name": "AS仙阁",
                 "short_name": "AS仙阁",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpXFeqVI_915848246_1504852999.png",
@@ -606,7 +601,6 @@ Res
             },
             {
                 "team_id": 7,
-                "tid": "817",
                 "team_name": "YTG",
                 "short_name": "YTG",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpajPuFN_253173967_1489139306.png",
@@ -614,7 +608,6 @@ Res
             },
             {
                 "team_id": 6,
-                "tid": "767",
                 "team_name": "JC",
                 "short_name": "JC",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phppSw69l_1928455556_1489140572.png",
@@ -622,7 +615,6 @@ Res
             },
             {
                 "team_id": 5,
-                "tid": "81",
                 "team_name": "XQ",
                 "short_name": "X-QUEST",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpAsQ8en_55863151_1504853133.png",
@@ -630,7 +622,6 @@ Res
             },
             {
                 "team_id": 4,
-                "tid": "80",
                 "team_name": "WF",
                 "short_name": "WF",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php8FoNtq_1043328301_1489139259.png",
@@ -638,7 +629,6 @@ Res
             },
             {
                 "team_id": 3,
-                "tid": "73",
                 "team_name": "eStarPro",
                 "short_name": "eStarPro",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpufmVkV_73983205_1505115440.png",
@@ -646,7 +636,6 @@ Res
             },
             {
                 "team_id": 2,
-                "tid": "70",
                 "team_name": "AG超玩会",
                 "short_name": "AG",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php2gzntz_468365754_1489057020.png",
@@ -654,7 +643,6 @@ Res
             },
             {
                 "team_id": 1,
-                "tid": "869",
                 "team_name": "QGhappy",
                 "short_name": "QG",
                 "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpsTEvZs_877137796_1489139248.png",
