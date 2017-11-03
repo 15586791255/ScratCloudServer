@@ -1054,3 +1054,35 @@ Res
     }
 }
 ```
+
+
+## 微信登录
+
+[POST] **application/json** `/account/wx_login`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| code | string | true | 微信授权成功后返回给客户端的code |
+
+> 正常放回
+
+```
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"code": "081oOcKc2zWE7C0QdAJc2YZ8Kc2oOcKy"}' 'http://localhost:8082/account/wx_login'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "uid": "27008002",
+        "refresh_token": "9ZqVdPgDolxh5xER",
+        "access_token": "rT843UYr4mhneBqW",
+        "expired_in": 86400000
+    }
+}
+```
