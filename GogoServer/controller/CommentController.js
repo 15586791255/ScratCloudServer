@@ -71,7 +71,7 @@ const getComments = (req, res) => {
         let items = [];
         for (let item of comments) {
             delete item.delete_ts;
-            if (minIndex == 0 || minIndex > item.news_id) {
+            if (minIndex == 0 || minIndex > item.comment_id) {
                 minIndex = item.comment_id
             }
             // TODO 此处可优化
