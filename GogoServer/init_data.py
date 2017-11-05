@@ -209,9 +209,9 @@ def insert_into_team_member(conn, cursor, team_id, tid, mid, member_name, descri
 	cursor.execute(sql, (team_id, member_name, description, avatar, tid, mid, now_ts, ))
 	conn.commit()
 
-def parse_team_member(conn, cursor, team_id, tid):
+def parse_team_member(conn, cursor, team_id, tid, id):
 	now_ts = time.time()*1000
-	lines = command("curl 'http://pvp.ingame.qq.com/php/ingame/smobamatch/guild_players.php?match_id=8&src=ingame&game=smoba&callback=jsonp4&loading=true&tips=true&guildid=%s&_=%.0f' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % (tid, now_ts))
+	lines = command("curl 'http://pvp.ingame.qq.com/php/ingame/smobamatch/guild_players.php?match_id=%s&src=ingame&game=smoba&callback=jsonp4&loading=true&tips=true&guildid=%s&_=%.0f' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % (id, tid, now_ts))
 	members = json.loads(lines[0].replace('jsonp4(', '')[:-1]).get('data').get('memberllist')
 	for member in members:
 		mid = member.get('memberid')
@@ -220,9 +220,9 @@ def parse_team_member(conn, cursor, team_id, tid):
 		avatar = 'http:' + member.get('membericon')
 		insert_into_team_member(conn, cursor, team_id, tid, mid, member_name, description, avatar)
 
-def parse_team_list(conn, cursor):
+def parse_team(conn, cursor, id):
 	now_ts = time.time()*1000
-	lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchteaminfo8.json?callback=%%3F&t=%.0f&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % now_ts)
+	lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchteaminfo%s.json?callback=%%3F&t=%.0f&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % (id, now_ts))
 	datas = json.loads(lines[0])
 	teams = datas.get('teamlist')
 	for team in teams:
@@ -234,7 +234,7 @@ def parse_team_list(conn, cursor):
 		if short_name == '':
 			short_name = team_name
 		team_id = insert_into_team(conn, cursor, tid, team_name, description, logo, short_name)
-		parse_team_member(conn, cursor, team_id, tid)
+		parse_team_member(conn, cursor, team_id, tid, id)
 
 def insert_into_game(conn, cursor, gid, title, logo, reward, rule, game_ts):
 	sql = 'select game_id from game where gid=%s'
@@ -348,15 +348,23 @@ def parse_race(conn, cursor, curr_id):
 				# print game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts
 				insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, STATUS.get(status), dt_str)
 
+# 8: KPL；10：第三届王者城市赛；1：2017QGC夏季赛； 9 WGC精英赛 11 第三届王者校园争霸赛 7 TGA 12 2017
+MACH_IDS = [8,10,1,9,11,7,12]
+
 def parse_race_list(conn, cursor):
-	# 8: KPL；10：第三届王者城市赛；1：2017QGC夏季赛； 9 WGC精英赛 11 第三届王者校园争霸赛 7 TGA 12 2017
-	parse_race(conn, cursor, 8)
-	parse_race(conn, cursor, 10)
-	parse_race(conn, cursor, 1)
-	parse_race(conn, cursor, 9)
-	parse_race(conn, cursor, 11)
-	parse_race(conn, cursor, 7)
-	parse_race(conn, cursor, 12)
+	for id in MACH_IDS:
+		parse_race(conn, cursor, id)
+	# parse_race(conn, cursor, 8)
+	# parse_race(conn, cursor, 10)
+	# parse_race(conn, cursor, 1)
+	# parse_race(conn, cursor, 9)
+	# parse_race(conn, cursor, 11)
+	# parse_race(conn, cursor, 7)
+	# parse_race(conn, cursor, 12)
+
+def parse_team_list(conn, cursor):
+	for id in MACH_IDS:
+		parse_team(conn, cursor, id)
 
 def main():
 	# lines = command("curl 'http://itea-cdn.qq.com/file/ingame/smoba/matchlivelist8.json?callback=%%3F&t=%.1f&loading=true' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % now_ts)
