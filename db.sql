@@ -153,6 +153,7 @@ score_a varchar(8) not null default '0',
 score_b varchar(8) not null default '0',
 status enum('end', 'holding', 'ready') not null default 'end',
 race_ts bigint unsigned not null default 0,
+dt int unsigned not null default 0 comment '如：20171101',
 create_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
 primary key(race_id)

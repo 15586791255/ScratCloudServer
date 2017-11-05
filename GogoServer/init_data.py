@@ -20,6 +20,9 @@ db = 'scratcloud'
 user = 'scrat'
 passwd = 'scrat'
 
+user = 'root'
+passwd = ''
+
 def http_get(url):
 	print '[GET]:', url
 	req = urllib2.Request(url=url, headers={
@@ -281,20 +284,20 @@ def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, e
 	cursor.execute(sql, (rid,))
 	return cursor.fetchone()[0]
 
-def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, status):
+def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str):
 	sql = 'select count(1) from race where mid=%s'
 	print sql
 	cursor.execute(sql, (mid,))
 	if cursor.fetchone()[0] > 0:
-		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, status=%s where mid=%s'
+		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, status=%s, dt=%s where mid=%s'
 		print sql
-		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, mid, ))
+		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str, mid, ))
 		conn.commit()
 		return
 	now_ts = time.time()*1000
-	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s, status=%s'
+	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s, status=%s, dt=%s'
 	print sql
-	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, status, ))
+	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, status, dt_str, ))
 	conn.commit()
 
 STATUS = {
@@ -334,6 +337,7 @@ def parse_race(conn, cursor, curr_id):
 			match_datas = match.get('list')
 			for item in match_datas:
 				mid = item.get('id')
+				dt_str = item.get('mtime').split(' ')[0].replace('-', '')
 				dt = datetime.datetime.strptime(item.get('mtime'), '%Y-%m-%d %H:%M')
 				race_ts = '%.0f' % (time.mktime(dt.timetuple()) * 1000)
 				team_id_a = item.get('teama_id')
@@ -342,7 +346,7 @@ def parse_race(conn, cursor, curr_id):
 				score_b = item.get('winb')
 				status = item.get('status')
 				# print game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts
-				insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, STATUS.get(status))
+				insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, STATUS.get(status), dt_str)
 
 def parse_race_list(conn, cursor):
 	# 8: KPL；10：第三届王者城市赛；1：2017QGC夏季赛； 9 WGC精英赛 11 第三届王者校园争霸赛 7 TGA 12 2017
