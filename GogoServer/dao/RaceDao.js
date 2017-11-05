@@ -18,6 +18,19 @@ function * getRaces(race_id, size, status) {
     return yield Conn.query(sql, {replacements: replacements, type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getRacesByDt(dt_list) {
+    if (!dt_list || dt_list.length == 0) {
+        return [];
+    }
+    const place_holder = Utils.getSqlPlaceHolder(dt_list.length);
+    return yield Conn.query(`select * from race where dt in (${place_holder}) order by race_ts desc`,
+        {replacements: dt_list, type: Sequelize.QueryTypes.SELECT})
+}
+
+function * getRaceDtList() {
+    return yield Conn.query('select distinct dt from race order by dt desc', {type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getRaces
+    getRaces, getRaceDtList, getRacesByDt
 };

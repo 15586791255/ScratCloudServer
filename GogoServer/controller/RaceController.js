@@ -20,11 +20,12 @@ const formatRace = (race) => {
     delete race.mid;
     delete race.team_id_a;
     delete race.team_id_b;
+    delete race.dt;
     return race;
 };
 
 const getRaces = (req, res) => {
-    let {index, size, status} = req.query;
+    let {index, size} = req.query;
     if (!index) {
         index = 0
     } else if (index < 0) {
@@ -32,7 +33,7 @@ const getRaces = (req, res) => {
     }
 
     if (!size) {
-        size = 20;
+        size = 7;
     } else if (size > 60) {
         size = 60;
     } else if (size <= 0) {
@@ -40,22 +41,48 @@ const getRaces = (req, res) => {
     }
 
     Co(function *() {
-        const races = yield RaceDao.getRaces(index, parseInt(size), status);
-        let min_race_id = index;
+        const race_dt_list = yield RaceDao.getRaceDtList();
+
+        const dt_list = [];
+        let res_index = -1;
+        let curr_size = size;
+        for (let item of race_dt_list) {
+            if (index > 0 && item.dt >= index) {
+                continue;
+            }
+            res_index = item.dt;
+            dt_list.push(item.dt);
+            curr_size--;
+            if (curr_size <= 0) {
+                break;
+            }
+        }
+
+        const res_item_objects = {};
+        const races = yield RaceDao.getRacesByDt(dt_list);
         for (let race of races) {
             const [team_a] = yield TeamDao.getTeamByTid(race.team_id_a);
             const [team_b] = yield TeamDao.getTeamByTid(race.team_id_b);
             race.team_a = formatTeam(team_a);
             race.team_b = formatTeam(team_b);
-            formatRace(race);
-            if (min_race_id == 0 || min_race_id > race.race_id) {
-                min_race_id = race.race_id
+            const curr_dt = race.dt;
+            let item_obj = res_item_objects[curr_dt];
+            if (!item_obj) {
+                item_obj = {dt: curr_dt, items: []};
             }
+            formatRace(race);
+            item_obj.items.push(race);
+            res_item_objects[curr_dt] = item_obj;
         }
-        if (races.length < size) {
-            min_race_id = -1;
+
+        const res_items = [];
+        for (let dt of dt_list) {
+            res_items.push(res_item_objects[dt]);
         }
-        return BaseRes.success(res, {index: min_race_id, items: races});
+        if (res_items.length < size) {
+            res_index = -1;
+        }
+        return BaseRes.success(res, {index: res_index, items: res_items});
     });
 };
 

@@ -42,6 +42,7 @@ global.Sequelize = Sequelize;
 global.Conn = dbPool;
 
 global.BaseRes = require('../util/BaseResponse');
+global.Utils = require('../util/Utils');
 
 app.use('/core', require('../routes/Core'));
 

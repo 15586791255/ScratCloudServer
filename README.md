@@ -790,15 +790,14 @@ Res
 | param | type | require | description |
 | --- | :---: | :---: | --- |
 | index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
-| size | int | false | 返回数量，默认20, size>0 && size<=60 |
-| status | string | false | 状态，`holding`代表正在举行，`end`代表结束，`ready`代表还没开始，不传，默认全部 |
+| size | int | false | 返回数量，默认7, size>0 && size<=60 |
 
 ### Response
 
 > 正常放回
 
 ```
-curl 'http://localhost:8083/core/races?index=0&size=10&status=ready'
+curl 'http://localhost:8083/core/races?index=0&size=7'
 ```
 
 Res
@@ -808,247 +807,161 @@ Res
     "code": 200,
     "msg": "ok",
     "data": {
-        "index": 297,
+        "index": 20171105,
         "items": [
             {
-                "race_id": 306,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510491600000",
-                "create_ts": "1509357587635",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 10,
-                    "team_name": "EDG.M",
-                    "short_name": "EDG.M",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpmiq3GP_1104041337_1504853078.png",
-                    "create_ts": "1509302181807"
-                },
-                "team_b": {
-                    "team_id": 1,
-                    "team_name": "QGhappy",
-                    "short_name": "QG",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpsTEvZs_877137796_1489139248.png",
-                    "create_ts": "1509302181789"
-                }
+                "dt": 20171109,
+                "items": [
+                    {
+                        "race_id": 297,
+                        "race_info_id": 6,
+                        "game_id": 1,
+                        "score_a": "0",
+                        "score_b": "0",
+                        "race_ts": "1510232400000",
+                        "create_ts": "1509357587627",
+                        "status": "ready",
+                        "team_a": {
+                            "team_id": 8,
+                            "team_name": "AS仙阁",
+                            "short_name": "AS仙阁",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpXFeqVI_915848246_1504852999.png",
+                            "create_ts": "1509302181802"
+                        },
+                        "team_b": {
+                            "team_id": 5,
+                            "team_name": "XQ",
+                            "short_name": "X-QUEST",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpAsQ8en_55863151_1504853133.png",
+                            "create_ts": "1509302181797"
+                        }
+                    },
+                    {
+                        "race_id": 296,
+                        "race_info_id": 6,
+                        "game_id": 1,
+                        "score_a": "0",
+                        "score_b": "0",
+                        "race_ts": "1510227000000",
+                        "create_ts": "1509357587626",
+                        "status": "ready",
+                        "team_a": {
+                            "team_id": 6,
+                            "team_name": "JC",
+                            "short_name": "JC",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phppSw69l_1928455556_1489140572.png",
+                            "create_ts": "1509302181798"
+                        },
+                        "team_b": {
+                            "team_id": 2,
+                            "team_name": "AG超玩会",
+                            "short_name": "AG",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php2gzntz_468365754_1489057020.png",
+                            "create_ts": "1509302181793"
+                        }
+                    },
+                    {
+                        "race_id": 295,
+                        "race_info_id": 6,
+                        "game_id": 1,
+                        "score_a": "0",
+                        "score_b": "0",
+                        "race_ts": "1510221600000",
+                        "create_ts": "1509357587626",
+                        "status": "ready",
+                        "team_a": {
+                            "team_id": 11,
+                            "team_name": "RNG.M",
+                            "short_name": "RNG.M",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpE0o8R8_1073428518_1505269754.png",
+                            "create_ts": "1509302181808"
+                        },
+                        "team_b": {
+                            "team_id": 9,
+                            "team_name": "sViper",
+                            "short_name": "sViper",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phps09l4L_852880468_1504853493.png",
+                            "create_ts": "1509302181805"
+                        }
+                    }
+                ]
             },
             {
-                "race_id": 305,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510486200000",
-                "create_ts": "1509357587634",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 12,
-                    "team_name": "GK",
-                    "short_name": "GK",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php3Vk6UO_1057408997_1504853231.png",
-                    "create_ts": "1509302181810"
-                },
-                "team_b": {
-                    "team_id": 2,
-                    "team_name": "AG超玩会",
-                    "short_name": "AG",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php2gzntz_468365754_1489057020.png",
-                    "create_ts": "1509302181793"
-                }
-            },
-            {
-                "race_id": 304,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510480800000",
-                "create_ts": "1509357587633",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 7,
-                    "team_name": "YTG",
-                    "short_name": "YTG",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpajPuFN_253173967_1489139306.png",
-                    "create_ts": "1509302181800"
-                },
-                "team_b": {
-                    "team_id": 4,
-                    "team_name": "WF",
-                    "short_name": "WF",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php8FoNtq_1043328301_1489139259.png",
-                    "create_ts": "1509302181796"
-                }
-            },
-            {
-                "race_id": 303,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510405200000",
-                "create_ts": "1509357587632",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 3,
-                    "team_name": "eStarPro",
-                    "short_name": "eStarPro",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpufmVkV_73983205_1505115440.png",
-                    "create_ts": "1509302181794"
-                },
-                "team_b": {
-                    "team_id": 2,
-                    "team_name": "AG超玩会",
-                    "short_name": "AG",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php2gzntz_468365754_1489057020.png",
-                    "create_ts": "1509302181793"
-                }
-            },
-            {
-                "race_id": 302,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510399800000",
-                "create_ts": "1509357587631",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 12,
-                    "team_name": "GK",
-                    "short_name": "GK",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php3Vk6UO_1057408997_1504853231.png",
-                    "create_ts": "1509302181810"
-                },
-                "team_b": {
-                    "team_id": 8,
-                    "team_name": "AS仙阁",
-                    "short_name": "AS仙阁",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpXFeqVI_915848246_1504852999.png",
-                    "create_ts": "1509302181802"
-                }
-            },
-            {
-                "race_id": 301,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510394400000",
-                "create_ts": "1509357587631",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 10,
-                    "team_name": "EDG.M",
-                    "short_name": "EDG.M",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpmiq3GP_1104041337_1504853078.png",
-                    "create_ts": "1509302181807"
-                },
-                "team_b": {
-                    "team_id": 7,
-                    "team_name": "YTG",
-                    "short_name": "YTG",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpajPuFN_253173967_1489139306.png",
-                    "create_ts": "1509302181800"
-                }
-            },
-            {
-                "race_id": 300,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510318800000",
-                "create_ts": "1509357587630",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 3,
-                    "team_name": "eStarPro",
-                    "short_name": "eStarPro",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpufmVkV_73983205_1505115440.png",
-                    "create_ts": "1509302181794"
-                },
-                "team_b": {
-                    "team_id": 12,
-                    "team_name": "GK",
-                    "short_name": "GK",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php3Vk6UO_1057408997_1504853231.png",
-                    "create_ts": "1509302181810"
-                }
-            },
-            {
-                "race_id": 299,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510313400000",
-                "create_ts": "1509357587629",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 5,
-                    "team_name": "XQ",
-                    "short_name": "X-QUEST",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpAsQ8en_55863151_1504853133.png",
-                    "create_ts": "1509302181797"
-                },
-                "team_b": {
-                    "team_id": 6,
-                    "team_name": "JC",
-                    "short_name": "JC",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phppSw69l_1928455556_1489140572.png",
-                    "create_ts": "1509302181798"
-                }
-            },
-            {
-                "race_id": 298,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510308000000",
-                "create_ts": "1509357587628",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 9,
-                    "team_name": "sViper",
-                    "short_name": "sViper",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phps09l4L_852880468_1504853493.png",
-                    "create_ts": "1509302181805"
-                },
-                "team_b": {
-                    "team_id": 7,
-                    "team_name": "YTG",
-                    "short_name": "YTG",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpajPuFN_253173967_1489139306.png",
-                    "create_ts": "1509302181800"
-                }
-            },
-            {
-                "race_id": 297,
-                "race_info_id": 6,
-                "game_id": 1,
-                "score_a": "0",
-                "score_b": "0",
-                "race_ts": "1510232400000",
-                "create_ts": "1509357587627",
-                "status": "ready",
-                "team_a": {
-                    "team_id": 8,
-                    "team_name": "AS仙阁",
-                    "short_name": "AS仙阁",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpXFeqVI_915848246_1504852999.png",
-                    "create_ts": "1509302181802"
-                },
-                "team_b": {
-                    "team_id": 5,
-                    "team_name": "XQ",
-                    "short_name": "X-QUEST",
-                    "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpAsQ8en_55863151_1504853133.png",
-                    "create_ts": "1509302181797"
-                }
+                "dt": 20171105,
+                "items": [
+                    {
+                        "race_id": 294,
+                        "race_info_id": 6,
+                        "game_id": 1,
+                        "score_a": "0",
+                        "score_b": "0",
+                        "race_ts": "1509886800000",
+                        "create_ts": "1509357587625",
+                        "status": "ready",
+                        "team_a": {
+                            "team_id": 8,
+                            "team_name": "AS仙阁",
+                            "short_name": "AS仙阁",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpXFeqVI_915848246_1504852999.png",
+                            "create_ts": "1509302181802"
+                        },
+                        "team_b": {
+                            "team_id": 2,
+                            "team_name": "AG超玩会",
+                            "short_name": "AG",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php2gzntz_468365754_1489057020.png",
+                            "create_ts": "1509302181793"
+                        }
+                    },
+                    {
+                        "race_id": 293,
+                        "race_info_id": 6,
+                        "game_id": 1,
+                        "score_a": "0",
+                        "score_b": "0",
+                        "race_ts": "1509881400000",
+                        "create_ts": "1509357587624",
+                        "status": "ready",
+                        "team_a": {
+                            "team_id": 9,
+                            "team_name": "sViper",
+                            "short_name": "sViper",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phps09l4L_852880468_1504853493.png",
+                            "create_ts": "1509302181805"
+                        },
+                        "team_b": {
+                            "team_id": 1,
+                            "team_name": "QGhappy",
+                            "short_name": "QG",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpsTEvZs_877137796_1489139248.png",
+                            "create_ts": "1509302181789"
+                        }
+                    },
+                    {
+                        "race_id": 292,
+                        "race_info_id": 6,
+                        "game_id": 1,
+                        "score_a": "0",
+                        "score_b": "0",
+                        "race_ts": "1509876000000",
+                        "create_ts": "1509357587623",
+                        "status": "ready",
+                        "team_a": {
+                            "team_id": 4,
+                            "team_name": "WF",
+                            "short_name": "WF",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/php8FoNtq_1043328301_1489139259.png",
+                            "create_ts": "1509302181796"
+                        },
+                        "team_b": {
+                            "team_id": 11,
+                            "team_name": "RNG.M",
+                            "short_name": "RNG.M",
+                            "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpE0o8R8_1073428518_1505269754.png",
+                            "create_ts": "1509302181808"
+                        }
+                    }
+                ]
             }
         ]
     }
