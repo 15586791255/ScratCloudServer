@@ -158,3 +158,24 @@ create_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
 primary key(race_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table coin (
+coin_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+create_ts bigint unsigned not null default 0,
+primary key(coin_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table coin_plan (
+coin_plan_id int unsigned not null auto_increment comment '自增主键',
+fee int unsigned not null default 0 comment '单位分',
+coin_count int unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(coin_plan_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+insert ignore into coin_plan set fee=600,coin_count=400,create_ts=unix_timestamp(now())*1000;
+insert ignore into coin_plan set fee=3000,coin_count=600,create_ts=unix_timestamp(now())*1000;
+insert ignore into coin_plan set fee=6800,coin_count=1000,create_ts=unix_timestamp(now())*1000;
+insert ignore into coin_plan set fee=12800,coin_count=30000,create_ts=unix_timestamp(now())*1000;

@@ -999,3 +999,48 @@ Res
     }
 }
 ```
+
+## 获取竞猜币套餐
+
+[GET] `/core/coin/plans`
+
+### Response
+
+注意：fee 的单位为分
+
+> 正常返回
+
+```
+curl http://localhost:8083/core/coin/plans
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": [
+        {
+            "coin_plan_id": 1,
+            "fee": 600,
+            "coin_count": 400
+        },
+        {
+            "coin_plan_id": 2,
+            "fee": 3000,
+            "coin_count": 600
+        },
+        {
+            "coin_plan_id": 3,
+            "fee": 6800,
+            "coin_count": 1000
+        },
+        {
+            "coin_plan_id": 4,
+            "fee": 12800,
+            "coin_count": 30000
+        }
+    ]
+}
+```

@@ -7,6 +7,7 @@ const BannerController = require('../controller/BannerController');
 const CommentController = require('../controller/CommentController');
 const TeamController = require('../controller/TeamController');
 const RaceController = require('../controller/RaceController');
+const CoinController = require('../controller/CoinController');
 
 router.get('/test', function (req, res) {
     res.send({
@@ -23,5 +24,6 @@ router.get('/comments', CommentController.getComments);
 router.get('/teams', TeamController.getTeams);
 router.get('/team/:team_id', TeamController.getTeam);
 router.get('/races', RaceController.getRaces);
+router.get('/coin/plans', CoinController.getPlans);
 
 module.exports = router;
