@@ -19,19 +19,16 @@ const getTeams = (req, res) => {
 
     Co(function *() {
         const teams = yield TeamDao.getTeams(index, parseInt(size));
-        let min_index = index;
+        let max_index = -1;
         for (let item of teams) {
             delete item.description;
             delete item.delete_ts;
             delete item.tid;
-            if (min_index == 0 || min_index > item.team_id) {
-                min_index = item.team_id
+            if (max_index == 0 || max_index < item.team_id) {
+                max_index = item.team_id
             }
         }
-        if (teams.length < size) {
-            min_index = -1;
-        }
-        BaseRes.success(res, {index: min_index, items: teams});
+        BaseRes.success(res, {index: max_index, items: teams});
     });
 };
 
