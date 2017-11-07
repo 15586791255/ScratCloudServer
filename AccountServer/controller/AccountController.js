@@ -62,6 +62,9 @@ const smsLogin = (req, res) => {
 
         console.log(account);
         const {uid} = account;
+        if (!uid || uid == '') {
+            return BaseRes.serverError(res);
+        }
         const refresh_token = Utils.randChar(16);
         const refreshTokenId = yield RefreshTokenDao.addToken(uid, refresh_token, pt);
         if (refreshTokenId == 0) {
@@ -188,6 +191,9 @@ const wxLogin = (req, res) => {
                 }
 
                 const {uid} = account;
+                if (!uid || uid == '') {
+                    return BaseRes.serverError(res);
+                }
                 const refresh_token = Utils.randChar(16);
                 const refreshTokenId = yield RefreshTokenDao.addToken(uid, refresh_token, pt);
                 if (refreshTokenId == 0) {
