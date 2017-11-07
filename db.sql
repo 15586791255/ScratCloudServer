@@ -179,3 +179,38 @@ insert ignore into coin_plan set fee=600,coin_count=400,create_ts=unix_timestamp
 insert ignore into coin_plan set fee=3000,coin_count=600,create_ts=unix_timestamp(now())*1000;
 insert ignore into coin_plan set fee=6800,coin_count=1000,create_ts=unix_timestamp(now())*1000;
 insert ignore into coin_plan set fee=12800,coin_count=30000,create_ts=unix_timestamp(now())*1000;
+
+create table order_info (
+order_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+out_trade_no varchar(32) not null default '',
+tp enum('coin_plan') not null default 'coin_plan',
+tp_id int unsigned not null default 0,
+fee int unsigned not null default 0 comment '单位分',
+pay_pt enum('alipay', 'weixin') not null default 'alipay',
+status enum('unpaid', 'paid') not null default 'unpaid',
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+unique key(out_trade_no),
+primary key(order_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table user_coin (
+user_coin_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+coin_count int unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+update_ts bigint unsigned not null default 0,
+unique key(uid),
+primary key(user_coin_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table coin_history (
+history_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+coin_count int unsigned not null default 0,
+tp enum('buy_coin', 'guess', 'gift') not null default 'gift',
+tp_id int unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+primary key(history_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

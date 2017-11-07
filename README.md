@@ -1044,3 +1044,14 @@ Res
     ]
 }
 ```
+
+
+## 生产支付宝订单
+
+[POST] **application/json** `/pay/alipay/order/coin_plan/:id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| id | string | true | coin_plan_id, URL参数 |
