@@ -1061,3 +1061,29 @@ Res
 ```
 {"code":200,"msg":"ok","data":"支付宝的orderInfo"}
 ```
+
+## 获取用户信息
+
+[GET] `/core/user`
+
+### Response
+
+```
+curl -H 'app_key: test_key' -H 'pt: app' -H 'uid: 27008002' -H 'access_token:rT843UYr4mhneBqW' http://localhost:8083/core/user
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "uid": "27008002",
+        "coin": 0,
+        "username": "18924212953",
+        "gender": "male",
+        "avatar": "http://wx.qlogo.cn/mmopen/vi_32/9icoOxiatBlS91mriaJWBvCGHEsw1N8XibwJPNLAQdyYHic7bdqUG4TqbIDX58KmP7InBWdHPU8tEQU0WdgH8tGmB5A/0"
+    }
+}
+```
