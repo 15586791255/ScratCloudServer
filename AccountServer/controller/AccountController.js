@@ -224,6 +224,16 @@ const wxLogin = (req, res) => {
     });
 };
 
+const logout = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    const {refresh_token} = req.body;
+
+    const now_ts = new Date().getTime();
+    AccessTokenDao.updateExpiredTs(uid, access_token, now_ts);
+    RefreshTokenDao.updateExpiredTs(uid, refresh_token, now_ts);
+    return BaseRes.success(res);
+};
+
 module.exports = {
-    login, smsLogin, refreshToken, wxLogin
+    login, smsLogin, refreshToken, wxLogin, logout
 };

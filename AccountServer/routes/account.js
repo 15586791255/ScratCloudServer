@@ -8,6 +8,7 @@ const SmsController = require('../controller/SmsController');
 
 // curl -X POST -H "Content-type: application/json" -H "app_id: app_id_1" -d '{"phone":"13521389587","password":"test"}' 'http://localhost:8082/account/login'
 router.post('/login', AccountController.login);
+router.post('/logout', AccountController.logout);
 // curl -X POST -H "Content-type: application/json" -d '{"tel":"15018329815"}' 'http://localhost:8082/account/sms'
 router.post('/sms', SmsController.sendTencentSms);
 // curl -X POST -H "Content-type: application/json" -H "app_id: app_id_1" -d '{"tel":"15018329815"}' 'http://localhost:8082/account/sms/move_car'

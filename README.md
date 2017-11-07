@@ -1087,3 +1087,25 @@ Res
     }
 }
 ```
+
+## 退出登录接口
+
+[POST] **application/json** `/account/logout`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| refresh_token | string | true | 刷新令牌 |
+
+### Response
+
+```
+curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -H "uid: 27008002" -H 'access_token: k9MQOhagzMg3voff' -d '{"refresh_token": "VReffR2dV7klN1xs"}' 'http://localhost:8082/account/logout'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```

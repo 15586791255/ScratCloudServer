@@ -11,6 +11,11 @@ function * getToken(uid, token, scope) {
         {replacements: [uid, token, scope], type: Sequelize.QueryTypes.SELECT});
 }
 
+function updateExpiredTs(uid, token, ts) {
+    Conn.query("update refresh_token set expired_ts=? where uid=? and token=?",
+        {replacements: [ts, uid, token], type: Sequelize.QueryTypes.UPDATE});
+}
+
 module.exports = {
-    addToken, getToken
+    addToken, getToken, updateExpiredTs
 };
