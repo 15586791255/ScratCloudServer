@@ -34,3 +34,6 @@ curl http://localhost:8085/alipay/test
 ```
 
 nohup java -jar alipay-0.1.0.jar --spring.config.location=alipay-0.1.0.application.properties > alipay-0.1.0.log &
+
+mvn clean package
+scp target/alipay-0.1.0.jar root@xd:/root/projects/springboot/

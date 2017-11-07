@@ -9,9 +9,7 @@ import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.scrat.server.gogo.base.BaseController;
 import com.scrat.server.gogo.base.BaseRowObj;
-import com.scrat.server.gogo.dao.AccessTokenDao;
-import com.scrat.server.gogo.dao.CoinPlanDao;
-import com.scrat.server.gogo.dao.OrderDao;
+import com.scrat.server.gogo.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +32,8 @@ public class PayController extends BaseController {
     private String appPrivateKey;
     @Value("${alipay.app-public-key}")
     private String appPublicKey;
+    @Value("${alipay.alipay-public-key}")
+    private String alipayPublicKey;
     @Value("${alipay.notify-url}")
     private String notifyUrl;
     @Value("${alipay.timeout}")
@@ -47,6 +47,10 @@ public class PayController extends BaseController {
     private CoinPlanDao coinPlanDao;
     @Autowired
     private OrderDao orderDao;
+    @Autowired
+    private CoinHistoryDao coinHistoryDao;
+    @Autowired
+    private UserCoinDao userCoinDao;
 
 //    curl -X POST -H 'Content-type: application/json' -H 'uid:27008002' -H 'access_token: rT843UYr4mhneBqW'  http://localhost:8080/alipay/order/coin_plan/1
     @RequestMapping(value = "/order/coin_plan/{coinPlanId}", method = RequestMethod.POST)
@@ -87,7 +91,7 @@ public class PayController extends BaseController {
         System.out.println(orderId);
         System.out.println(alipayOrderInfo);
 
-        return res().data(map().put("order", alipayOrderInfo).build()).build();
+        return res().data(alipayOrderInfo).build();
     }
 
     private String createSubject(BaseRowObj planInfo) {
@@ -159,16 +163,34 @@ public class PayController extends BaseController {
         }
         System.out.println(params);
         try {
-            boolean flag = AlipaySignature.rsaCheckV1(params, appPublicKey, "utf-8", "RSA2");
+            boolean flag = AlipaySignature.rsaCheckV1(params, alipayPublicKey, "utf-8", "RSA2");
             System.out.println(flag);
             if (!flag) {
                 return "fail";
             }
-            orderDao.updateOrder(orderId, OrderDao.STATUS_PAID);
         } catch (AlipayApiException e) {
             e.printStackTrace();
             return "fail";
         }
+        String coinPlanId = orderInfo.optString("tp_id");
+        BaseRowObj coinPlanInfo = coinPlanDao.getCoinPlan(coinPlanId);
+        if (coinPlanInfo.isEmpty()) {
+            System.out.println("没有找到相关数据："+coinPlanId);
+            return "fail";
+        }
+        String uid = orderInfo.optString("uid");
+        int coinCount = coinPlanInfo.optInt("coin_count");
+
+        coinHistoryDao.addCoinHistory(uid, coinCount, CoinHistoryDao.TYPE_BUG_COIN, orderId);
+        BaseRowObj userCoin = userCoinDao.getUserCoin(uid);
+        if (userCoin.isEmpty()) {
+            userCoinDao.addUserCoin(uid, coinCount);
+        } else {
+            coinCount += userCoin.optInt("coin_count");
+            userCoinDao.updateUserCoin(uid, coinCount);
+        }
+        orderDao.updateOrder(orderId, OrderDao.STATUS_PAID);
+
         return "success";
     }
 

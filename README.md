@@ -1046,7 +1046,7 @@ Res
 ```
 
 
-## 生产支付宝订单
+## 生成支付宝订单
 
 [POST] **application/json** `/pay/alipay/order/coin_plan/:id`
 
@@ -1055,3 +1055,9 @@ Res
 | param | type | require | description |
 | --- | :---: | :---: | --- |
 | id | string | true | coin_plan_id, URL参数 |
+
+### Response
+
+```
+{"code":200,"msg":"ok","data":"支付宝的orderInfo"}
+```
