@@ -209,7 +209,7 @@ create table coin_history (
 history_id int unsigned not null auto_increment comment '自增主键',
 uid char(16) not null default '',
 coin_count int unsigned not null default 0,
-tp enum('buy_coin', 'guess', 'gift') not null default 'gift',
+tp enum('buy_coin', 'guess', 'gift', 'exchange') not null default 'gift',
 tp_id int unsigned not null default 0,
 create_ts bigint unsigned not null default 0,
 primary key(history_id)

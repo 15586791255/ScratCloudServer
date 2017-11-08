@@ -1205,3 +1205,26 @@ Res
     }
 }
 ```
+
+
+## 兑换商品
+
+[post] **application/json** `/mall/exchange/:goods_id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| goods_id | string | true | 商品ID，属于URL参数 |
+
+### Response
+
+```
+curl -X POST -H "Content-type: application/json" -H 'uid: 27008002' -H 'access_token: rT843UYr4mhneBqW' 'http://localhost:8086/mall/exchange/1'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```
