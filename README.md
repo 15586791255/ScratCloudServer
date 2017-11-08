@@ -1144,10 +1144,54 @@ Res
                 "title": "专属皮肤",
                 "coin": 1000,
                 "total": 100,
+                "max_per_buy": 1,
                 "expired_ts": "1510230946000",
                 "create_ts": "1510130946000"
             }
         ]
+    }
+}
+```
+
+
+## 获取商品详情
+
+[GET] `/mall/goods/:goods_id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| goods_id | string | true | 商品ID，属于URL参数 |
+
+### Response
+
+```
+curl 'http://localhost:8086/mall/goods/1'
+```
+
+Res
+
+> 注意: total_buy=-1 代表用户未登录，不知道是否购买过，total_buy>-1 代表用户兑换的次数，可根据此判断是否购买
+max_per_buy 每人最多购买次数，total_apply 代表整个商品已经兑换的次数，total 总共兑换次数
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "goods_id": 1,
+        "tp": "equipment",
+        "cover": "http://game.gtimg.cn/images/yxzj/web201605/page/pf_img1.png",
+        "title": "专属皮肤",
+        "description": "兑换阿珂专属皮肤",
+        "coin": 1000,
+        "total": 100,
+        "max_per_buy": 1,
+        "expired_ts": "1510235312000",
+        "create_ts": "1510135312000",
+        "total_apply": "0",
+        "total_buy": -1
     }
 }
 ```

@@ -11,6 +11,12 @@ function * getGoods(tp, index, size) {
         {replacements: [now_ts, tp, index, size], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getGoodsDetail(goods_id) {
+    return yield Conn.query(
+        'select * from goods where goods_id=?',
+        {replacements: [goods_id], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getGoods
+    getGoods, getGoodsDetail
 };
