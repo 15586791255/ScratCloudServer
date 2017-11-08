@@ -118,6 +118,70 @@ const bugGoods = (req, res) => {
     })
 };
 
+const exchangeHistory = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    let {index, size} = req.query;
+    if (!uid || !access_token) {
+        return BaseRes.tokenError(res, '请登陆');
+    }
+
+    if (!index) {
+        index = 0
+    } else if (index < 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    if (!size) {
+        size = 20;
+    } else if (size > 60) {
+        size = 60;
+    } else if (size <= 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+
+        let min_index = index;
+        const orders = yield GoodsOrderDao.getOrder(uid, index, parseInt(size));
+        const items = [];
+        for (let order of orders) {
+            const [goods] = yield GoodsDao.getGoodsDetail(order.goods_id);
+            if (!goods) {
+                console.log(`error: goods is empty. goods_id=${order.goods_id}. goods_order_id=${order.goods_order_id}`);
+                continue;
+            }
+
+            delete order.delete_ts;
+            items.push({
+                goods_order: order,
+                goods: {
+                    goods_id: goods.goods_id,
+                    title: goods.title,
+                    coin: goods.coin
+                }
+            });
+            if (min_index == 0 || min_index > order.goods_order_id) {
+                min_index = order.goods_order_id;
+            }
+        }
+
+        if (items.length < size) {
+            min_index = -1;
+        }
+        
+        BaseRes.success(res, {index: min_index, items});
+    });
+};
+
 module.exports = {
-    getGoods, getGoodsDetail, bugGoods
+    getGoods, getGoodsDetail, bugGoods, exchangeHistory
 };

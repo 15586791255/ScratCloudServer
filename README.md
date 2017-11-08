@@ -1131,7 +1131,7 @@ Res
 ### Response
 
 ```
-curl http://localhost:8086/mall/goods?tp=equipment&index=0&size=1
+curl 'http://localhost:8086/mall/goods?tp=equipment&index=0&size=1'
 ```
 
 Res
@@ -1209,7 +1209,7 @@ Res
 
 ## 兑换商品
 
-[post] **application/json** `/mall/exchange/:goods_id`
+[POST] **application/json** `/mall/exchange/:goods_id`
 
 ### Param
 
@@ -1227,4 +1227,49 @@ Res
 
 ```
 {"code":200,"msg":"ok"}
+```
+
+## 获取兑换历史
+
+[GET] `/mall/exchange/history`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
+| size | int | false | 返回数量，默认20, size>0 && size<=60 |
+
+### Response
+
+```
+curl -H 'uid: 27008002' -H 'access_token: rT843UYr4mhneBqW' 'http://localhost:8086/mall/exchange/history?index=0&size=1'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "index": -1,
+        "items": [
+            {
+                "goods_order": {
+                    "goods_order_id": 1,
+                    "goods_id": 1,
+                    "uid": "27008002",
+                    "status": "apply",
+                    "create_ts": "1510152068067"
+                },
+                "goods": {
+                    "goods_id": 1,
+                    "title": "专属皮肤",
+                    "coin": 1000
+                }
+            }
+        ]
+    }
+}
 ```
