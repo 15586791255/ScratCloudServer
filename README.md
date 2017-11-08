@@ -1178,8 +1178,12 @@ curl 'http://localhost:8086/mall/goods/1'
 
 Res
 
-> 注意: total_buy=-1 代表用户未登录，不知道是否购买过，total_buy>-1 代表用户兑换的次数，可根据此判断是否购买
-max_per_buy 每人最多购买次数，total_apply 代表整个商品已经兑换的次数，total 总共兑换次数
+> 注意:
+total_buy=-1 代表用户未登录，不知道是否购买过
+total_buy>-1 代表用户兑换的次数，可根据此判断是否购买
+max_per_buy 每人最多购买次数
+total_apply 代表整个商品已经兑换的次数
+total 总共兑换次数
 
 ```
 {
