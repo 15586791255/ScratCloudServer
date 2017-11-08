@@ -15,13 +15,13 @@ function * findByAppIdAndTel(appId, tel) {
         {replacements: [appId, tel], type: Sequelize.QueryTypes.SELECT});
 }
 
-function * addAccount(appId, tel, wxOpenId, wxUnionId, username, pwd, gender, avatar) {
+function * addAccount(appId, tel, wxOpenId, wxUnionId, username, pwd, gender, avatar, qqOpenId) {
     const uid = Utils.rand(8);
     const nowTs = new Date().getTime();
     const [insertId, affectedRows] = yield Conn.query(
-        'insert ignore into account set app_id=?,uid=?,tel=?,wx_openid=?,username=?,pwd=?,gender=?,create_ts=?,wx_unionid=?,avatar=?',
+        'insert ignore into account set app_id=?,uid=?,tel=?,wx_openid=?,username=?,pwd=?,gender=?,create_ts=?,wx_unionid=?,avatar=?,qq_openid=?',
         {
-            replacements: [appId, uid, tel, wxOpenId, username, pwd, gender, nowTs, wxUnionId, avatar],
+            replacements: [appId, uid, tel, wxOpenId, username, pwd, gender, nowTs, wxUnionId, avatar, qqOpenId],
             type: Sequelize.QueryTypes.INSERT
         });
 
@@ -32,9 +32,14 @@ function * findByWxUnionId(wxUnionId) {
     return yield Conn.query(
         'select * from account where wx_unionid=? limit 1',
         {replacements: [wxUnionId], type: Sequelize.QueryTypes.SELECT});
+}
 
+function * findByQqOpenId(qq_openid) {
+    return yield Conn.query(
+        'select * from account where qq_openid=? limit 1',
+        {replacements: [qq_openid], type: Sequelize.QueryTypes.SELECT});
 }
 
 module.exports = {
-    findByUid, findByAppIdAndTel, addAccount, findByAccountId, findByWxUnionId
+    findByUid, findByAppIdAndTel, addAccount, findByAccountId, findByWxUnionId, findByQqOpenId
 };

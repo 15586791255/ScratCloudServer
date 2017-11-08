@@ -18,5 +18,6 @@ router.post('/sms_login', AccountController.smsLogin);
 //curl -X POST -H "Content-type: application/json" -H "app_key: test_key" -H "pt: app" -d '{"refresh_token": "bGDep7WTLCIqjlTw"}' 'http://localhost:8082/account/96008684/token'
 router.post('/token', AccountController.refreshToken);
 router.post('/wx_login', AccountController.wxLogin);
+router.post('/qq_login', AccountController.qqLogin);
 
 module.exports = router;

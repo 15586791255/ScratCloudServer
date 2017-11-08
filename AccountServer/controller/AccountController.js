@@ -27,6 +27,18 @@ const convertWxSex = (sex) => {
     return 'unknown';
 };
 
+const convertQqSex = (sex) => {
+    if (sex == '男') {
+        return 'male';
+    }
+
+    if (sex == '女') {
+        return 'female';
+    }
+
+    return 'unknown';
+};
+
 const smsLogin = (req, res) => {
     const {app_key, pt} = req.headers;
     const {tel, code} = req.body;
@@ -53,7 +65,7 @@ const smsLogin = (req, res) => {
 
         let [account] = yield AccountDao.findByAppIdAndTel(app.app_id, tel);
         if (!account) {
-            const accountId = yield AccountDao.addAccount(app.app_id, tel, '', '', tel, '', 'unknown', '');
+            const accountId = yield AccountDao.addAccount(app.app_id, tel, '', '', tel, '', 'unknown', '', '');
             if (accountId == 0) {
                 return BaseRes.serverError(res, '创建账号失败');
             }
@@ -182,7 +194,7 @@ const wxLogin = (req, res) => {
 
                 let [account] = yield AccountDao.findByWxUnionId(unionid);
                 if (!account) {
-                    const accountId = yield AccountDao.addAccount(app.app_id, '', openid, unionid, nickname, '', convertWxSex(sex), headimgurl);
+                    const accountId = yield AccountDao.addAccount(app.app_id, '', openid, unionid, nickname, '', convertWxSex(sex), headimgurl, '');
                     if (accountId == 0) {
                         return BaseRes.serverError(res, '创建账号失败');
                     }
@@ -224,6 +236,70 @@ const wxLogin = (req, res) => {
     });
 };
 
+const qqLogin = (req, res) => {
+    const {app_key, pt} = req.headers;
+    const {openid, access_token} = req.body;
+    if (!openid || !access_token || !app_key || !pt) {
+        return BaseRes.paramError(res);
+    }
+
+    rp({
+        method: 'GET',
+        uri: `https://graph.qq.com/user/get_user_info?access_token=${access_token}&oauth_consumer_key=${Config.qqAppId}&openid=${openid}`,
+        json: true
+    }).then(userBody => {
+        const {ret, msg, nickname, figureurl_qq_2, gender} = userBody;
+        if (ret != 0) {
+            console.log(msg);
+            return BaseRes.notFoundError(res);
+        }
+
+        Co(function *() {
+            const [app] = yield AppDao.findByAppKey(app_key);
+            if (!app) {
+                return BaseRes.paramError(res);
+            }
+
+            let [account] = yield AccountDao.findByQqOpenId(openid);
+            if (!account) {
+                const accountId = yield AccountDao.addAccount(app.app_id, '', '', '', nickname, '', convertQqSex(gender), figureurl_qq_2, openid);
+                if (accountId == 0) {
+                    return BaseRes.serverError(res, '创建账号失败');
+                }
+
+                account = yield AccountDao.findByAccountId(accountId);
+            }
+
+            const {uid} = account;
+            if (!uid || uid == '') {
+                return BaseRes.serverError(res);
+            }
+            const refresh_token = Utils.randChar(16);
+            const refreshTokenId = yield RefreshTokenDao.addToken(uid, refresh_token, pt);
+            if (refreshTokenId == 0) {
+                return BaseRes.serverError(res);
+            }
+            const access_token = Utils.randChar(16);
+            const accessTokenId = yield AccessTokenDao.addToken(uid, access_token, pt);
+            if (accessTokenId == 0) {
+                return BaseRes.serverError(res);
+            }
+
+            const data = {
+                uid,
+                refresh_token,
+                access_token,
+                expired_in: Config.expiredTokenInTs
+            };
+
+            return BaseRes.success(res, data);
+        });
+    }).catch(err => {
+        console.log(err);
+        return BaseRes.serverError(res, err);
+    })
+};
+
 const logout = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
     const {refresh_token} = req.body;
@@ -235,5 +311,5 @@ const logout = (req, res) => {
 };
 
 module.exports = {
-    login, smsLogin, refreshToken, wxLogin, logout
+    login, smsLogin, refreshToken, wxLogin, logout, qqLogin
 };

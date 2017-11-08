@@ -1275,3 +1275,35 @@ Res
     }
 }
 ```
+
+## QQ登录
+
+[POST] **application/json** `/account/qq_login`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| openid | string | true | QQ返回的openid |
+| access_token | string | true | QQ返回的access_token |
+
+### Response
+
+```
+curl -X POST -H 'pt: app' -H 'app_key:test_key' -H "Content-type: application/json" -d '{"openid":"openid","access_token":"access"}' http://localhost:8082/account/qq_login
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "uid": "27008002",
+        "refresh_token": "9ZqVdPgDolxh5xER",
+        "access_token": "rT843UYr4mhneBqW",
+        "expired_in": 86400000
+    }
+}
+```
