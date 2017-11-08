@@ -1248,6 +1248,8 @@ curl -H 'uid: 27008002' -H 'access_token: rT843UYr4mhneBqW' 'http://localhost:80
 
 Res
 
+> 注意：status=apply 处理中；status=done 已完成
+
 ```
 {
     "code": 200,
