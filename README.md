@@ -22,6 +22,12 @@ http {
     location /api/account/ {
         proxy_pass http://localhost:8082/account/;
     }
+    location /api/pay/alipay/ {
+        proxy_pass http://localhost:8085/alipay/;
+    }
+    location /api/mall/ {
+        proxy_pass http://localhost:8086/mall/;
+    }
 ```
 
 # Server API for Gogo
