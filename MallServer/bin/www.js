@@ -44,6 +44,8 @@ global.Conn = dbPool;
 global.BaseRes = require('../util/BaseResponse');
 global.Utils = require('../util/Utils');
 
+app.use('/mall', require('../routes/Mall'));
+
 app.listen(Config.port, Config.host, function () {
     console.log(`Visit at http://${Config.host}:${Config.port}`);
 });

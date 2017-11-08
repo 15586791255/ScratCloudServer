@@ -1109,3 +1109,45 @@ Res
 ```
 {"code":200,"msg":"ok"}
 ```
+
+## 获取商品列表
+
+[GET] `/mall/goods`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
+| size | int | false | 返回数量，默认20, size>0 && size<=60 |
+| tp | string | true | `equipment`装备; `lucky_money`红包; `game_around`游戏周边; `virtual`虚拟物品 |
+
+### Response
+
+```
+curl http://localhost:8086/mall/goods?tp=equipment&index=0&size=1
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "index": -1,
+        "items": [
+            {
+                "goods_id": 1,
+                "tp": "equipment",
+                "cover": "http://game.gtimg.cn/images/yxzj/web201605/page/pf_img1.png",
+                "title": "专属皮肤",
+                "coin": 1000,
+                "total": 100,
+                "expired_ts": "1510230946000",
+                "create_ts": "1510130946000"
+            }
+        ]
+    }
+}
+```

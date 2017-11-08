@@ -214,3 +214,35 @@ tp_id int unsigned not null default 0,
 create_ts bigint unsigned not null default 0,
 primary key(history_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table goods (
+goods_id int unsigned not null auto_increment comment '自增主键',
+tp varchar(16) not null default '',
+cover varchar(512) not null default '',
+title varchar(128) not null default '',
+description text not null,
+coin int unsigned not null default 0,
+total int unsigned not null default 0,
+expired_ts bigint unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(goods_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+--equipment 装备
+--lucky_money 红包
+--game_around 游戏周边
+--virtual 虚拟物品
+
+insert ignore into goods set cover='http://game.gtimg.cn/images/yxzj/web201605/page/pf_img1.png', tp='equipment', title='专属皮肤', description='兑换阿珂专属皮肤', coin=1000, total=100, create_ts=unix_timestamp(now())*1000, expired_ts=unix_timestamp(now())*1000+100000000;
+
+create table goods_order (
+goods_order_id int unsigned not null auto_increment comment '自增主键',
+goods_id int unsigned not null default 0,
+uid char(16) not null default '',
+status enum('apply', 'done') not null default 'apply',
+create_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(goods_order_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
