@@ -69,7 +69,7 @@ const smsLogin = (req, res) => {
             if (accountId == 0) {
                 return BaseRes.serverError(res, '创建账号失败');
             }
-            account = yield AccountDao.findByAccountId(accountId);
+            [account] = yield AccountDao.findByAccountId(accountId);
         }
 
         console.log(account);
@@ -199,7 +199,7 @@ const wxLogin = (req, res) => {
                         return BaseRes.serverError(res, '创建账号失败');
                     }
 
-                    account = yield AccountDao.findByAccountId(accountId);
+                    [account] = yield AccountDao.findByAccountId(accountId);
                 }
 
                 const {uid} = account;
@@ -267,7 +267,7 @@ const qqLogin = (req, res) => {
                     return BaseRes.serverError(res, '创建账号失败');
                 }
 
-                account = yield AccountDao.findByAccountId(accountId);
+                [account] = yield AccountDao.findByAccountId(accountId);
             }
 
             const {uid} = account;
