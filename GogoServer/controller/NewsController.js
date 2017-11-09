@@ -39,11 +39,13 @@ const getNews = (req, res) => {
 const getNewsDetail = (req, res) => {
     const {news_id} = req.params;
     Co(function *() {
-        const newsList = yield NewsDao.getNewsDetail(news_id);
-        if(newsList.length == 0) {
+        const [news] = yield NewsDao.getNewsDetail(news_id);
+        if (!news) {
             return BaseRes.notFoundError(res);
         }
-        BaseRes.success(res, newsList[0]);
+        const [comment_count] = yield CommentDao.getTotalComment('news', news_id);
+        news.comment_count = parseInt(comment_count.total);
+        BaseRes.success(res, news);
     });
 };
 

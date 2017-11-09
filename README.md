@@ -215,6 +215,7 @@ Res
         "tp": "KPL",
         "news_ts": "1509173893000",
         "view_count": 0,
+        "comment_count":5,
         "cover": "https://itea-cdn.qq.com/file/tgl/20171027/0.1509036733.2056077a00b5e89d0eb6793b06773159.230*140_71784.png",
         "url": "",
         "body": "<video controls=\"\" autoplay=\"\" name=\"media\"><source src=\"http://120.198.235.230/ugcyd.qq.com/flv/226/45/m0566771th6.mp4\" type=\"video/mp4\"></video>"
