@@ -21,6 +21,11 @@ function * getComments(comment_id, tp, target_id, size) {
         {replacements: [tp, target_id, size], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getTotalComment(tp, target_id) {
+    return yield Conn.query('select count(1) as total from comment where tp=? and target_id=?',
+        {replacements: [tp, target_id], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    addComment, getComment, getComments
+    addComment, getComment, getComments, getTotalComment
 };

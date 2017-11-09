@@ -147,6 +147,7 @@ Res
                 "tp": "KPL",
                 "news_ts": "1509173893000",
                 "view_count": 0,
+                "comment_count":5,
                 "cover": "https://itea-cdn.qq.com/file/tgl/20171027/0.1509036733.2056077a00b5e89d0eb6793b06773159.230*140_71784.png"
             },
             {
@@ -156,6 +157,7 @@ Res
                 "tp": "KPL",
                 "news_ts": "1509173922000",
                 "view_count": 0,
+                "comment_count":5,
                 "cover": "https://itea-cdn.qq.com/file/tgl/20171027/10.1509036412.2d77cdb8b7fef3184c4d67d21215d051.230*140_83683.png"
             }
         ]

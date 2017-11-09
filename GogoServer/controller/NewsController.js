@@ -1,4 +1,5 @@
 const NewsDao = require('../dao/NewsDao');
+const CommentDao = require('../dao/CommentDao');
 
 const getNews = (req, res) => {
     let {index, size} = req.query;
@@ -22,8 +23,10 @@ const getNews = (req, res) => {
         for (let item of newsList) {
             delete item.body;
             delete item.url;
+            const [comment_count] = yield CommentDao.getTotalComment('news', item.news_id);
+            item.comment_count = parseInt(comment_count.total);
             if (minIndex == 0 || minIndex > item.news_id) {
-                minIndex = item.news_id
+                minIndex = item.news_id;
             }
         }
         if (newsList.length < size) {
