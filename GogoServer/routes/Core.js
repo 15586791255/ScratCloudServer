@@ -27,5 +27,6 @@ router.get('/team/:team_id', TeamController.getTeam);
 router.get('/races', RaceController.getRaces);
 router.get('/coin/plans', CoinController.getPlans);
 router.get('/user', UserController.getUserInfo);
+router.post('/user', UserController.updateUserInfo);
 
 module.exports = router;

@@ -1307,3 +1307,27 @@ Res
     }
 }
 ```
+
+## 更新用户信息
+
+[POST] **application/json** `/core/user`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| username | string | true | 昵称 |
+| avatar | string | true | 头像地址 |
+| gender | string | true | 性别。male: 男； female：女； unknown： 未知 |
+
+### Response
+
+```
+curl -X POST -H 'uid: 27008002' -H 'access_token: rT843UYr4mhneBqW' -H 'pt: app' -H 'app_key:test_key' -H "Content-type: application/json" -d '{"username": "hh", "gender": "female", "avatar":"http://wx.qlogo.cn/mmopen/vi_32/9icoOxiatBlS91mriaJWBvCGHEsw1N8XibwJPNLAQdyYHic7bdqUG4TqbIDX58KmP7InBWdHPU8tEQU0WdgH8tGmB5A/0"}' 'http://localhost:8083/core/user'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```
