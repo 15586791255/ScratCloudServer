@@ -1,5 +1,5 @@
 {
-  "name": "PayServer",
+  "name": "WechatPayServer",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
