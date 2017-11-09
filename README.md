@@ -1354,6 +1354,32 @@ curl -X POST -H 'uid: 27008002' -H 'access_token: rT843UYr4mhneBqW' -H 'pt: app'
 Res
 
 ```
-{"code":200,"msg":"ok"
+{"code":200,"msg":"ok"}
 ```
 
+## 获取地址信息
+
+[GET] `/core/address`
+
+### Response
+
+```
+curl -H 'uid: 27008002' -H 'access_token: rT843UYr4mhneBqW' -H 'pt: app' -H 'app_key:test_key' 'http://localhost:8083/core/address'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "address_id": 1,
+        "uid": "27008002",
+        "tel": "t",
+        "receiver": "r",
+        "location": "l",
+        "address_detail": "a"
+    }
+}
+```

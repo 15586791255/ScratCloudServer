@@ -106,6 +106,41 @@ const updateAddress = (req, res) => {
     });
 };
 
+const getAddress = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    if (!uid || !access_token) {
+        return BaseRes.tokenError(res, '请登陆');
+    }
+
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+
+        const [address] = yield AddressDao.getAddress(uid);
+        if (!address) {
+            BaseRes.success(res, {
+                uid:uid,
+                tel:"",
+                receiver: "",
+                location: "",
+                address_detail: ""
+            });
+        } else {
+            delete address.delete_ts;
+            delete address.update_ts;
+            delete address.create_ts;
+            BaseRes.success(res, address);
+        }
+    });
+};
+
 module.exports = {
-    getUserInfo, updateUserInfo, updateAddress
+    getUserInfo, updateUserInfo, updateAddress, getAddress
 };
