@@ -28,5 +28,6 @@ router.get('/races', RaceController.getRaces);
 router.get('/coin/plans', CoinController.getPlans);
 router.get('/user', UserController.getUserInfo);
 router.post('/user', UserController.updateUserInfo);
+router.post('/address', UserController.updateAddress);
 
 module.exports = router;

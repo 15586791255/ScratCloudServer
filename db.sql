@@ -248,3 +248,15 @@ delete_ts bigint unsigned not null default 0,
 primary key(goods_order_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
+create table address (
+address_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+tel varchar(11) not null default '',
+receiver varchar(32) not null default '',
+location varchar(128) not null default '',
+address_detail varchar(512) not null default '',
+create_ts bigint unsigned not null default 0,
+update_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(address_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

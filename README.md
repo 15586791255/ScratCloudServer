@@ -1331,3 +1331,29 @@ Res
 ```
 {"code":200,"msg":"ok"}
 ```
+
+## 更新地址信息
+
+[POST] **application/json** `/core/address`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| receiver | string | true | 收件人 |
+| tel | string | true | 联系电话 |
+| location | string | true | 地区 |
+| address_detail | string | true | 地址详情 |
+
+### Response
+
+```
+curl -X POST -H 'uid: 27008002' -H 'access_token: rT843UYr4mhneBqW' -H 'pt: app' -H 'app_key:test_key' -H "Content-type: application/json" -d '{"receiver": "r", "tel":"t", "location":"l", "address_detail": "a"}' 'http://localhost:8083/core/address'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"
+```
+
