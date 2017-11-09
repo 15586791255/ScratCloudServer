@@ -4,8 +4,9 @@ function * findByUid(uid) {
 }
 
 function updateAccount(uid, avatar, gender, username) {
-    Conn.query('update account set avatar=?, gender=?, username=? where uid=?',
-        {replacements: [avatar, gender, username, uid], type: Sequelize.QueryTypes.UPDATE})
+    const now_ts = new Date().getTime();
+    Conn.query('update account set avatar=?, gender=?, username=?, update_ts=? where uid=?',
+        {replacements: [avatar, gender, username, now_ts, uid], type: Sequelize.QueryTypes.UPDATE})
 }
 
 module.exports = {
