@@ -20,11 +20,11 @@ function * addOrder(goods_id, uid) {
 
 function * getOrder(uid, goods_order_id, size) {
     if (!goods_order_id || goods_order_id == 0) {
-        return yield Conn.query('select * from goods_order where uid=? and delete_ts=0 limit ?',
+        return yield Conn.query('select * from goods_order where uid=? and delete_ts=0 order by goods_order_id desc limit ?',
             {replacements: [uid, size], type: Sequelize.QueryTypes.SELECT});
     }
 
-    return yield Conn.query('select * from goods_order where uid=? and goods_order_id<? and delete_ts=0 limit ?',
+    return yield Conn.query('select * from goods_order where uid=? and goods_order_id<? and delete_ts=0 order by goods_order_id desc limit ?',
         {replacements: [uid, goods_order_id, size], type: Sequelize.QueryTypes.SELECT});
 }
 
