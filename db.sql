@@ -260,3 +260,39 @@ update_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
 primary key(address_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table betting (
+betting_id int unsigned not null auto_increment comment '自增主键',
+title varchar(128) not null default '',
+race_id int unsigned not null default 0,
+expired_ts bigint unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+update_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(betting_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table betting_item (
+betting_item_id int unsigned not null auto_increment comment '自增主键',
+betting_id int unsigned not null default 0,
+title varchar(128) not null default '',
+odds float unsigned not null default 1,
+create_ts bigint unsigned not null default 0,
+update_ts bigint unsigned not null default 0,
+delete_ts bigint unsigned not null default 0,
+primary key(betting_item_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table user_betting (
+user_betting_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+betting_item_id int unsigned not null default 0,
+coin int unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+primary key(user_betting_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+insert ignore into betting set race_id=306, title='你觉得哪一队会赢？', create_ts=unix_timestamp(now())*1000, expired_ts=unix_timestamp(now())*1000+10000000;
+insert ignore into betting_item set betting_id=1, title='AG超会玩',odds=1.2,create_ts=unix_timestamp(now())*1000;
+insert ignore into betting_item set betting_id=1, title='GK',odds=2.1,create_ts=unix_timestamp(now())*1000;
+insert ignore into user_betting set uid='27008002', betting_item_id=1,coin=500,create_ts=unix_timestamp(now())*1000;

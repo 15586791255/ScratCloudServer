@@ -1,5 +1,9 @@
 const RaceDao = require('../dao/RaceDao');
 const TeamDao = require('../dao/TeamDao');
+const BettingDao = require('../dao/BettingDao');
+const BettingItemDao = require('../dao/BettingItemDao');
+const UserBettingDao = require('../dao/UserBettingDao');
+const RaceInfoDao = require('../dao/RaceInfoDao');
 
 const formatTeam = (team) => {
     if (!team) {
@@ -44,7 +48,7 @@ const getRaces = (req, res) => {
         const race_dt_list = yield RaceDao.getRaceDtList();
 
         const dt_list = [];
-        let res_index = -1;
+        let res_index;
         let curr_size = size;
         for (let item of race_dt_list) {
             if (index > 0 && item.dt >= index) {
@@ -86,6 +90,76 @@ const getRaces = (req, res) => {
     });
 };
 
+const getRacesDetail = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    const {race_id} = req.params;
+
+    Co(function *() {
+        const [race] = yield RaceDao.getRaceDetail(race_id);
+        if (!race) {
+            return BaseRes.notFoundError(res);
+        }
+
+        if (race.delete_ts > 0) {
+            return BaseRes.notFoundError(res, '赛事已被删除');
+        }
+
+        const [team_a] = yield TeamDao.getTeamByTid(race.team_id_a);
+        const [team_b] = yield TeamDao.getTeamByTid(race.team_id_b);
+        race.team_a = formatTeam(team_a);
+        race.team_b = formatTeam(team_b);
+        formatRace(race);
+
+        const [race_info] = yield RaceInfoDao.getRaceInfo(race.race_info_id);
+        race.description = race_info.description;
+        race.race_name = race_info.race_name;
+        race.start_ts = race_info.start_ts;
+        race.end_ts = race_info.end_ts;
+
+        const betting_list = yield BettingDao.getBetting(race_id);
+        if (betting_list.length == 0) {
+            return BaseRes.success(res, {race, betting: []});
+        }
+
+        for (let betting of betting_list) {
+            delete betting.create_ts;
+            delete betting.update_ts;
+            delete betting.delete_ts;
+
+            let has_betting = false;
+            const betting_items = yield BettingItemDao.getBettingItem(betting.betting_id);
+            for (let betting_item of betting_items) {
+                delete betting_item.create_ts;
+                delete betting_item.update_ts;
+                delete betting_item.delete_ts;
+
+                if (!uid) {
+                    betting_item.coin = -1;
+                    continue;
+                }
+
+                const [user_betting] = yield UserBettingDao.getUserBettingCoin(uid, betting_item.betting_item_id);
+                if (user_betting.total) {
+                    betting_item.coin = parseInt(user_betting.total);
+                    has_betting = true;
+                } else {
+                    betting_item.coin = 0;
+                }
+            }
+            betting.items = betting_items;
+            if (!uid) {
+                betting.betting_status = 'unknown';
+            } else if (has_betting) {
+                betting.betting_status = 'already_bet';
+            } else {
+                betting.betting_status = 'not_bet'
+            }
+        }
+
+        BaseRes.success(res, {race, betting: betting_list});
+    });
+};
+
 module.exports = {
-    getRaces
+    getRaces, getRacesDetail
 };

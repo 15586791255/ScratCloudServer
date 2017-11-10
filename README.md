@@ -1386,3 +1386,85 @@ Res
     }
 }
 ```
+
+## 获取竞猜详情
+
+[GET] `/core/race/:race_id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| race_id | string | true | 赛事ID |
+
+### Response
+
+```
+curl -H 'uid:27008002' http://localhost:8083/core/race/408
+```
+
+Res
+
+> 注意  betting_status=already_bet 已投注； betting_status=not_bet 未投注； betting_status=unknown 未知（没登录的情况会这样）
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "race": {
+            "race_id": 306,
+            "race_info_id": 6,
+            "game_id": 1,
+            "score_a": "0",
+            "score_b": "0",
+            "race_ts": "1510491600000",
+            "create_ts": "1509357587635",
+            "status": "ready",
+            "team_a": {
+                "team_id": 10,
+                "team_name": "EDG.M",
+                "short_name": "EDG.M",
+                "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpmiq3GP_1104041337_1504853078.png",
+                "create_ts": "1509302181807"
+            },
+            "team_b": {
+                "team_id": 1,
+                "team_name": "QGhappy",
+                "short_name": "QG",
+                "logo": "http://ossweb-img.qq.com/htdocs/weiguanwang/smoba/phpsTEvZs_877137796_1489139248.png",
+                "create_ts": "1509302181789"
+            },
+            "description": "",
+            "race_name": "2017秋季赛·常规赛",
+            "start_ts": "1505988000000",
+            "end_ts": "1510491600000"
+        },
+        "betting": [
+            {
+                "betting_id": 1,
+                "title": "你觉得哪一队会赢？",
+                "race_id": 306,
+                "expired_ts": "1510340314000",
+                "items": [
+                    {
+                        "betting_item_id": 1,
+                        "betting_id": 1,
+                        "title": "AG超会玩",
+                        "odds": 1.2,
+                        "coin": 500
+                    },
+                    {
+                        "betting_item_id": 2,
+                        "betting_id": 1,
+                        "title": "GK",
+                        "odds": 2.1,
+                        "coin": 0
+                    }
+                ],
+                "betting_status": "already_bet"
+            }
+        ]
+    }
+}
+```

@@ -31,6 +31,11 @@ function * getRaceDtList() {
     return yield Conn.query('select distinct dt from race order by dt desc', {type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getRaceDetail(race_id) {
+    return yield Conn.query('select * from race where race_id=? limit 1', 
+        {replacements: [race_id], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getRaces, getRaceDtList, getRacesByDt
+    getRaces, getRaceDtList, getRacesByDt, getRaceDetail
 };
