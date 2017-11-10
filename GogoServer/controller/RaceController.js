@@ -4,6 +4,9 @@ const BettingDao = require('../dao/BettingDao');
 const BettingItemDao = require('../dao/BettingItemDao');
 const UserBettingDao = require('../dao/UserBettingDao');
 const RaceInfoDao = require('../dao/RaceInfoDao');
+const UserCoinDao = require('../dao/UserCoinDao');
+const CoinHistoryDao = require('../dao/CoinHistoryDao');
+const AccessTokenDao = require('../dao/AccessTokenDao');
 
 const formatTeam = (team) => {
     if (!team) {
@@ -160,6 +163,66 @@ const getRacesDetail = (req, res) => {
     });
 };
 
+const createBetting = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    console.log(req.body);
+    const betting_orders = req.body;
+
+    const success = [];
+    const fail = [];
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+
+        const [coin_info] = yield UserCoinDao.findByUid(uid);
+        if (!coin_info || coin_info.coin_count <= 0) {
+            return BaseRes.forbiddenError(res, '投注失败，竞猜币不足');
+            // coin = coin_info.coin_count;
+        }
+
+        let coin = coin_info.coin_count;
+
+        for (let order of betting_orders) {
+            if (order.coin > coin) {
+                fail.push(order.betting_item_id);
+                continue;
+            }
+            
+            const [betting_item] = yield BettingItemDao.getBettingItemDetail(order.betting_item_id);
+            if (!betting_item) {
+                fail.push(order.betting_item_id);
+                continue;
+            }
+
+            const [betting] = yield BettingDao.getBettingDetail(betting_item.betting_id);
+            if (!betting || betting.delete_ts > 0 || betting.expired_ts < new Date().getTime()) {
+                fail.push(order.betting_item_id);
+                continue;
+            }
+
+            const user_betting_id = yield UserBettingDao.addUserBetting(uid, order.betting_item_id, order.coin);
+            if (user_betting_id <= 0) {
+                fail.push(order.betting_item_id);
+                continue;
+            }
+
+            yield UserCoinDao.decreaseCoin(uid, order.coin);
+            coin -= order.coin;
+            yield CoinHistoryDao.addCoinHistory(uid, order.coin, 'betting', user_betting_id);
+            success.push(order.betting_item_id);
+        }
+
+        BaseRes.success(res, {success, fail});
+    });
+};
+
 module.exports = {
-    getRaces, getRacesDetail
+    getRaces, getRacesDetail, createBetting
 };

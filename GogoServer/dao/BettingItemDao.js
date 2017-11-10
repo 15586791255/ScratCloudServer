@@ -4,6 +4,11 @@ function * getBettingItem(betting_id) {
 
 }
 
+function * getBettingItemDetail(betting_item_id) {
+    return yield Conn.query('select * from betting_item where betting_item_id=? limit 1',
+        {replacements: [betting_item_id], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getBettingItem
+    getBettingItem, getBettingItemDetail
 };

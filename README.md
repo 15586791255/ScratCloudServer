@@ -1468,3 +1468,28 @@ Res
     }
 }
 ```
+
+## 参与竞猜
+
+[POST] **application/json** `/core/betting`
+
+### Param
+
+> 注意，这个body是数组。大概长这样 `[{"coin": 500, "betting_item_id": 1}]`
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| coin | int | true | 竞猜币数量 |
+| betting_item_id | string | true | ID |
+
+### Response
+
+```
+curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -d '[{"coin": 500, "betting_item_id": 1}]' http://localhost:8083/core/betting
+```
+
+Res
+
+```
+{"code":200,"msg":"ok","data":{"success":[1],"fail":[]}
+```
