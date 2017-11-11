@@ -10,6 +10,18 @@ function * addUserBetting(uid, betting_item_ids, coin, odds) {
     return insert_id;
 }
 
+function * getUserBetting(uid, user_betting_id, size) {
+    if (!user_betting_id || user_betting_id == 0) {
+        return yield Conn.query(
+            'select * from user_betting where uid=? order by user_betting_id desc limit ?',
+            {replacements: [uid, size], type: Sequelize.QueryTypes.SELECT})
+    }
+
+    return yield Conn.query(
+        'select * from user_betting where uid=? and user_betting_id<? order by user_betting_id desc limit ?',
+        {replacements: [uid, user_betting_id, size], type: Sequelize.QueryTypes.SELECT})
+}
+
 module.exports = {
-    getUserBettingCoin, addUserBetting
+    getUserBettingCoin, addUserBetting, getUserBetting
 };

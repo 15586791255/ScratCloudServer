@@ -1493,3 +1493,127 @@ Res
 ```
 {"code":200,"msg":"ok"}
 ```
+
+
+## 获取竞猜历史
+
+[GET] `/core/betting`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
+| size | int | false | 返回数量，默认20, size>0 && size<=60 |
+
+### Response
+
+```
+curl -H 'uid:27008002' 'http://localhost:8083/core/betting?index=0&size=2'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "index": 2,
+        "items": [
+            {
+                "user_betting_id": 3,
+                "uid": "27008002",
+                "betting_item_ids": [
+                    "1"
+                ],
+                "coin": 500,
+                "odds": 1.2,
+                "status": "apply",
+                "create_ts": "1510381416625",
+                "bettings": [
+                    {
+                        "betting_id": 1,
+                        "title": "全场比赛结果为？",
+                        "race_id": 306,
+                        "expired_ts": "1510417224000",
+                        "items": [
+                            {
+                                "betting_item_id": 1,
+                                "betting_id": 1,
+                                "title": "EDG.M 胜",
+                                "odds": 1.2
+                            }
+                        ]
+                    }
+                ],
+                "race": {
+                    "race_name": "2017秋季赛·常规赛",
+                    "description": ""
+                }
+            },
+            {
+                "user_betting_id": 2,
+                "uid": "27008002",
+                "betting_item_ids": [
+                    "1",
+                    "3",
+                    "5"
+                ],
+                "coin": 500,
+                "odds": 1.60056,
+                "status": "apply",
+                "create_ts": "1510381402375",
+                "bettings": [
+                    {
+                        "betting_id": 1,
+                        "title": "全场比赛结果为？",
+                        "race_id": 306,
+                        "expired_ts": "1510417224000",
+                        "items": [
+                            {
+                                "betting_item_id": 1,
+                                "betting_id": 1,
+                                "title": "EDG.M 胜",
+                                "odds": 1.2
+                            }
+                        ]
+                    },
+                    {
+                        "betting_id": 2,
+                        "title": "第一局对战结果为？",
+                        "race_id": 306,
+                        "expired_ts": "1510417224000",
+                        "items": [
+                            {
+                                "betting_item_id": 3,
+                                "betting_id": 2,
+                                "title": "EDG.M 胜",
+                                "odds": 1.14
+                            }
+                        ]
+                    },
+                    {
+                        "betting_id": 3,
+                        "title": "第一局谁先获得一血？",
+                        "race_id": 306,
+                        "expired_ts": "1510417224000",
+                        "items": [
+                            {
+                                "betting_item_id": 5,
+                                "betting_id": 3,
+                                "title": "EDG.M",
+                                "odds": 1.17
+                            }
+                        ]
+                    }
+                ],
+                "race": {
+                    "race_name": "2017秋季赛·常规赛",
+                    "description": ""
+                }
+            }
+        ]
+    }
+}
+```

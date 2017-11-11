@@ -27,6 +27,7 @@ router.get('/team/:team_id', TeamController.getTeam);
 router.get('/races', RaceController.getRaces);
 router.get('/race/:race_id', RaceController.getRacesDetail);
 router.post('/betting', RaceController.createBetting);
+router.get('/betting', RaceController.getBettingHistories);
 router.get('/coin/plans', CoinController.getPlans);
 router.get('/user', UserController.getUserInfo);
 router.post('/user', UserController.updateUserInfo);

@@ -165,7 +165,9 @@ const getRacesDetail = (req, res) => {
 
 const createBetting = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
-    console.log(req.body);
+    if (!uid || !access_token) {
+        return BaseRes.tokenError(res);
+    }
     const {coin, betting_item_id_list} = req.body;
 
     if (!coin || !betting_item_id_list || betting_item_id_list.length == 0) {
@@ -214,6 +216,76 @@ const createBetting = (req, res) => {
     });
 };
 
+const getBettingHistories = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    if (!uid || !access_token) {
+        return BaseRes.tokenError(res);
+    }
+    
+    let {index, size} = req.query;
+    if (!index) {
+        index = 0
+    } else if (index < 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    if (!size) {
+        size = 7;
+    } else if (size > 60) {
+        size = 60;
+    } else if (size <= 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+        
+        const user_bettings = yield UserBettingDao.getUserBetting(uid, index, parseInt(size));
+        let min_index = index;
+        for (let user_betting of user_bettings) {
+            user_betting.betting_item_ids = user_betting.betting_item_ids.split(',');
+            const betting_items = yield BettingItemDao.getBettingItems(user_betting.betting_item_ids);
+            const bettings = [];
+            let race_id;
+            for (let betting_item of betting_items) {
+                delete betting_item.create_ts;
+                delete betting_item.update_ts;
+                delete betting_item.delete_ts;
+                const [betting] = yield BettingDao.getBettingDetail(betting_item.betting_id);
+                delete betting.update_ts;
+                delete betting.delete_ts;
+                delete betting.create_ts;
+                race_id = betting.race_id;
+                betting.items = [betting_item];
+                bettings.push(betting);
+            }
+            user_betting.bettings = bettings;
+            const [race] = yield RaceDao.getRaceDetail(race_id);
+            const [race_info] = yield RaceInfoDao.getRaceInfo(race.race_info_id);
+            user_betting.race = {
+                race_name: race_info.race_name,
+                description: race_info.description
+            };
+            
+            if (min_index == 0 || min_index > user_betting.user_betting_id) {
+                min_index = user_betting.user_betting_id;
+            }
+        }
+        if (user_bettings.length < size) {
+            min_index = -1;
+        }
+        BaseRes.success(res, {index: min_index, items: user_bettings});
+    });
+};
+
 module.exports = {
-    getRaces, getRacesDetail, createBetting
+    getRaces, getRacesDetail, createBetting, getBettingHistories
 };
