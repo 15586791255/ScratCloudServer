@@ -1514,6 +1514,8 @@ curl -H 'uid:27008002' 'http://localhost:8083/core/betting?index=0&size=2'
 
 Res
 
+> 注意  status=apply未完成  status=win赢了  status=lose输了  status=invalid被取消了
+
 ```
 {
     "code": 200,
