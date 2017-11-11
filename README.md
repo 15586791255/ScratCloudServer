@@ -1475,21 +1475,21 @@ Res
 
 ### Param
 
-> 注意，这个body是数组。大概长这样 `[{"coin": 500, "betting_item_id": 1}]`
+> 注意，这个betting_item_id_list是数组
 
 | param | type | require | description |
 | --- | :---: | :---: | --- |
 | coin | int | true | 竞猜币数量 |
-| betting_item_id | string | true | ID |
+| betting_item_id_list | array | true | betting_item_id数组, 例如"betting_item_id_list": [1] |
 
 ### Response
 
 ```
-curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -d '[{"coin": 500, "betting_item_id": 1}]' http://localhost:8083/core/betting
+curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -d '{"coin": 500, "betting_item_id_list": [1]}' http://localhost:8083/core/betting
 ```
 
 Res
 
 ```
-{"code":200,"msg":"ok","data":{"success":[1],"fail":[]}
+{"code":200,"msg":"ok"}
 ```

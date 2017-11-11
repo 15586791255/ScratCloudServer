@@ -166,60 +166,51 @@ const getRacesDetail = (req, res) => {
 const createBetting = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
     console.log(req.body);
-    const betting_orders = req.body;
+    const {coin, betting_item_id_list} = req.body;
 
-    const success = [];
-    const fail = [];
+    if (!coin || !betting_item_id_list || betting_item_id_list.length == 0) {
+        return BaseRes.paramError(res);
+    }
+
     Co(function *() {
         const [token] = yield AccessTokenDao.getToken(uid, access_token);
         if (!token) {
             return BaseRes.tokenError(res);
         }
-
+        
         const now_ts = new Date().getTime();
         if (token.expired_ts < now_ts) {
             return BaseRes.tokenError(res);
         }
 
         const [coin_info] = yield UserCoinDao.findByUid(uid);
-        if (!coin_info || coin_info.coin_count <= 0) {
+        if (!coin_info || coin_info.coin_count <= 0 || coin_info.coin_count < coin) {
             return BaseRes.forbiddenError(res, '投注失败，竞猜币不足');
-            // coin = coin_info.coin_count;
         }
 
-        let coin = coin_info.coin_count;
-
-        for (let order of betting_orders) {
-            if (order.coin > coin) {
-                fail.push(order.betting_item_id);
-                continue;
-            }
-            
-            const [betting_item] = yield BettingItemDao.getBettingItemDetail(order.betting_item_id);
-            if (!betting_item) {
-                fail.push(order.betting_item_id);
-                continue;
-            }
-
-            const [betting] = yield BettingDao.getBettingDetail(betting_item.betting_id);
-            if (!betting || betting.delete_ts > 0 || betting.expired_ts < new Date().getTime()) {
-                fail.push(order.betting_item_id);
-                continue;
-            }
-
-            const user_betting_id = yield UserBettingDao.addUserBetting(uid, order.betting_item_id, order.coin);
-            if (user_betting_id <= 0) {
-                fail.push(order.betting_item_id);
-                continue;
-            }
-
-            yield UserCoinDao.decreaseCoin(uid, order.coin);
-            coin -= order.coin;
-            yield CoinHistoryDao.addCoinHistory(uid, order.coin, 'betting', user_betting_id);
-            success.push(order.betting_item_id);
+        const betting_items = yield BettingItemDao.getBettingItems(betting_item_id_list);
+        if (betting_items.length < betting_item_id_list.length) {
+            return BaseRes.forbiddenError(res, '投注失败，部分竞猜项目已失效');
         }
 
-        BaseRes.success(res, {success, fail});
+        const betting_id_set = new Set();
+        let odds = 1;
+        for (let betting_item of betting_items) {
+            betting_id_set.add(betting_item.betting_id);
+            odds *= betting_item.odds;
+        }
+
+        if (betting_id_set.size < betting_item_id_list.length) {
+            return BaseRes.forbiddenError(res, '投注失败，每个竞猜项目只能选一项');
+        }
+
+        const user_betting_id = yield UserBettingDao.addUserBetting(uid, betting_item_id_list, coin, odds);
+        if (user_betting_id <= 0) {
+            return BaseRes.serverError(res, '创建投注订单失效');
+        }
+        yield UserCoinDao.decreaseCoin(uid, coin);
+        yield CoinHistoryDao.addCoinHistory(uid, coin, 'betting', user_betting_id);
+        BaseRes.success(res);
     });
 };
 
