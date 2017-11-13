@@ -109,21 +109,23 @@ def get_redis_conn(host, port, password):
 	# next_url = host + next_page['href']
 	# return next_url, datas
 
-def insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, view_count):
+def insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, view_count, video):
+	if '' == body:
+		return
 	sql = 'select count(1) from news where nid=%s'
 	print sql
 	cursor.execute(sql, (nid,))
 	count = cursor.fetchone()[0]
 	if count > 0:
 		print 'already exist', nid
-		sql = 'update news set title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s where nid=%s'
+		sql = 'update news set title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s, video=%s where nid=%s'
 		print sql
-		cursor.execute(sql, (title, tp, news_ts, cover, url, body, nid, view_count, ))
+		cursor.execute(sql, (title, tp, news_ts, cover, url, body, nid, video, view_count, ))
 		conn.commit()
 		return
-	sql = 'insert ignore into news set nid=%s, title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s'
+	sql = 'insert ignore into news set nid=%s, title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s, video=%s'
 	print sql
-	cursor.execute(sql, (nid, title, tp, news_ts, cover, url, body, view_count, ))
+	cursor.execute(sql, (nid, title, tp, news_ts, cover, url, body, view_count, video, ))
 	conn.commit()
 
 def get_video_html(url):
@@ -153,10 +155,11 @@ def get_news(page):
 		jump_url = detail_data.get('infoJumpUrl')
 		video_id = detail_data.get('infoVid')
 		content = detail_data.get('inforContent')
-		if content == '' and video_id != '':
-			content = get_video_html('http://120.198.235.230/ugcyd.qq.com/flv/226/45/%s.mp4' % video_id)
+		video = ''
+		if video_id != '':
+			video = 'http://120.198.235.230/ugcyd.qq.com/flv/226/45/%s.mp4' % video_id
 		# print info_id, title, tp, ts, img, jump_url, content
-		res.append((info_id, title, tp, ts,  img, jump_url, content, view_count))
+		res.append((info_id, title, tp, ts,  img, jump_url, content, view_count, video))
 	return res
 
 def parse_news(conn, cursor):
@@ -164,8 +167,8 @@ def parse_news(conn, cursor):
 		print x
 		datas = get_news(x)
 		for data in datas:
-			(nid, title, tp, news_ts, cover, url, body, view_count) = data
-			insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, view_count)
+			(nid, title, tp, news_ts, cover, url, body, view_count, video) = data
+			insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, view_count, video)
 
 def insert_into_team(conn, cursor, tid, team_name, description, logo, short_name):
 	sql = 'select team_id from team where tid=%s'

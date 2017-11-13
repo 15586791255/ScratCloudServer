@@ -77,6 +77,7 @@ view_count int unsigned not null default 0 comment 'iInfoPv||iInfoVv',
 cover varchar(512) not null default '' comment '对应iInfoImg',
 url varchar(512) not null default '' comment '对应infoJumpUrl',
 body text not null comment '对应inforContent',
+video varchar(512) not null default '',
 unique key(nid),
 primary key(news_id)
 ) engine=InnoDB default charset=utf8;
