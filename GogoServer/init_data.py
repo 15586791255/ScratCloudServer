@@ -110,7 +110,7 @@ def get_redis_conn(host, port, password):
 	# return next_url, datas
 
 def insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, view_count, video):
-	if '' == body:
+	if '' == body and '' == video:
 		return
 	sql = 'select count(1) from news where nid=%s'
 	print sql
@@ -388,8 +388,8 @@ def main():
 # ok------------
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
 	parse_news(conn, cursor)
-	# parse_team_list(conn, cursor)
-	# parse_race_list(conn, cursor)
+	parse_team_list(conn, cursor)
+	parse_race_list(conn, cursor)
 	close_mysal_conn(conn, cursor)
 
 if __name__ == '__main__':
