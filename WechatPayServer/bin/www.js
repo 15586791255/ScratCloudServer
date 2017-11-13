@@ -43,7 +43,7 @@ global.Conn = dbPool;
 
 global.BaseRes = require('../util/BaseResponse');
 
-// app.use('/file', require('../routes/File'));
+app.use('/weixin', require('../routes/WechatPay'));
 
 app.listen(Config.port, Config.host, function () {
     console.log(`Visit at http://${Config.host}:${Config.port}`);

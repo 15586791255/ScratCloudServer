@@ -25,6 +25,9 @@ http {
     location /api/pay/alipay/ {
         proxy_pass http://localhost:8085/alipay/;
     }
+    location /api/pay/weixin/ {
+        proxy_pass http://localhost:8087/weixin/;
+    }
     location /api/mall/ {
         proxy_pass http://localhost:8086/mall/;
     }
@@ -1616,6 +1619,34 @@ Res
                 }
             }
         ]
+    }
+}
+```
+
+## 生成微信订单
+
+[POST] **application/json** `/pay/weixin/order/coin_plan/:id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| id | string | true | coin_plan_id, URL参数 |
+
+### Response
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "app_id": "wx3349545f4d083130",
+        "partner_id": "1491484952",
+        "prepay_id": "wx20171113165527fbb4a94e4f0745396937",
+        "package": "Sign=WXPay",
+        "nonce_str": "sBxvwOYuNpciHklYeUIHlPWCHo7asL6v",
+        "timestamp": "1510563327",
+        "sign": "CA6DC90290D32B6A9A8C36EE88F7CBCC"
     }
 }
 ```
