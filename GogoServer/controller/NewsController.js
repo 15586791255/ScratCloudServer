@@ -19,20 +19,20 @@ const getNews = (req, res) => {
 
     Co(function *() {
         const newsList = yield NewsDao.getNews(index, parseInt(size));
-        let minIndex = index;
+        let min_index = index;
         for (let item of newsList) {
             delete item.body;
             delete item.url;
             const [comment_count] = yield CommentDao.getTotalComment('news', item.news_id);
             item.comment_count = parseInt(comment_count.total);
-            if (minIndex == 0 || minIndex > item.news_id) {
-                minIndex = item.news_id;
+            if (min_index == 0 || min_index > item.news_ts) {
+                min_index = item.news_ts;
             }
         }
         if (newsList.length < size) {
-            minIndex = -1;
+            min_index = -1;
         }
-        BaseRes.success(res, {index: minIndex, items: newsList});
+        BaseRes.success(res, {index: min_index, items: newsList});
     });
 };
 
