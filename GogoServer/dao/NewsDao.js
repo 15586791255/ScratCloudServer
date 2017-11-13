@@ -1,6 +1,6 @@
 function * getNews(news_ts, size) {
     if (news_ts > 0) {
-        return yield Conn.query('select * from news where news_id<? order by news_ts desc limit ?',
+        return yield Conn.query('select * from news where news_ts<? order by news_ts desc limit ?',
             {replacements: [news_ts, size], type: Sequelize.QueryTypes.SELECT});
     }
 
