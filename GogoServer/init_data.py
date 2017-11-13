@@ -163,7 +163,7 @@ def get_news(page):
 	return res
 
 def parse_news(conn, cursor):
-	for x in xrange(1,2):
+	for x in xrange(1,30):
 		print x
 		datas = get_news(x)
 		for data in datas:
@@ -388,8 +388,8 @@ def main():
 # ok------------
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
 	parse_news(conn, cursor)
-	parse_team_list(conn, cursor)
-	parse_race_list(conn, cursor)
+	# parse_team_list(conn, cursor)
+	# parse_race_list(conn, cursor)
 	close_mysal_conn(conn, cursor)
 
 if __name__ == '__main__':
