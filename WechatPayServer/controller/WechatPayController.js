@@ -119,14 +119,16 @@ const createOrder = (req, res) => {
                 return BaseRes.serverError(res, '生成预订单失败');
             }
             const res_data = response_data.xml;
-            delete res_data.return_code;
-            delete res_data.return_msg;
-            delete res_data.result_code;
-            res_data.partner_id = Config.wechatPayMchId;
-            res_data.package = 'Sign=WXPay';
-            res_data.timestamp = parseInt(now_date.getTime()/1000);
             console.log(res_data);
-            BaseRes.success(res);
+            BaseRes.success(res, {
+                app_id: res_data.appid,
+                partner_id: Config.wechatPayMchId,
+                prepay_id: res_data.prepay_id,
+                package: 'Sign=WXPay',
+                nonce_str: res_data.nonce_str,
+                timestamp: parseInt(now_date.getTime()/1000),
+                sign: res_data.sign
+            });
         }).catch(err => {
             console.log(err);
             return BaseRes.serverError(res, '申请微信订单失败');
