@@ -11,12 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "co": "^4.6.0",
+    "crypto": "^1.0.1",
     "express": "^4.16.2",
     "mysql2": "^1.4.2",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "sequelize": "^4.22.2",
-    "wechat-pay": "^0.2.5",
     "xml2json": "^0.11.0"
   }
 }
