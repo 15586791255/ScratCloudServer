@@ -125,14 +125,23 @@ const createOrder = (req, res) => {
             }
             const res_data = response_data.xml;
             console.log(res_data);
+            const timestamp = parseInt(now_date.getTime()/1000);
+            const ret = {
+                appid: res_data.appid,
+                noncestr: res_data.nonce_str,
+                package: 'Sign=WXPay',
+                partnerid: Config.wechatPayMchId,
+                prepayid: res_data.prepay_id,
+                timestamp:timestamp
+            };
             BaseRes.success(res, {
                 app_id: res_data.appid,
                 partner_id: Config.wechatPayMchId,
                 prepay_id: res_data.prepay_id,
                 package: 'Sign=WXPay',
                 nonce_str: res_data.nonce_str,
-                timestamp: parseInt(now_date.getTime()/1000),
-                sign: res_data.sign
+                timestamp: timestamp,
+                sign: getSign(ret)
             });
         }).catch(err => {
             console.log(err);
