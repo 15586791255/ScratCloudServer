@@ -84,7 +84,7 @@ const createOrder = (req, res) => {
             notify_url: Config.wechatPayNotifyUrl,
             out_trade_no: out_trade_no,
             spbill_create_ip: client_ip,
-            total_fee: 1,
+            total_fee: fee,
             trade_type: 'APP',
             time_start: now_date.format('yyyyMMddhhmmss'),
             time_expire: new Date(now_date.getTime() + 1000*60*60).format('yyyyMMddhhmmss')
@@ -132,7 +132,7 @@ const createOrder = (req, res) => {
                 package: 'Sign=WXPay',
                 nonce_str: res_data.nonce_str,
                 timestamp: parseInt(now_date.getTime()/1000),
-                sign: res_data.sign
+                sign: sign
             });
         }).catch(err => {
             console.log(err);
