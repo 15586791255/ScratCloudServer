@@ -44,12 +44,11 @@ const createOrder = (req, res) => {
         return BaseRes.tokenError(res, '请登陆');
     }
 
-    let client_ip = req.ip;
-    if((client_ip == '::1' || client_ip.indexOf('::') != -1) && req.headers['x-real-ip'] ){
-        client_ip = req.headers['x-real-ip'];
+    let client_ip = req.headers['x-real-ip'];
+    if (!client_ip || client_ip == '::1' || client_ip.indexOf('::') != -1 ) {
+        client_ip = '39.108.94.94';
     }
-    console.log(client_ip);
-    
+
     const {coin_plan_id} = req.params;
 
     Co(function *() {
@@ -78,8 +77,8 @@ const createOrder = (req, res) => {
         const now_date = new Date();
         const params = {
             appid: Config.wechatPayAppId,
-            attach: 'GoGo电竞',
-            body: `${coin_plan.coin_count}竞猜币`,
+            attach: 'GoGo',
+            body: `${coin_plan.coin_count}`,
             mch_id: Config.wechatPayMchId,
             nonce_str: rand(32),
             notify_url: Config.wechatPayNotifyUrl,
