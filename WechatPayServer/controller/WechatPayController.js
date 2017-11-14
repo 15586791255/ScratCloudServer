@@ -44,6 +44,12 @@ const createOrder = (req, res) => {
         return BaseRes.tokenError(res, '请登陆');
     }
 
+    let client_ip = req.ip;
+    if((client_ip == '::1' || client_ip.indexOf('::') != -1) && req.headers['x-real-ip'] ){
+        client_ip = req.headers['x-real-ip'];
+    }
+    console.log(client_ip);
+    
     const {coin_plan_id} = req.params;
 
     Co(function *() {
@@ -78,7 +84,7 @@ const createOrder = (req, res) => {
             nonce_str: rand(32),
             notify_url: Config.wechatPayNotifyUrl,
             out_trade_no: out_trade_no,
-            spbill_create_ip: '127.0.0.1',
+            spbill_create_ip: client_ip,
             total_fee: 1,
             trade_type: 'APP',
             time_start: now_date.format('yyyyMMddhhmmss'),
