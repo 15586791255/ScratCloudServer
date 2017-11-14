@@ -94,21 +94,21 @@ const createOrder = (req, res) => {
         const sign = getSign(params);
         console.log(sign);
 
-        const body = `<xml>
-           <appid>${params.appid}</appid>
-           <attach>${params.attach}</attach>
-           <body>${params.body}</body>
-           <mch_id>${params.mch_id}</mch_id>
-           <nonce_str>${params.nonce_str}</nonce_str>
-           <notify_url>${params.notify_url}</notify_url>
-           <out_trade_no>${params.out_trade_no}</out_trade_no>
-           <spbill_create_ip>${params.spbill_create_ip}</spbill_create_ip>
-           <total_fee>${params.total_fee}</total_fee>
-           <trade_type>${params.trade_type}</trade_type>
-           <time_start>${params.time_start}</time_start>
-           <time_expire>${params.time_expire}</time_expire>
-           <sign>${sign}</sign>
-        </xml>`;
+        const body = `<xml>`
+            + `<appid>${params.appid}</appid>`
+            + `<attach>${params.attach}</attach>`
+            + `<body>${params.body}</body>`
+            + `<mch_id>${params.mch_id}</mch_id>`
+            + `<nonce_str>${params.nonce_str}</nonce_str>`
+            + `<notify_url>${params.notify_url}</notify_url>`
+            + `<out_trade_no>${params.out_trade_no}</out_trade_no>`
+            + `<spbill_create_ip>${params.spbill_create_ip}</spbill_create_ip>`
+            + `<total_fee>${params.total_fee}</total_fee>`
+            + `<trade_type>${params.trade_type}</trade_type>`
+            + `<time_start>${params.time_start}</time_start>`
+            + `<time_expire>${params.time_expire}</time_expire>`
+            + `<sign>${sign}</sign>`
+            + `</xml>`;
         console.log(body);
         rp({
             method: 'POST',
@@ -132,7 +132,7 @@ const createOrder = (req, res) => {
                 package: 'Sign=WXPay',
                 nonce_str: res_data.nonce_str,
                 timestamp: parseInt(now_date.getTime()/1000),
-                sign: sign
+                sign: res_data.sign
             });
         }).catch(err => {
             console.log(err);
