@@ -4,6 +4,8 @@ const crypto = require('crypto');
 const AccessTokenDao = require('../dao/AccessTokenDao');
 const CoinPlanDao = require('../dao/CoinPlanDao');
 const OrderInfoDao = require('../dao/OrderInfoDao');
+const CoinHistoryDao = require('../dao/CoinHistoryDao');
+const UserCoinDao = require('../dao/UserCoinDao');
 
 Date.prototype.format = function (format) {
     const o = {
@@ -160,10 +162,61 @@ const createOrder = (req, res) => {
     });
 };
 
-const notifyOrder = (req, res) => {
-    console.log(req.body);
+const successXmlResponse = (res) => {
     res.set('Content-Type', 'text/xml');
     res.send(`<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>`);
+};
+
+const notifyOrder = (req, res) => {
+    const {xml} = req.body;
+    console.log(getSign(xml));
+    Co(function *() {
+        const [order_info] = yield OrderInfoDao.getOrder(xml.out_trade_no);
+        if (!order_info) {
+            console.log('\n===error===');
+            console.log('not found order');
+            console.log((xml));
+            console.log('===end error===\n');
+            return successXmlResponse(res);
+        }
+
+        if (order_info.tp != 'coin_plan') {
+            console.log('\n===error===');
+            console.log('not coin_plan');
+            console.log((xml));
+            console.log('===end error===\n');
+            return successXmlResponse(res);
+        }
+
+        if (order_info.status == 'paid') {
+            console.log('\n===error===');
+            console.log('already execute');
+            console.log((xml));
+            console.log('===end error===\n');
+            return successXmlResponse(res);
+        }
+
+        const [coin_plan] = yield CoinPlanDao.getCoinPlan(order_info.tp_id);
+        if (!coin_plan) {
+            console.log('\n===error===');
+            console.log('not found coin plan');
+            console.log((xml));
+            console.log('===end error===\n');
+            return successXmlResponse(res);
+        }
+
+        const {uid, coin_count} = coin_plan;
+        yield CoinHistoryDao.addCoinHistory(uid, coin_count, 'buy_coin', order_info.order_id);
+        const [user_coin] = yield UserCoinDao.findByUid(uid);
+        if (!user_coin) {
+            yield UserCoinDao.addUserCoin(uid, coin_count);
+        } else {
+            yield UserCoinDao.addCoin(uid, coin_count);
+        }
+        yield OrderInfoDao.updateOrderStatus(order_info.order_id, 'paid');
+        successXmlResponse(res);
+    });
+
 };
 
 const getSign = (params) => {
