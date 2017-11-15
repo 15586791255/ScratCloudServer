@@ -169,6 +169,7 @@ const successXmlResponse = (res) => {
 
 const notifyOrder = (req, res) => {
     const {xml} = req.body;
+    console.log(xml);
     console.log(getSign(xml));
     Co(function *() {
         const [order_info] = yield OrderInfoDao.getOrder(xml.out_trade_no);
@@ -205,13 +206,13 @@ const notifyOrder = (req, res) => {
             return successXmlResponse(res);
         }
 
-        const {uid, coin_count} = coin_plan;
+        const {coin_count} = coin_plan;
         yield CoinHistoryDao.addCoinHistory(uid, coin_count, 'buy_coin', order_info.order_id);
-        const [user_coin] = yield UserCoinDao.findByUid(uid);
+        const [user_coin] = yield UserCoinDao.findByUid(order_info.uid);
         if (!user_coin) {
-            yield UserCoinDao.addUserCoin(uid, coin_count);
+            yield UserCoinDao.addUserCoin(order_info.uid, coin_count);
         } else {
-            yield UserCoinDao.addCoin(uid, coin_count);
+            yield UserCoinDao.addCoin(order_info.uid, coin_count);
         }
         yield OrderInfoDao.updateOrderStatus(order_info.order_id, 'paid');
         successXmlResponse(res);
