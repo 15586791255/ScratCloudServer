@@ -169,10 +169,17 @@ const successXmlResponse = (res) => {
 
 const notifyOrder = (req, res) => {
     const {xml} = req.body;
-    const client_sign = getSign(xml);
-    if (xml.sign != client_sign) {
+    // const client_sign = getSign(xml);
+    // if (xml.sign != client_sign) {
+    //     console.log('\n===error===');
+    //     console.log(`sign error ${client_sign}`);
+    //     console.log((xml));
+    //     console.log('===end error===\n');
+    //     return successXmlResponse(res);
+    // }
+    if (xml.result_code != 'SUCCESS' || xml.return_code != 'SUCCESS') {
         console.log('\n===error===');
-        console.log(`sign error ${client_sign}`);
+        console.log('result not success');
         console.log((xml));
         console.log('===end error===\n');
         return successXmlResponse(res);
