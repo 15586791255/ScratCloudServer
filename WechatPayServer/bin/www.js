@@ -4,9 +4,11 @@ const express = require('express');
 
 const app = express();
 const bodyParser = require('body-parser');
+const xmlParser = require('express-xml-bodyparser');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(xmlParser());
 
 global.Co = require('co');
 global.Config = require('../Config');

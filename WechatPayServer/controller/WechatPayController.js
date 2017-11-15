@@ -161,7 +161,7 @@ const createOrder = (req, res) => {
 };
 
 const notifyOrder = (req, res) => {
-    console.log(req);
+    console.log(req.body);
     res.set('Content-Type', 'text/xml');
     res.send(`<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>`);
 };
