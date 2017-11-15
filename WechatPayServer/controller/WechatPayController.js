@@ -80,7 +80,7 @@ const createOrder = (req, res) => {
         const params = {
             appid: Config.wechatPayAppId,
             attach: 'GoGo',
-            body: `${coin_plan.coin_count}`,
+            body: `${coin_plan.coin_count}竞猜币`,
             mch_id: Config.wechatPayMchId,
             nonce_str: rand(32),
             notify_url: Config.wechatPayNotifyUrl,
@@ -169,8 +169,14 @@ const successXmlResponse = (res) => {
 
 const notifyOrder = (req, res) => {
     const {xml} = req.body;
-    console.log(xml);
-    console.log(getSign(xml));
+    const client_sign = getSign(xml);
+    if (xml.sign != client_sign) {
+        console.log('\n===error===');
+        console.log(`sign error ${client_sign}`);
+        console.log((xml));
+        console.log('===end error===\n');
+        return successXmlResponse(res);
+    }
     Co(function *() {
         const [order_info] = yield OrderInfoDao.getOrder(xml.out_trade_no);
         if (!order_info) {
@@ -207,7 +213,7 @@ const notifyOrder = (req, res) => {
         }
 
         const {coin_count} = coin_plan;
-        yield CoinHistoryDao.addCoinHistory(uid, coin_count, 'buy_coin', order_info.order_id);
+        yield CoinHistoryDao.addCoinHistory(order_info.uid, coin_count, 'buy_coin', order_info.order_id);
         const [user_coin] = yield UserCoinDao.findByUid(order_info.uid);
         if (!user_coin) {
             yield UserCoinDao.addUserCoin(order_info.uid, coin_count);
@@ -215,6 +221,7 @@ const notifyOrder = (req, res) => {
             yield UserCoinDao.addCoin(order_info.uid, coin_count);
         }
         yield OrderInfoDao.updateOrderStatus(order_info.order_id, 'paid');
+        console.log(`pay success ${xml.out_trade_no}`);
         successXmlResponse(res);
     });
 
