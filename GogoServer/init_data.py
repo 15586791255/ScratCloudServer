@@ -113,18 +113,18 @@ def insert_into_news(conn, cursor, nid, title, tp, news_ts, cover, url, body, vi
 	if '' == body and '' == video:
 		return
 	sql = 'select count(1) from news where nid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (nid,))
 	count = cursor.fetchone()[0]
 	if count > 0:
 		print 'already exist', nid
 		sql = 'update news set title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s, video=%s where nid=%s'
-		print sql
+		# print sql
 		cursor.execute(sql, (title, tp, news_ts, cover, url, body, nid, video, view_count, ))
 		conn.commit()
 		return
 	sql = 'insert ignore into news set nid=%s, title=%s, tp=%s, news_ts=%s, cover=%s, url=%s, body=%s, view_count=%s, video=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (nid, title, tp, news_ts, cover, url, body, view_count, video, ))
 	conn.commit()
 
@@ -172,7 +172,7 @@ def parse_news(conn, cursor):
 
 def insert_into_team(conn, cursor, tid, team_name, description, logo, short_name):
 	sql = 'select team_id from team where tid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (tid,))
 	team_id = 0
 	record = cursor.fetchone()
@@ -180,35 +180,35 @@ def insert_into_team(conn, cursor, tid, team_name, description, logo, short_name
 		team_id = record[0]
 	if team_id > 0:
 		sql = 'update team set team_name=%s, description=%s, logo=%s, short_name=%s where tid=%s'
-		print sql
+		# print sql
 		cursor.execute(sql, (team_name, description, logo, short_name, tid, ))
 		conn.commit()
 		return team_id
 	now_ts = time.time()*1000
 	sql = 'insert ignore into team set tid=%s, team_name=%s, description=%s, logo=%s, short_name=%s, create_ts=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (tid, team_name, description, logo, short_name, now_ts, ))
 	conn.commit()
 
 	sql = 'select team_id from team where tid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (tid,))
 	return cursor.fetchone()[0]
 
 def insert_into_team_member(conn, cursor, team_id, tid, mid, member_name, description, avatar):
 	sql = 'select count(1) from team_member where tid=%s and mid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (tid, mid, ))
 	count = cursor.fetchone()[0]
 	if count > 0:
 		sql = 'update team_member set team_id=%s, member_name=%s, description=%s, avatar=%s where tid=%s and mid=%s'
-		print sql
+		# print sql
 		cursor.execute(sql, (team_id, member_name, description, avatar, tid, mid, ))
 		conn.commit()
 		return
 	now_ts = time.time()*1000
 	sql = 'insert ignore into team_member set team_id=%s, member_name=%s, description=%s, avatar=%s, tid=%s, mid=%s, create_ts=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (team_id, member_name, description, avatar, tid, mid, now_ts, ))
 	conn.commit()
 
@@ -242,7 +242,7 @@ def parse_team(conn, cursor, id):
 
 def insert_into_game(conn, cursor, gid, title, logo, reward, rule, game_ts):
 	sql = 'select game_id from game where gid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (gid,))
 	game_id = 0
 	record = cursor.fetchone()
@@ -250,23 +250,23 @@ def insert_into_game(conn, cursor, gid, title, logo, reward, rule, game_ts):
 		game_id = record[0]
 	if game_id > 0:
 		sql = 'update game set gid=%s, title=%s, logo=%s, reward=%s, rule=%s, game_ts=%s where game_id=%s'
-		print sql
+		# print sql
 		cursor.execute(sql, (gid, title, logo, reward, rule, game_ts, game_id, ))
 		conn.commit()
 		return game_id
 	now_ts = time.time()*1000
 	sql = 'insert ignore into game set gid=%s, title=%s, logo=%s, reward=%s, rule=%s, game_ts=%s, create_ts=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (gid, title, logo, reward, rule, game_ts, now_ts, ))
 	conn.commit()
 	sql = 'select game_id from game where gid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (gid,))
 	return cursor.fetchone()[0]
 
 def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, end_ts):
 	sql = 'select race_info_id from race_info where rid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (rid,))
 	race_info_id = 0
 	record = cursor.fetchone()
@@ -274,33 +274,33 @@ def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, e
 		race_info_id = record[0]
 	if race_info_id > 0:
 		sql = 'update race_info set race_name=%s, description=%s, start_ts=%s, end_ts=%s where rid=%s'
-		print sql
+		# print sql
 		cursor.execute(sql, (race_name, description, start_ts, end_ts, rid, ))
 		conn.commit()
 		return race_info_id
 	now_ts = time.time()*1000
 	sql = 'insert ignore into race_info set race_name=%s, description=%s, start_ts=%s, end_ts=%s, rid=%s, create_ts=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (race_name, description, start_ts, end_ts, rid, now_ts, ))
 	conn.commit()
 	sql = 'select race_info_id from race_info where rid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (rid,))
 	return cursor.fetchone()[0]
 
 def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str):
 	sql = 'select count(1) from race where mid=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (mid,))
 	if cursor.fetchone()[0] > 0:
 		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, status=%s, dt=%s where mid=%s'
-		print sql
+		# print sql
 		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str, mid, ))
 		conn.commit()
 		return
 	now_ts = time.time()*1000
 	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s, status=%s, dt=%s'
-	print sql
+	# print sql
 	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, status, dt_str, ))
 	conn.commit()
 
@@ -387,8 +387,11 @@ def main():
 
 # ok------------
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
+	print '\n========= parse news =========\n'
 	parse_news(conn, cursor)
+	print '\n========= parse teams =========\n'
 	parse_team_list(conn, cursor)
+	print '\n========= parse race =========\n'
 	parse_race_list(conn, cursor)
 	close_mysal_conn(conn, cursor)
 
