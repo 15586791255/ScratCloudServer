@@ -289,20 +289,27 @@ def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, e
 	return cursor.fetchone()[0]
 
 def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str):
-	sql = 'select count(1) from race where mid=%s'
+	sql = 'select race_id from race where mid=%s'
 	# print sql
 	cursor.execute(sql, (mid,))
-	if cursor.fetchone()[0] > 0:
+	race_id = 0
+	record = cursor.fetchone()
+	if record:
+		race_id = record[0]
+	if race_id > 0:
 		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, status=%s, dt=%s where mid=%s'
 		# print sql
 		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str, mid, ))
 		conn.commit()
-		return
+		return race_id
 	now_ts = time.time()*1000
 	sql = 'insert ignore into race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, mid=%s, create_ts=%s, status=%s, dt=%s'
 	# print sql
 	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, status, dt_str, ))
 	conn.commit()
+	sql = 'select rrace_id from race where mid=%s'
+	cursor.execute(sql, (rid,))
+	return cursor.fetchone()[0]
 
 STATUS = {
 	2: 'end',
@@ -398,7 +405,7 @@ def main():
 def command_to_json(cmd):
 	exception = None
 	i = 0
-	while (i < 3):
+	while (i < 5):
 		try:
 			lines = command(cmd)
 			res_data = json.loads(lines[0])
@@ -406,7 +413,9 @@ def command_to_json(cmd):
 		except Exception as e:
 			print e
 			i += 1
+			print 'retry', i
 			exception = e
+			time.sleep(3)
 	raise exception
 
 def fanqie_tab():
@@ -437,7 +446,7 @@ def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
 		game_name = detail_data.get('gameName') # game.title
 		match_name = detail_data.get('matchName') # race_info.race_name
 		print game_name, match_name, battle_name
-		race_name = '%s-%s' % (match_name, battle_name)
+		race_name = '%s-%s-%s' % (game_name, match_name, battle_name)
 		race_info_id = insert_into_race_info(conn, cursor, match_id, race_name, '', 0, 0)
 
 		game_icon = detail_data.get('gameIcon')
@@ -463,7 +472,47 @@ def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
 		race_ts = '%.0f' % (time.mktime(dt.timetuple()) * 1000)
 		dt_str = detail_data.get('startTime').split(' ')[0].replace('/', '')
 
-		insert_info_race(conn, cursor, db_game_id, race_info_id, match_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str)
+		race_id = insert_info_race(conn, cursor, db_game_id, race_info_id, match_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str)
+
+		betting_data = command_to_json("curl --connect-timeout 10 'https://fanqie-api.3iuu.com/guess/guessList.do?appId=fanqie_ios_store&appVersion=12000&battleId=%s&battleNumber=0&cid=ayy_ios_zv_AppStore&imei=73BF94B7-25FD-4A39-A79C-F595932A6423&mac=D80F264B-F5B1-4334-9429-C53D1F9E0D01&model=iPhone9%%2C1&page=1&sign=0edc6f25779f38ec2d095e6d3a6d5efa&targetVersion=10.3&udid=73BF94B7-25FD-4A39-A79C-F595932A6423'" % battle_id)
+		guess_list = betting_data.get('data').get('guessList')
+		for guess in guess_list:
+			guess_title = guess.get('guessTitle')
+			items = guess.get('items')
+			betting_id = insert_into_betting(conn, cursor, guess_title, race_id)
+			for item in items:
+				item_name = item.get('itemName')
+				item_rate = item.get('itemRate')
+				state = item.get('state')
+				# TODO
+				insert_into_betting_item(conn, cursor, betting_id, item_name, item_rate)
+
+def insert_into_betting_item(conn, cursor, betting_id, title, odds):
+	sql = 'select count(1) as total from betting_item where betting_id=%s and title=%s'
+	cursor.execute(sql, (betting_id, title,))
+	count = cursor.fetchone()[0]
+	if count > 0:
+		return
+	sql = 'insert ignore into betting_item set betting_id=%s, title=%s, odds=%s, create_ts=%s'
+	cursor.execute(sql, (betting_id, title, odds, time.time()*1000,))
+	conn.commit()
+
+def insert_into_betting(conn, cursor, title, race_id):
+	print title, race_id
+	sql = 'select betting_id from betting where race_id=%s and title=%s'
+	cursor.execute(sql, (race_id, title,))
+	betting_id = 0
+	record = cursor.fetchone()
+	if record:
+		betting_id = record[0]
+	if betting_id > 0:
+		return betting_id
+	sql = 'insert ignore into betting set race_id=%s, title=%s, create_ts=%s'
+	cursor.execute(sql, (race_id, title, time.time()*1000,))
+	conn.commit()
+	sql = 'select betting_id from betting where race_id=%s and title=%s'
+	cursor.execute(sql, (race_id, title,))
+	return cursor.fetchone()[0]
 
 def fanqie_format_date_without_year(dt_str):
 	month = int(dt_str.split('月')[0])
