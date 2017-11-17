@@ -395,5 +395,128 @@ def main():
 	parse_race_list(conn, cursor)
 	close_mysal_conn(conn, cursor)
 
+def command_to_json(cmd):
+	exception = None
+	i = 0
+	while (i < 3):
+		try:
+			lines = command(cmd)
+			res_data = json.loads(lines[0])
+			return res_data
+		except Exception as e:
+			print e
+			i += 1
+			exception = e
+	raise exception
+
+def fanqie_tab():
+	res_data = command_to_json("curl --connect-timeout 10 'https://fanqie-api.3iuu.com/game/list.do?appId=fanqie_ios_store&appVersion=12000&cid=ayy_ios_zv_AppStore&imei=73BF94B7-25FD-4A39-A79C-F595932A6423&mac=D80F264B-F5B1-4334-9429-C53D1F9E0D01&model=iPhone9%%2C1&page=1&sign=0888906e12b5f54156fdfe5950a3a532&targetVersion=10.3&udid=73BF94B7-25FD-4A39-A79C-F595932A6423'")
+	datas = res_data.get('data')
+	res = []
+	for data in datas:
+		res.append((data.get('gameName'), data.get('gameId')))
+	return res
+
+def fanqie_game(conn, cursor, game_id, db_game_id):
+	res_data = command_to_json("curl --connect-timeout 10 'https://fanqie-api.3iuu.com/battle/list.do?appId=fanqie_ios_store&appVersion=12000&cid=ayy_ios_zv_AppStore&gameId=%s&history=1&imei=73BF94B7-25FD-4A39-A79C-F595932A6423&mac=D80F264B-F5B1-4334-9429-C53D1F9E0D01&model=iPhone9%%2C1&page=1&sign=518de873065cd7a46af39a1d5f508537&targetVersion=10.3&udid=73BF94B7-25FD-4A39-A79C-F595932A6423'" % game_id)
+	datas = res_data.get('data')
+	history_list = datas.get('historyList')
+	fanqie_game_item(conn, cursor, history_list, db_game_id, 'end')
+	on_going_list = datas.get('ongoingList')
+	fanqie_game_item(conn, cursor, on_going_list, db_game_id, 'ready')
+
+def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
+	for game in game_list:
+		battle_id = game.get('battleId')
+		res_data = command_to_json("curl --connect-timeout 10 'https://fanqie-api.3iuu.com/battle/detail.do?appId=fanqie_ios_store&appVersion=12000&battleId=%s&cid=ayy_ios_zv_AppStore&imei=73BF94B7-25FD-4A39-A79C-F595932A6423&mac=D80F264B-F5B1-4334-9429-C53D1F9E0D01&model=iPhone9%%2C1&sign=185a27e1b5d33c2fb6e435c9e37178d2&targetVersion=10.3&udid=73BF94B7-25FD-4A39-A79C-F595932A6423'" % battle_id)
+		detail_data = res_data.get('data')
+
+		match_id = 'fanqie%s' % detail_data.get('matchId') # race.mid
+
+		battle_name = detail_data.get('battleName')
+		game_name = detail_data.get('gameName') # game.title
+		match_name = detail_data.get('matchName') # race_info.race_name
+		print game_name, match_name, battle_name
+		race_name = '%s-%s' % (match_name, battle_name)
+		race_info_id = insert_into_race_info(conn, cursor, match_id, race_name, '', 0, 0)
+
+		game_icon = detail_data.get('gameIcon')
+
+		team_1 = detail_data.get('team1')
+		team_id_a = 'fanqie%s' % team_1.get('teamId') # team.tid race.team_id_a
+		team_1_icon = team_1.get('teamIcon')
+		team_1_name = team_1.get('teamName')
+		score_a = team_1.get('score') # race.score_a
+
+		insert_into_team(conn, cursor, team_id_a, team_1_name, '', team_1_icon, team_1_name)
+
+		team_2 = detail_data.get('team2')
+		team_id_b = 'fanqie%s' % team_2.get('teamId') # team.tid race.team_id_a
+		team_2_icon = team_2.get('teamIcon')
+		team_2_name = team_2.get('teamName')
+		score_b = team_2.get('score') # race.score_a
+
+		insert_into_team(conn, cursor, team_id_b, team_2_name, '', team_2_icon, team_2_name)
+
+		# 2017/11/18 19:00
+		dt = datetime.datetime.strptime(detail_data.get('startTime'), '%Y/%m/%d %H:%M')
+		race_ts = '%.0f' % (time.mktime(dt.timetuple()) * 1000)
+		dt_str = detail_data.get('startTime').split(' ')[0].replace('/', '')
+
+		insert_info_race(conn, cursor, db_game_id, race_info_id, match_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str)
+
+def fanqie_format_date_without_year(dt_str):
+	month = int(dt_str.split('月')[0])
+	year = get_curr_year()
+	if month < 2 and get_curr_month() > 10:
+		year += 1
+	dt = datetime.datetime.strptime('%s年%s' % (year, dt_str), u'%Y年%m月%d日 %H:%M')
+	return '%.0f' % (time.mktime(dt.timetuple()) * 1000)
+
+def get_curr_year():
+	return int(time.strftime('%Y',time.localtime(time.time())))
+
+def get_next_year():
+	curr_year = get_curr_year()
+	return curr_year + 1
+
+def get_curr_month():
+	return int(time.strftime('%m',time.localtime(time.time())))
+
+def insert_into_game_by_name(conn, cursor, gid, title, logo, reward, rule, game_ts):
+	sql = 'select game_id from game where title=%s'
+	# print sql
+	cursor.execute(sql, (title,))
+	game_id = 0
+	record = cursor.fetchone()
+	if record:
+		game_id = record[0]
+	if game_id > 0:
+		sql = 'update game set gid=%s, title=%s, logo=%s, reward=%s, rule=%s, game_ts=%s where game_id=%s'
+		# print sql
+		cursor.execute(sql, (gid, title, logo, reward, rule, game_ts, game_id, ))
+		conn.commit()
+		return game_id
+	now_ts = time.time()*1000
+	sql = 'insert ignore into game set gid=%s, title=%s, logo=%s, reward=%s, rule=%s, game_ts=%s, create_ts=%s'
+	# print sql
+	cursor.execute(sql, (gid, title, logo, reward, rule, game_ts, now_ts, ))
+	conn.commit()
+	sql = 'select game_id from game where title=%s'
+	# print sql
+	cursor.execute(sql, (title,))
+	return cursor.fetchone()[0]
+
+def main_fanqie():
+	conn, cursor = get_mysql_conn(host, db, user, passwd)
+	tabs = fanqie_tab()
+	for tab in tabs:
+		(game_name, game_id) = tab
+		db_game_id = insert_into_game_by_name(conn, cursor, game_id, game_name, '', '', '', 0)
+		print db_game_id
+		print '正在解析', game_name
+		fanqie_game(conn, cursor, game_id, db_game_id)
+	close_mysal_conn(conn, cursor)
+
 if __name__ == '__main__':
-	main()
+	main_fanqie()
