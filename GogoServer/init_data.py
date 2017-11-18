@@ -307,7 +307,7 @@ def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_i
 	# print sql
 	cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, mid, now_ts, status, dt_str, ))
 	conn.commit()
-	sql = 'select rrace_id from race where mid=%s'
+	sql = 'select race_id from race where mid=%s'
 	cursor.execute(sql, (mid,))
 	return cursor.fetchone()[0]
 
