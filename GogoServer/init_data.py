@@ -243,8 +243,8 @@ def parse_team(conn, cursor, id):
 def insert_into_game(conn, cursor, gid, title, logo, reward, rule, game_ts):
 	sql = 'select game_id from game where gid=%s'
 	# print sql
-	cursor.execute(sql, (gid,))
 	game_id = 0
+	cursor.execute(sql, (gid,))
 	record = cursor.fetchone()
 	if record:
 		game_id = record[0]
@@ -267,8 +267,8 @@ def insert_into_game(conn, cursor, gid, title, logo, reward, rule, game_ts):
 def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, end_ts):
 	sql = 'select race_info_id from race_info where rid=%s'
 	# print sql
-	cursor.execute(sql, (rid,))
 	race_info_id = 0
+	cursor.execute(sql, (rid,))
 	record = cursor.fetchone()
 	if record:
 		race_info_id = record[0]
@@ -290,16 +290,17 @@ def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, e
 
 def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str):
 	sql = 'select race_id from race where mid=%s and team_id_a=%s and team_id_b=%s'
-	# print sql
-	cursor.execute(sql, (mid, team_id_a, team_id_b,))
+	print sql % (mid, team_id_a, team_id_b)
 	race_id = 0
+	cursor.execute(sql, (mid, team_id_a, team_id_b,))
 	record = cursor.fetchone()
 	if record:
 		race_id = record[0]
+	print race_id
 	if race_id > 0:
-		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, status=%s, dt=%s where mid=%s'
+		sql = 'update race set game_id=%s, race_info_id=%s, team_id_a=%s, team_id_b=%s, score_a=%s, score_b=%s, race_ts=%s, status=%s, dt=%s where mid=%s and team_id_a=%s and team_id_b=%s'
 		# print sql
-		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str, mid, ))
+		cursor.execute(sql, (game_id, race_info_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str, mid, team_id_a, team_id_b,))
 		conn.commit()
 		return race_id
 	now_ts = time.time()*1000
@@ -502,8 +503,8 @@ def insert_into_betting_item(conn, cursor, betting_id, title, odds):
 def insert_into_betting(conn, cursor, title, race_id):
 	print title, race_id
 	sql = 'select betting_id from betting where race_id=%s and title=%s'
-	cursor.execute(sql, (race_id, title,))
 	betting_id = 0
+	cursor.execute(sql, (race_id, title,))
 	record = cursor.fetchone()
 	if record:
 		betting_id = record[0]
@@ -537,8 +538,8 @@ def get_curr_month():
 def insert_into_game_by_name(conn, cursor, gid, title, logo, reward, rule, game_ts):
 	sql = 'select game_id from game where title=%s'
 	# print sql
-	cursor.execute(sql, (title,))
 	game_id = 0
+	cursor.execute(sql, (title,))
 	record = cursor.fetchone()
 	if record:
 		game_id = record[0]
