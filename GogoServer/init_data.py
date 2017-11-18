@@ -289,9 +289,9 @@ def insert_into_race_info(conn, cursor, rid, race_name, description, start_ts, e
 	return cursor.fetchone()[0]
 
 def insert_info_race(conn, cursor, game_id, race_info_id, mid, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str):
-	sql = 'select race_id from race where mid=%s'
+	sql = 'select race_id from race where mid=%s and team_id_a=%s and team_id_b=%s'
 	# print sql
-	cursor.execute(sql, (mid,))
+	cursor.execute(sql, (mid, team_id_a, team_id_b,))
 	race_id = 0
 	record = cursor.fetchone()
 	if record:
@@ -471,6 +471,7 @@ def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
 		dt = datetime.datetime.strptime(detail_data.get('startTime'), '%Y/%m/%d %H:%M')
 		race_ts = '%.0f' % (time.mktime(dt.timetuple()) * 1000)
 		dt_str = detail_data.get('startTime').split(' ')[0].replace('/', '')
+		print dt_str
 
 		race_id = insert_info_race(conn, cursor, db_game_id, race_info_id, match_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str)
 
@@ -488,6 +489,7 @@ def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
 				insert_into_betting_item(conn, cursor, betting_id, item_name, item_rate)
 
 def insert_into_betting_item(conn, cursor, betting_id, title, odds):
+	print betting_id, title, odds
 	sql = 'select count(1) as total from betting_item where betting_id=%s and title=%s'
 	cursor.execute(sql, (betting_id, title,))
 	count = cursor.fetchone()[0]
