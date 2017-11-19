@@ -3,16 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="zh-CN">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="keywords" content="gogo,gogo电竞,GoGo,GoGo电竞,电竞,王者荣耀,DOTA,DOTA2,守望先锋,英雄联盟,游戏,游戏电竞,竞猜,电竞平台">
+    <meta name="description" content="gogo,gogo电竞,GoGo,GoGo电竞,电竞,王者荣耀,DOTA,DOTA2,守望先锋,英雄联盟,游戏,游戏电竞,竞猜,电竞平台">
+    <meta name="author" content="Scrat">
     <title>GoGo</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="cover.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
-    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -38,8 +41,9 @@
                              height="60"/>安卓 立即下载</a>
                 </p>
                 <p class="load">
-                    <a href="#"
-                       class="btn btn-lg btn-default"><img src="ios.png" width="120" height="60"/>iOS&nbsp;&nbsp;立即下载</a>
+                    <a id="ios" href="#"
+                       class="btn btn-lg btn-default"><img src="ios.png" width="120"
+                                                           height="60"/>iOS&nbsp;&nbsp;立即下载</a>
                 </p>
             </div>
         </div>
@@ -50,5 +54,10 @@
 <script src="bootstrap.min.js"></script>
 <script src="docs.min.js"></script>
 <script src="ie10-viewport-bug-workaround.js"></script>
+<script type="application/javascript">
+    $('#ios').click(function () {
+        alert('敬请期待');
+    });
+</script>
 </body>
 </html>
