@@ -215,7 +215,7 @@ const createBetting = (req, res) => {
             if (!race) {
                 return BaseRes.forbiddenError(res, '投注失败，赛事失效');
             }
-            if (now_ts > race.race_ts + 3600000) {
+            if (now_ts > (parseFloat(race.race_ts) + 3600000)) {
                 return BaseRes.forbiddenError(res, '投注失败，已超出投注时间');
             }
         }
