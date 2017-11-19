@@ -486,15 +486,22 @@ def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
 				item_name = item.get('itemName')
 				item_rate = item.get('itemRate')
 				state = item.get('state')
-				# TODO
-				insert_into_betting_item(conn, cursor, betting_id, item_name, item_rate)
+				betting_status = 'unknown'
+				if state == -1:
+					betting_status = 'lose'
+				if state == 1:
+					betting_status = 'win'
+				insert_into_betting_item(conn, cursor, betting_id, item_name, item_rate, betting_status)
 
-def insert_into_betting_item(conn, cursor, betting_id, title, odds):
+def insert_into_betting_item(conn, cursor, betting_id, title, odds, status):
 	print betting_id, title, odds
 	sql = 'select count(1) as total from betting_item where betting_id=%s and title=%s'
 	cursor.execute(sql, (betting_id, title,))
 	count = cursor.fetchone()[0]
 	if count > 0:
+		sql = 'update betting_item set status=%s where betting_id=%s and title=%s'
+		cursor.execute(sql, (status, betting_id, title,))
+		conn.commit()
 		return
 	sql = 'insert ignore into betting_item set betting_id=%s, title=%s, odds=%s, create_ts=%s'
 	cursor.execute(sql, (betting_id, title, odds, time.time()*1000,))
@@ -559,8 +566,39 @@ def insert_into_game_by_name(conn, cursor, gid, title, logo, reward, rule, game_
 	cursor.execute(sql, (title,))
 	return cursor.fetchone()[0]
 
+def get_user_betting(conn, cursor):
+	sql = "select user_betting_id,uid,betting_item_ids,coin,odds from user_betting where status='apply'"
+	cursor.execute(sql)
+	return cursor.fetchall()
+
+def get_betting_status(conn, cursor, betting_item_id):
+	sql = "select status from betting_item where betting_item_id=%s limit 1"
+	cursor.execute(sql, (betting_item_id,))
+	row = cursor.fetchone()
+	if row:
+		return row[0]
+	return 'unknown'
+
+def add_user_coin(conn, cursor, uid, coin, user_betting_id):
+	now_ts = time.time()*1000
+	sql = "insert ignore into coin_history set uid=%s,coin_count=%s,tp='guess',tp_id=%s,create_ts=%s"
+	cursor.execute(sql, (uid,coin,user_betting_id,now_ts))
+	conn.commit()
+	sql = "update user_coin set coin_count=coin_count+%s where uid=%s"
+	cursor.execute(sql, (coin, uid,))
+	conn.commit()
+	user_betting_status(conn, cursor, user_betting_id, 'win')
+
+def user_betting_status(conn, cursor, user_betting_id, status):
+	sql = "update user_betting set status=%s where user_betting_id=%s"
+	cursor.execute(sql, (status, user_betting_id,))
+	conn.commit()
+
 def main_fanqie():
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
+	
+	parse_news(conn, cursor)
+
 	tabs = fanqie_tab()
 	for tab in tabs:
 		(game_name, game_id) = tab
@@ -568,6 +606,28 @@ def main_fanqie():
 		print db_game_id
 		print '正在解析', game_name
 		fanqie_game(conn, cursor, game_id, db_game_id)
+
+	user_betting_datas = get_user_betting(conn, cursor)
+	for user_betting in user_betting_datas:
+		(user_betting_id,uid,betting_item_ids,coin,odds) = user_betting
+		betting_item_id_arr = betting_item_ids.split(',')
+		finally_result_status = 'unknown'
+		for betting_item_id in betting_item_id_arr:
+			betting_item_status = get_betting_status(conn, cursor, betting_item_id)
+			# print user_betting_id, betting_item_id, betting_item_status
+			if betting_item_status == 'lose':
+				finally_result_status = 'lose'
+				break
+			elif betting_item_status == 'unknown':
+				finally_result_status = 'unknown'
+				break
+			elif betting_item_status == 'win':
+				finally_result_status = 'win'
+		if finally_result_status == 'win':
+			add_user_coin(conn, cursor, uid, int(coin*odds), user_betting_id)
+		elif finally_result_status == 'lose':
+			user_betting_status(conn, cursor, user_betting_id, 'win')
+			
 	close_mysal_conn(conn, cursor)
 
 if __name__ == '__main__':
