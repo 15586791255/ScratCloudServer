@@ -205,6 +205,20 @@ const createBetting = (req, res) => {
         if (betting_id_set.size < betting_item_id_list.length) {
             return BaseRes.forbiddenError(res, '投注失败，每个竞猜项目只能选一项');
         }
+        
+        for (let betting_id of betting_id_set) {
+            const [betting] = yield BettingDao.getBettingDetail(betting_id);
+            if (!betting) {
+                return BaseRes.forbiddenError(res, '投注失败，部分竞猜项目已失效');
+            }
+            const [race] = yield RaceDao.getRaceDetail(betting.race_id);
+            if (!race) {
+                return BaseRes.forbiddenError(res, '投注失败，赛事失效');
+            }
+            if (now_ts > race.race_ts + 3600000) {
+                return BaseRes.forbiddenError(res, '投注失败，已超出投注时间');
+            }
+        }
 
         const user_betting_id = yield UserBettingDao.addUserBetting(uid, betting_item_id_list, coin, odds);
         if (user_betting_id <= 0) {
