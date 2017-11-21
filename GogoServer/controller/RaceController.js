@@ -216,6 +216,9 @@ const getRacesDetail2 = (req, res) => {
         const betting_tps = yield BettingDao.getBettingTps(race_id);
         const betting_tp_list = [];
         for (let tp of betting_tps) {
+            if (tp == '') {
+                continue;
+            }
             let tp_name;
             if (tp == 0) {
                 tp_name = '总局';
