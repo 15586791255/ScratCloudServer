@@ -296,27 +296,21 @@ create_ts bigint unsigned not null default 0,
 primary key(user_betting_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
-insert ignore into betting set race_id=306, title='全场比赛结果为？', create_ts=unix_timestamp(now())*1000, expired_ts=unix_timestamp(now())*1000+36000000;
-insert ignore into betting_item set betting_id=1, title='EDG.M 胜',odds=1.2,create_ts=unix_timestamp(now())*1000;
-insert ignore into betting_item set betting_id=1, title='QG 胜',odds=2.1,create_ts=unix_timestamp(now())*1000;
+create table feedback (
+feedback_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+title varchar(64) not null default '',
+content text not null,
+app_key char(16) not null default '',
+ver_code varchar(16) not null default '',
+ver_name varchar(16) not null default '',
+create_ts bigint unsigned not null default 0,
+primary key(feedback_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
-insert ignore into betting set race_id=306, title='第一局对战结果为？', create_ts=unix_timestamp(now())*1000, expired_ts=unix_timestamp(now())*1000+36000000;
-insert ignore into betting_item set betting_id=2, title='EDG.M 胜',odds=1.14,create_ts=unix_timestamp(now())*1000;
-insert ignore into betting_item set betting_id=2, title='QG 胜',odds=2.2,create_ts=unix_timestamp(now())*1000;
-
-insert ignore into betting set race_id=306, title='第一局谁先获得一血？', create_ts=unix_timestamp(now())*1000, expired_ts=unix_timestamp(now())*1000+36000000;
-insert ignore into betting_item set betting_id=3, title='EDG.M',odds=1.17,create_ts=unix_timestamp(now())*1000;
-insert ignore into betting_item set betting_id=3, title='QG',odds=1.77,create_ts=unix_timestamp(now())*1000;
-
-insert ignore into betting set race_id=306, title='第一局人头数之和是单数还是双数？', create_ts=unix_timestamp(now())*1000, expired_ts=unix_timestamp(now())*1000+36000000;
-insert ignore into betting_item set betting_id=4, title='单数',odds=1.74,create_ts=unix_timestamp(now())*1000;
-insert ignore into betting_item set betting_id=4, title='双数',odds=1.74,create_ts=unix_timestamp(now())*1000;
-
-insert ignore into betting set race_id=306, title='全场比赛胜局比分为？', create_ts=unix_timestamp(now())*1000, expired_ts=unix_timestamp(now())*1000+36000000;
-insert ignore into betting_item set betting_id=5, title='0:2',odds=3.45,create_ts=unix_timestamp(now())*1000;
-insert ignore into betting_item set betting_id=5, title='1:2',odds=3.40,create_ts=unix_timestamp(now())*1000;
-insert ignore into betting_item set betting_id=5, title='2:0',odds=2.70,create_ts=unix_timestamp(now())*1000;
-insert ignore into betting_item set betting_id=5, title='2:1',odds=3.40,create_ts=unix_timestamp(now())*1000;
-
-drop table user_betting;
-delete from coin_history where tp='betting';
+create table feedback_img (
+feedback_img_id int unsigned not null auto_increment comment '自增主键',
+feedback_id int unsigned not null default 0,
+url varchar(522) not null default '',
+primary key(feedback_img_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

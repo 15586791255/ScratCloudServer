@@ -1650,3 +1650,30 @@ Res
     }
 }
 ```
+
+
+## 添加反馈
+
+[POST] **application/json** `/feedback/feedback`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| title | string | false | 反馈标题（可不传） |
+| content | string | false | 反馈内容（可不传） |
+| ver_code | string | false | 版本号（可不传） |
+| ver_name | string | false | 版本名（可不传） |
+| imgs | string_list | false | 这个是字符串列表，反馈图片（可不传） |
+
+### Response
+
+```
+curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -H "app_key:test_key" 'http://localhost:8088/feedback/feedback' -d '{"title":"title","content":"content","ver_code":"1","ver_name":"name","imgs":["http://4493bz.1985t.com/uploads/allimg/160222/5-160222145918.jpg"]}'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```
