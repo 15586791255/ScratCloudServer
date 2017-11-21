@@ -163,7 +163,7 @@ def get_news(page):
 	return res
 
 def parse_news(conn, cursor):
-	for x in xrange(1,30):
+	for x in xrange(1,5):
 		print x
 		datas = get_news(x)
 		for data in datas:
@@ -476,22 +476,29 @@ def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
 
 		race_id = insert_info_race(conn, cursor, db_game_id, race_info_id, match_id, team_id_a, team_id_b, score_a, score_b, race_ts, status, dt_str)
 
-		betting_data = command_to_json("curl --connect-timeout 10 'https://fanqie-api.3iuu.com/guess/guessList.do?appId=fanqie_ios_store&appVersion=12000&battleId=%s&battleNumber=0&cid=ayy_ios_zv_AppStore&imei=73BF94B7-25FD-4A39-A79C-F595932A6423&mac=D80F264B-F5B1-4334-9429-C53D1F9E0D01&model=iPhone9%%2C1&page=1&sign=0edc6f25779f38ec2d095e6d3a6d5efa&targetVersion=10.3&udid=73BF94B7-25FD-4A39-A79C-F595932A6423'" % battle_id)
-		guess_list = betting_data.get('data').get('guessList')
-		for guess in guess_list:
-			guess_title = guess.get('guessTitle')
-			items = guess.get('items')
-			betting_id = insert_into_betting(conn, cursor, guess_title, race_id)
-			for item in items:
-				item_name = item.get('itemName')
-				item_rate = item.get('itemRate')
-				state = item.get('state')
-				betting_status = 'unknown'
-				if state == -1:
-					betting_status = 'lose'
-				if state == 1:
-					betting_status = 'win'
-				insert_into_betting_item(conn, cursor, betting_id, item_name, item_rate, betting_status)
+		for x in xrange(0,8):
+			betting_tp = x
+			betting_data = command_to_json("curl --connect-timeout 10 'https://fanqie-api.3iuu.com/guess/guessList.do?appId=fanqie_ios_store&appVersion=12000&battleId=%s&battleNumber=%s&cid=ayy_ios_zv_AppStore&imei=73BF94B7-25FD-4A39-A79C-F595932A6423&mac=D80F264B-F5B1-4334-9429-C53D1F9E0D01&model=iPhone9%%2C1&page=1&sign=0edc6f25779f38ec2d095e6d3a6d5efa&targetVersion=10.3&udid=73BF94B7-25FD-4A39-A79C-F595932A6423'" % (battle_id, x))
+			guess_list = betting_data.get('data').get('guessList')
+			for guess in guess_list:
+				guess_title = guess.get('guessTitle')
+				items = guess.get('items')
+				betting_id = insert_into_betting(conn, cursor, guess_title, race_id, betting_tp)
+				for item in items:
+					item_name = item.get('itemName')
+					item_rate = item.get('itemRate')
+					state = item.get('state')
+					betting_status = 'unknown'
+					if state == -1:
+						betting_status = 'lose'
+					if state == 1:
+						betting_status = 'win'
+					insert_into_betting_item(conn, cursor, betting_id, item_name, item_rate, betting_status)
+
+def get_betting_tp(x):
+	if x == 0:
+		return '总局'
+	return '第%s局' % x
 
 def insert_into_betting_item(conn, cursor, betting_id, title, odds, status):
 	print betting_id, title, odds
@@ -507,21 +514,24 @@ def insert_into_betting_item(conn, cursor, betting_id, title, odds, status):
 	cursor.execute(sql, (betting_id, title, odds, time.time()*1000,))
 	conn.commit()
 
-def insert_into_betting(conn, cursor, title, race_id):
+def insert_into_betting(conn, cursor, title, race_id, betting_tp):
 	print title, race_id
-	sql = 'select betting_id from betting where race_id=%s and title=%s'
+	sql = 'select betting_id from betting where race_id=%s and title=%s and tp=%s'
 	betting_id = 0
-	cursor.execute(sql, (race_id, title,))
+	cursor.execute(sql, (race_id, title, betting_tp, ))
 	record = cursor.fetchone()
 	if record:
 		betting_id = record[0]
 	if betting_id > 0:
+		sql = 'update betting set race_id=%s, title=%s, tp=%s where betting_id=%s'
+		cursor.execute(sql, (race_id, title, betting_tp, betting_id,))
+		conn.commit()
 		return betting_id
-	sql = 'insert ignore into betting set race_id=%s, title=%s, create_ts=%s'
-	cursor.execute(sql, (race_id, title, time.time()*1000,))
+	sql = 'insert ignore into betting set race_id=%s, title=%s, create_ts=%s, tp=%s'
+	cursor.execute(sql, (race_id, title, time.time()*1000, betting_tp, ))
 	conn.commit()
-	sql = 'select betting_id from betting where race_id=%s and title=%s'
-	cursor.execute(sql, (race_id, title,))
+	sql = 'select betting_id from betting where race_id=%s and title=%s and tp=%s'
+	cursor.execute(sql, (race_id, title, betting_tp, ))
 	return cursor.fetchone()[0]
 
 def fanqie_format_date_without_year(dt_str):
