@@ -163,6 +163,75 @@ const getRacesDetail = (req, res) => {
     });
 };
 
+const getRaceTpDetail = (req, res) => {
+    const {race_id, tp} = req.params;
+    Co(function *() {
+        const betting_list = yield BettingDao.getBettings(race_id, tp);
+        if (betting_list.length == 0) {
+            return BaseRes.success(res, []);
+        }
+
+        for (let betting of betting_list) {
+            delete betting.create_ts;
+            delete betting.update_ts;
+            delete betting.delete_ts;
+
+            const betting_items = yield BettingItemDao.getBettingItem(betting.betting_id);
+            for (let betting_item of betting_items) {
+                delete betting_item.create_ts;
+                delete betting_item.update_ts;
+                delete betting_item.delete_ts;
+            }
+            betting.items = betting_items;
+        }
+        BaseRes.success(res, betting_list);
+    });
+};
+
+const getRacesDetail2 = (req, res) => {
+    const {race_id} = req.params;
+
+    Co(function *() {
+        const [race] = yield RaceDao.getRaceDetail(race_id);
+        if (!race) {
+            return BaseRes.notFoundError(res);
+        }
+
+        if (race.delete_ts > 0) {
+            return BaseRes.notFoundError(res, '赛事已被删除');
+        }
+
+        const [team_a] = yield TeamDao.getTeamByTid(race.team_id_a);
+        const [team_b] = yield TeamDao.getTeamByTid(race.team_id_b);
+        race.team_a = formatTeam(team_a);
+        race.team_b = formatTeam(team_b);
+        formatRace(race);
+
+        const [race_info] = yield RaceInfoDao.getRaceInfo(race.race_info_id);
+        race.description = race_info.description;
+        race.race_name = race_info.race_name;
+        race.start_ts = race_info.start_ts;
+        race.end_ts = race_info.end_ts;
+
+        const betting_tps = yield BettingDao.getBettingTps(race_id);
+        const betting_tp_list = [];
+        for (let tp of betting_tps) {
+            let tp_name;
+            if (tp == 0) {
+                tp_name = '总局';
+            } else {
+                tp_name = `第${tp}局`;
+            }
+            betting_tp_list.push({
+                tp,
+                tp_name
+            })
+        }
+
+        BaseRes.success(res, {race, betting_tps: betting_tp_list});
+    });
+};
+
 const createBetting = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
     if (!uid || !access_token) {
@@ -301,5 +370,5 @@ const getBettingHistories = (req, res) => {
 };
 
 module.exports = {
-    getRaces, getRacesDetail, createBetting, getBettingHistories
+    getRaces, getRacesDetail, createBetting, getBettingHistories, getRacesDetail2, getRaceTpDetail
 };

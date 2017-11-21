@@ -33,5 +33,7 @@ router.get('/user', UserController.getUserInfo);
 router.post('/user', UserController.updateUserInfo);
 router.post('/address', UserController.updateAddress);
 router.get('/address', UserController.getAddress);
+router.get('/race2/:race_id/:tp', RaceController.getRaceTpDetail);
+router.get('/race2/:race_id', RaceController.getRacesDetail2);
 
 module.exports = router;

@@ -1680,3 +1680,214 @@ Res
 ```
 {"code":200,"msg":"ok"}
 ```
+
+
+## 获取比赛详情数据（v2）
+
+[GET] `/core/race2/:race_id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| race_id | string | true | 属于URL参数 |
+
+### Response
+
+```
+curl 'http://localhost:8083/core/race2/516'
+```
+
+Res
+
+> 注意 betting_tps 用户获取竞猜项用
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "race": {
+            "race_id": 516,
+            "race_info_id": 13,
+            "game_id": 8,
+            "score_a": "3",
+            "score_b": "2",
+            "race_ts": "1508659200000",
+            "create_ts": "1510974462003",
+            "status": "end",
+            "team_a": {
+                "team_id": 299,
+                "team_name": "WE",
+                "short_name": "WE",
+                "logo": "http://dl2.img.3iuu.com/attachments/419d/0729/127eb4ce77a24386036e8a04/1494484019963.jpg"
+            },
+            "team_b": {
+                "team_id": 301,
+                "team_name": "C9",
+                "short_name": "C9",
+                "logo": "http://dl2.img.3iuu.com/attachments/43be/1a27/ca950a5db1f4d16ac308e8c2/1503925576338.jpg"
+            },
+            "description": "",
+            "race_name": "英雄联盟-全球总决赛-淘汰赛第四天",
+            "start_ts": "0",
+            "end_ts": "0"
+        },
+        "betting_tps": [
+           {
+               "tp": "0",
+               "tp_name": "总局"
+           },
+           {
+               "tp": "1",
+               "tp_name": "第1局"
+           },
+           {
+               "tp": "2",
+               "tp_name": "第2局"
+           },
+           {
+               "tp": "3",
+               "tp_name": "第3局"
+           },
+           {
+               "tp": "4",
+               "tp_name": "第4局"
+           },
+           {
+               "tp": "5",
+               "tp_name": "第5局"
+           }
+       ]
+    }
+}
+```
+
+## 获取竞猜项目
+
+[GET] `/core/race2/:race_id/:betting_tp`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| race_id | string | true | 属于URL参数 |
+| betting_tp | string | true | 属于URL参数，上面接口返回的betting_tps的tp |
+
+### Response
+
+```
+scrat:~ scrat$ curl 'http://localhost:8083/core/race2/516/0'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": [
+        {
+            "betting_id": 52,
+            "title": "最终获胜",
+            "race_id": 516,
+            "tp": "0",
+            "items": [
+                {
+                    "betting_item_id": 74,
+                    "betting_id": 52,
+                    "title": "WE",
+                    "odds": 1.09,
+                    "status": "win"
+                },
+                {
+                    "betting_item_id": 75,
+                    "betting_id": 52,
+                    "title": "C9",
+                    "odds": 9.93,
+                    "status": "lose"
+                }
+            ]
+        },
+        {
+            "betting_id": 53,
+            "title": "最终比分",
+            "race_id": 516,
+            "tp": "0",
+            "items": [
+                {
+                    "betting_item_id": 76,
+                    "betting_id": 53,
+                    "title": "3 - 0",
+                    "odds": 7.64,
+                    "status": "lose"
+                },
+                {
+                    "betting_item_id": 77,
+                    "betting_id": 53,
+                    "title": "3 - 1",
+                    "odds": 3.12,
+                    "status": "lose"
+                },
+                {
+                    "betting_item_id": 78,
+                    "betting_id": 53,
+                    "title": "3 - 2",
+                    "odds": 2.61,
+                    "status": "win"
+                },
+                {
+                    "betting_item_id": 79,
+                    "betting_id": 53,
+                    "title": "2 - 3",
+                    "odds": 6.85,
+                    "status": "lose"
+                },
+                {
+                    "betting_item_id": 80,
+                    "betting_id": 53,
+                    "title": "1 - 3",
+                    "odds": 25.77,
+                    "status": "lose"
+                },
+                {
+                    "betting_item_id": 81,
+                    "betting_id": 53,
+                    "title": "0 - 3",
+                    "odds": 16.29,
+                    "status": "lose"
+                }
+            ]
+        },
+        {
+            "betting_id": 54,
+            "title": "对局总数",
+            "race_id": 516,
+            "tp": "0",
+            "items": [
+                {
+                    "betting_item_id": 82,
+                    "betting_id": 54,
+                    "title": "3局",
+                    "odds": 4.09,
+                    "status": "lose"
+                },
+                {
+                    "betting_item_id": 83,
+                    "betting_id": 54,
+                    "title": "4局",
+                    "odds": 1.8,
+                    "status": "lose"
+                },
+                {
+                    "betting_item_id": 84,
+                    "betting_id": 54,
+                    "title": "5局",
+                    "odds": 3.8,
+                    "status": "win"
+                }
+            ]
+        }
+    ]
+}
+```
