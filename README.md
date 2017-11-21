@@ -31,6 +31,9 @@ http {
     location /api/mall/ {
         proxy_pass http://localhost:8086/mall/;
     }
+    location /api/feedback/ {
+        proxy_pass http://localhost:8088/feedback/;
+    }
 ```
 
 # Server API for Gogo
