@@ -135,8 +135,8 @@ def get_news(page):
 	if not page:
 		page = 1
 	res = []
-	lines = command("curl 'http://tgl.qq.com/api/tglStatic/list/search.js?gid=362&from=SCXL&order=top&cid=2140&page=%s&pagesize=6' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % page)
-	datas = json.loads(lines[0]).get('msg').get('result')
+	res_datas = command_to_json("curl --connect-timeout 10 'http://tgl.qq.com/api/tglStatic/list/search.js?gid=362&from=SCXL&order=top&cid=2140&page=%s&pagesize=6' -H 'Origin: http://pvp.qq.com' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Accept: application/json' -H 'Referer: http://pvp.qq.com/ingame/all/matchCenter/index.shtml?match_id=8' -H 'Connection: keep-alive' --compressed" % page)
+	datas = res_datas.get('msg').get('result')
 	for data in datas:
 		info_id = data.get('iInfoId')
 		title = data.get('sInfoTitle')
