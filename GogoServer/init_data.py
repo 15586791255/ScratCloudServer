@@ -489,7 +489,7 @@ def fanqie_game_item(conn, cursor, game_list, db_game_id, status):
 					item_rate = item.get('itemRate')
 					state = item.get('state')
 					betting_status = 'unknown'
-					if state == -1:
+					if state == -1 or state == -2:
 						betting_status = 'lose'
 					if state == 1:
 						betting_status = 'win'
