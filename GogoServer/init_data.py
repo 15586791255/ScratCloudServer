@@ -506,8 +506,8 @@ def insert_into_betting_item(conn, cursor, betting_id, title, odds, status):
 	cursor.execute(sql, (betting_id, title,))
 	count = cursor.fetchone()[0]
 	if count > 0:
-		sql = 'update betting_item set status=%s where betting_id=%s and title=%s'
-		cursor.execute(sql, (status, betting_id, title,))
+		sql = 'update betting_item set status=%s,odds=%s where betting_id=%s and title=%s'
+		cursor.execute(sql, (status, odds, betting_id, title,))
 		conn.commit()
 		return
 	sql = 'insert ignore into betting_item set betting_id=%s, title=%s, odds=%s, create_ts=%s'
