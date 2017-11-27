@@ -78,6 +78,9 @@ const getRaces = (req, res) => {
                 item_obj = {dt: curr_dt, items: []};
             }
             const [race_info] = yield RaceInfoDao.getRaceInfo(race.race_info_id);
+            if (!race_info) {
+                continue;
+            }
             race.race_name = race_info.race_name;
             formatRace(race);
             item_obj.items.push(race);
