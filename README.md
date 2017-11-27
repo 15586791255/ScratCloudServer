@@ -127,6 +127,7 @@ Res
 | --- | :---: | :---: | --- |
 | index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
 | size | int | false | 返回数量，默认20, size>0 && size<=60 |
+| game | string | false | wangzhe， chicken 默认wangzhe |
 
 
 ### Response
@@ -134,7 +135,7 @@ Res
 > 正常返回
 
 ```
-curl 'http://localhost:8083/core/news?index=0&size=2'
+curl 'http://localhost:8083/core/news?index=0&size=2&game=wangzhe'
 ```
 
 Res
@@ -144,27 +145,31 @@ Res
     "code": 200,
     "msg": "ok",
     "data": {
-        "index": 5,
+        "index": "1511268237000",
         "items": [
             {
-                "news_id": 6,
-                "nid": 330708,
-                "title": "【KPL秋季赛】第6周 WeFun vs AG超玩会_1",
-                "tp": "KPL",
-                "news_ts": "1509173893000",
-                "view_count": 0,
-                "comment_count":5,
-                "cover": "https://itea-cdn.qq.com/file/tgl/20171027/0.1509036733.2056077a00b5e89d0eb6793b06773159.230*140_71784.png"
+                "news_id": 98,
+                "nid": 346453,
+                "title": "【2017赛事周刊】 第21期：八强相争 季后赛谁主沉浮",
+                "tp": "综合",
+                "news_ts": "1511268576000",
+                "view_count": 107,
+                "cover": "https://itea-cdn.qq.com/file/tgl/20171121/212x127.1511265432.02eeb74f44965b802323314675d26daa.212*127_13636.jpg",
+                "video": "http://120.198.235.230/ugcyd.qq.com/flv/226/45/v05088ggtii.mp4",
+                "game": "wangzhe",
+                "comment_count": 0
             },
             {
-                "news_id": 5,
-                "nid": 330704,
-                "title": "【KPL秋季赛】第6周 WeFun vs AG超玩会_2",
-                "tp": "KPL",
-                "news_ts": "1509173922000",
-                "view_count": 0,
-                "comment_count":5,
-                "cover": "https://itea-cdn.qq.com/file/tgl/20171027/10.1509036412.2d77cdb8b7fef3184c4d67d21215d051.230*140_83683.png"
+                "news_id": 99,
+                "nid": 346432,
+                "title": "事后诸葛亮第24期 迷神关羽绕后大招毁天灭地",
+                "tp": "事后诸葛亮",
+                "news_ts": "1511268237000",
+                "view_count": 21903,
+                "cover": "https://itea-cdn.qq.com/file/tgl/20171121/400x225.1511263557.5620890d3b1e80e59c5f9a8459a8e66e.400*225_37520.jpg",
+                "video": "http://120.198.235.230/ugcyd.qq.com/flv/226/45/y0507dhpxzb.mp4",
+                "game": "wangzhe",
+                "comment_count": 0
             }
         ]
     }
@@ -1890,4 +1895,20 @@ Res
         }
     ]
 }
+```
+
+## 获取游戏类型（新闻列表tab）
+
+[GET] `/core/news/type`
+
+### Response
+
+```
+curl 'http://localhost:8083/core/news/type'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok","data":{"wangzhe":"王者荣耀","chicken":"绝地求生"}}
 ```

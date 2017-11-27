@@ -2,7 +2,11 @@ const NewsDao = require('../dao/NewsDao');
 const CommentDao = require('../dao/CommentDao');
 
 const getNews = (req, res) => {
-    let {index, size} = req.query;
+    let {index, size, game} = req.query;
+    if (!game) {
+        game = 'wangzhe';
+    }
+
     if (!index) {
         index = 0
     } else if (index < 0) {
@@ -18,7 +22,7 @@ const getNews = (req, res) => {
     }
 
     Co(function *() {
-        const newsList = yield NewsDao.getNews(index, parseInt(size));
+        const newsList = yield NewsDao.getNews(index, parseInt(size), game);
         let min_index = index;
         for (let item of newsList) {
             delete item.body;

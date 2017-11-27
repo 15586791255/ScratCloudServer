@@ -374,6 +374,10 @@ const getBettingHistories = (req, res) => {
     });
 };
 
+const getNewsTypes = (req, res) => {
+    BaseRes.success(res, Config.games);
+};
+
 module.exports = {
-    getRaces, getRacesDetail, createBetting, getBettingHistories, getRacesDetail2, getRaceTpDetail
+    getRaces, getRacesDetail, createBetting, getBettingHistories, getRacesDetail2, getRaceTpDetail, getNewsTypes
 };

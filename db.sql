@@ -78,6 +78,7 @@ cover varchar(512) not null default '' comment '对应iInfoImg',
 url varchar(512) not null default '' comment '对应infoJumpUrl',
 body text not null comment '对应inforContent',
 video varchar(512) not null default '',
+game enum('wangzhe', 'chicken') not null default 'wangzhe',
 unique key(nid),
 primary key(news_id)
 ) engine=InnoDB default charset=utf8;
