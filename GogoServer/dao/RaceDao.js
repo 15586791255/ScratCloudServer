@@ -23,7 +23,7 @@ function * getRacesByDt(dt_list) {
         return [];
     }
     const place_holder = Utils.getSqlPlaceHolder(dt_list.length);
-    return yield Conn.query(`select * from race where dt in (${place_holder}) order by race_ts desc`,
+    return yield Conn.query(`select * from race where dt in (${place_holder}) and race_info_id in (select distinct race_info_id from race_info where race_name like '王者%') order by race_ts desc`,
         {replacements: dt_list, type: Sequelize.QueryTypes.SELECT})
 }
 
