@@ -89,7 +89,9 @@ const getRaces = (req, res) => {
 
         const res_items = [];
         for (let dt of dt_list) {
-            res_items.push(res_item_objects[dt]);
+            if (res_item_objects[dt]) {
+                res_items.push(res_item_objects[dt]);
+            }
         }
         if (res_items.length < size) {
             res_index = -1;
