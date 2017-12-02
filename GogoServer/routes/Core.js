@@ -23,6 +23,7 @@ router.get('/news/:news_id', NewsController.getNewsDetail);
 router.get('/news', NewsController.getNews);
 router.get('/banner', BannerController.getBanner);
 router.post('/comment', CommentController.addComment);
+router.post('/comment/like', CommentController.addLike);
 router.get('/comments', CommentController.getComments);
 router.get('/teams', TeamController.getTeams);
 router.get('/team/:team_id', TeamController.getTeam);

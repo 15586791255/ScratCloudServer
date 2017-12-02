@@ -1,6 +1,7 @@
 const CommentDao = require('../dao/CommentDao');
 const AccessTokenDao = require('../dao/AccessTokenDao');
 const AccountDao = require('../dao/AccountDao');
+const CommentLikeDao = require('../dao/CommentLikeDao');
 
 const addComment = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
@@ -99,6 +100,25 @@ const getComments = (req, res) => {
     });
 };
 
+const addLike = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    const {comment_id} = req.body;
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+
+        yield CommentLikeDao.addLike(uid, comment_id);
+        BaseRes.success(res);
+    });
+};
+
 module.exports = {
-    addComment, getComments
+    addComment, getComments, addLike
 };

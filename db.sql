@@ -325,3 +325,12 @@ create_ts bigint unsigned not null default 0,
 unique key (uid, news_id),
 primary key(news_like_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table comment_like (
+comment_like_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+comment_id int unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+unique key (uid, comment_id),
+primary key(comment_like_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

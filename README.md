@@ -1914,7 +1914,7 @@ Res
 ```
 
 
-## 新闻点赞
+## 新闻点赞 20171202
 
 [POST] **application/json** `/core/news/like`
 
@@ -1936,3 +1936,24 @@ Res
 {"code":200,"msg":"ok"}
 ```
 
+## 评论点赞 20171202
+
+[POST] **application/json** `/core/comment/like`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| comment_id | string | true | 评论id |
+
+### Response
+
+```
+curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -H "app_key:test_key" -H "access_token:rT843UYr4mhneBqW" 'http://localhost:8083/core/comment/like' -d '{"comment_id":1}'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```
