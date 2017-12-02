@@ -93,7 +93,7 @@ const getRaces = (req, res) => {
                 res_items.push(res_item_objects[dt]);
             }
         }
-        if (res_items.length < size) {
+        if (res_items.length == 0) {
             res_index = -1;
         }
         return BaseRes.success(res, {index: res_index, items: res_items});
