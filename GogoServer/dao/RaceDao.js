@@ -28,7 +28,9 @@ function * getRacesByDt(dt_list) {
 }
 
 function * getRaceDtList() {
-    return yield Conn.query('select distinct dt from race order by dt desc', {type: Sequelize.QueryTypes.SELECT});
+    return yield Conn.query(
+        "select distinct dt from race where race_info_id in (select distinct race_info_id from race_info where race_name like '王者%') order by dt desc",
+        {type: Sequelize.QueryTypes.SELECT});
 }
 
 function * getRaceDetail(race_id) {
