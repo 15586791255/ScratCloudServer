@@ -1,5 +1,7 @@
 const NewsDao = require('../dao/NewsDao');
 const CommentDao = require('../dao/CommentDao');
+const NewsLikeDao = require('../dao/NewsLikeDao');
+const AccessTokenDao = require('../dao/AccessTokenDao');
 
 const getNews = (req, res) => {
     let {index, size, game} = req.query;
@@ -53,6 +55,26 @@ const getNewsDetail = (req, res) => {
     });
 };
 
+const addLike = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    const {news_id} = req.body;
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+
+        yield NewsLikeDao.addLike(uid, news_id);
+        BaseRes.success(res);
+    });
+
+};
+
 module.exports = {
-    getNews, getNewsDetail
+    getNews, getNewsDetail, addLike
 };

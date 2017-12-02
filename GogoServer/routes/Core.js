@@ -18,6 +18,7 @@ router.get('/test', function (req, res) {
 });
 
 router.get('/news/type', RaceController.getNewsTypes);
+router.post('/news/like', NewsController.addLike);
 router.get('/news/:news_id', NewsController.getNewsDetail);
 router.get('/news', NewsController.getNews);
 router.get('/banner', BannerController.getBanner);

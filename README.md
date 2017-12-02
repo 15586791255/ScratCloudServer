@@ -1912,3 +1912,27 @@ Res
 ```
 {"code":200,"msg":"ok","data":{"wangzhe":"王者荣耀","chicken":"绝地求生"}}
 ```
+
+
+## 新闻点赞
+
+[POST] **application/json** `/core/news/like`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| news_id | string | true | 新闻id |
+
+### Response
+
+```
+curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -H "app_key:test_key" -H "access_token:rT843UYr4mhneBqW" 'http://localhost:8083/core/news/like' -d '{"news_id":1}'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```
+

@@ -316,3 +316,12 @@ feedback_id int unsigned not null default 0,
 url varchar(522) not null default '',
 primary key(feedback_img_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table news_like (
+news_like_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+news_id int unsigned not null default 0,
+create_ts bigint unsigned not null default 0,
+unique key (uid, news_id),
+primary key(news_like_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
