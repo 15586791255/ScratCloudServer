@@ -5,6 +5,11 @@ function * addLike(uid, comment_id) {
     return insert_id;
 }
 
+function * deleteLike(uid, comment_id) {
+    yield Conn.query('delete from comment_like where uid=? and comment_id=?',
+        {replacements: [uid, comment_id], type: Sequelize.QueryTypes.UPDATE});
+}
+
 module.exports = {
-    addLike
+    addLike, deleteLike
 };

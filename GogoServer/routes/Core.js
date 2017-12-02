@@ -19,11 +19,13 @@ router.get('/test', function (req, res) {
 
 router.get('/news/type', RaceController.getNewsTypes);
 router.post('/news/like', NewsController.addLike);
+router.post('/news/unlike', NewsController.unLike);
 router.get('/news/:news_id', NewsController.getNewsDetail);
 router.get('/news', NewsController.getNews);
 router.get('/banner', BannerController.getBanner);
 router.post('/comment', CommentController.addComment);
 router.post('/comment/like', CommentController.addLike);
+router.post('/comment/unlike', CommentController.unLike);
 router.get('/comments', CommentController.getComments);
 router.get('/teams', TeamController.getTeams);
 router.get('/team/:team_id', TeamController.getTeam);

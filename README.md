@@ -1957,3 +1957,47 @@ Res
 ```
 {"code":200,"msg":"ok"}
 ```
+
+## 取消新闻点赞 20171202
+
+[POST] **application/json** `/core/news/unlike`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| news_id | string | true | 新闻id |
+
+### Response
+
+```
+curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -H "app_key:test_key" -H "access_token:rT843UYr4mhneBqW" 'http://localhost:8083/core/news/unlike' -d '{"news_id":1}'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```
+
+## 取消评论点赞 20171202
+
+[POST] **application/json** `/core/comment/unlike`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| comment_id | string | true | 评论id |
+
+### Response
+
+```
+curl -X POST -H 'uid:27008002' -H "Content-type: application/json" -H "app_key:test_key" -H "access_token:rT843UYr4mhneBqW" 'http://localhost:8083/core/comment/unlike' -d '{"comment_id":1}'
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```

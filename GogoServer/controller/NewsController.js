@@ -75,6 +75,25 @@ const addLike = (req, res) => {
 
 };
 
+const unLike = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    const {news_id} = req.body;
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+
+        yield NewsLikeDao.deleteLike(uid, news_id);
+        BaseRes.success(res);
+    });
+};
+
 module.exports = {
-    getNews, getNewsDetail, addLike
+    getNews, getNewsDetail, addLike, unLike
 };
