@@ -19,7 +19,7 @@ function * getTotalLike(news_ids) {
         `select news_id,count(1) as total from news_like where news_id in (${place_holder}) group by news_id`,
         {replacements: news_ids, type: Sequelize.QueryTypes.SELECT});
     for (let item of total_like) {
-        total_like[item.target_id] = item.total;
+        total_like[item.news_id] = item.total;
     }
     return res;
 }
