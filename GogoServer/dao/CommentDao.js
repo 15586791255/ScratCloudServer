@@ -38,7 +38,7 @@ function * getTotalComments(tp, target_ids) {
         `select target_id,count(1) as total from comment where target_id in (${place_holder}) and tp=? group by target_id`,
         {replacements: replacements, type: Sequelize.QueryTypes.SELECT});
     for (let item of total_comments) {
-        total_comments[item.target_id] = item.total;
+        res[item.target_id] = item.total;
     }
     return res;
 }
