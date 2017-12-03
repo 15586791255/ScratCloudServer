@@ -24,21 +24,36 @@ const getNews = (req, res) => {
     }
 
     Co(function *() {
-        const newsList = yield NewsDao.getNews(index, parseInt(size), game);
+        const news_list = yield NewsDao.getNews(index, parseInt(size), game);
+        let news_ids = [];
+        for (let item of news_list) {
+            news_ids.push(item.news_id);
+        }
+        const total_likes = yield NewsLikeDao.getTotalLike(news_ids);
+        const total_comments = yield CommentDao.getTotalComments('news', news_ids);
         let min_index = index;
-        for (let item of newsList) {
+        for (let item of news_list) {
             delete item.body;
             delete item.url;
-            const [comment_count] = yield CommentDao.getTotalComment('news', item.news_id);
-            item.comment_count = parseInt(comment_count.total);
+            // const [comment_count] = yield CommentDao.getTotalComment('news', item.news_id);
+            let comment_count = 0;
+            if (total_comments[item.news_id]) {
+                comment_count = total_comments[item.news_id];
+            }
+            item.comment_count = parseInt(comment_count);
+            let like_count = 0;
+            if (total_likes[item.news_id]) {
+                like_count = total_likes[item.news_id];
+            }
+            item.like_count = parseInt(like_count);
             if (min_index == 0 || min_index > item.news_ts) {
                 min_index = item.news_ts;
             }
         }
-        if (newsList.length < size) {
+        if (news_list.length < size) {
             min_index = -1;
         }
-        BaseRes.success(res, {index: min_index, items: newsList});
+        BaseRes.success(res, {index: min_index, items: news_list});
     });
 };
 

@@ -26,6 +26,23 @@ function * getTotalComment(tp, target_id) {
         {replacements: [tp, target_id], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getTotalComments(tp, target_ids) {
+    const res = {};
+    if (target_ids.length == 0) {
+        return res;
+    }
+    const place_holder = Utils.getSqlPlaceHolder(target_ids.length);
+    const replacements = target_ids;
+    replacements.push(tp);
+    const total_comments = yield Conn.query(
+        `select target_id,count(1) as total from comment where target_id in (${place_holder}) and tp=? group by target_id`,
+        {replacements: replacements, type: Sequelize.QueryTypes.SELECT});
+    for (let item of total_comments) {
+        total_comments[item.target_id] = item.total;
+    }
+    return res;
+}
+
 module.exports = {
-    addComment, getComment, getComments, getTotalComment
+    addComment, getComment, getComments, getTotalComment, getTotalComments
 };

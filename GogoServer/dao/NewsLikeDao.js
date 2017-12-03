@@ -9,6 +9,21 @@ function * deleteLike(uid, news_id) {
         {replacements: [uid, news_id], type: Sequelize.QueryTypes.UPDATE});
 }
 
+function * getTotalLike(news_ids) {
+    const res = {};
+    if (news_ids.length == 0) {
+        return res;
+    }
+    const place_holder = Utils.getSqlPlaceHolder(news_ids.length);
+    const total_like = yield Conn.query(
+        `select news_id,count(1) as total from news_like where news_id in (${place_holder}) group by news_id`,
+        {replacements: news_ids, type: Sequelize.QueryTypes.SELECT});
+    for (let item of total_like) {
+        total_like[item.target_id] = item.total;
+    }
+    return res;
+}
+
 module.exports = {
-    addLike, deleteLike
+    addLike, deleteLike, getTotalLike
 };
