@@ -42,7 +42,7 @@ function * isLike(news_id, uid) {
         `select count(1) as total from news_like where news_id=? and uid=?`,
         {replacements: [news_id, uid], type: Sequelize.QueryTypes.SELECT});
     if (count) {
-        return count > 0;
+        return count.total > 0;
     }
     return false;
 }
