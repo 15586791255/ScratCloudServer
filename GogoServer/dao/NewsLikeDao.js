@@ -24,6 +24,29 @@ function * getTotalLike(news_ids) {
     return res;
 }
 
+function * getTotalLikeById(news_id) {
+    const [count] = yield Conn.query(
+        `select count(1) as total from news_like where news_id=?`,
+        {replacements: [news_id], type: Sequelize.QueryTypes.SELECT});
+    if (count) {
+        return count.total;
+    }
+    return 0;
+}
+
+function * isLike(news_id, uid) {
+    if (!uid) {
+        return false;
+    }
+    const [count] = yield Conn.query(
+        `select count(1) as total from news_like where news_id=? and uid=?`,
+        {replacements: [news_id, uid], type: Sequelize.QueryTypes.SELECT});
+    if (count) {
+        return count > 0;
+    }
+    return false;
+}
+
 module.exports = {
-    addLike, deleteLike, getTotalLike
+    addLike, deleteLike, getTotalLike, getTotalLikeById, isLike
 };

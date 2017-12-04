@@ -58,14 +58,19 @@ const getNews = (req, res) => {
 };
 
 const getNewsDetail = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
     const {news_id} = req.params;
     Co(function *() {
         const [news] = yield NewsDao.getNewsDetail(news_id);
         if (!news) {
             return BaseRes.notFoundError(res);
         }
+        const like_count = yield NewsLikeDao.getTotalLikeById(news_id);
+        const is_like = yield NewsLikeDao.isLike(news_id, uid);
         const [comment_count] = yield CommentDao.getTotalComment('news', news_id);
         news.comment_count = parseInt(comment_count.total);
+        news.like_count = parseInt(like_count);
+        news.is_like = is_like;
         BaseRes.success(res, news);
     });
 };
