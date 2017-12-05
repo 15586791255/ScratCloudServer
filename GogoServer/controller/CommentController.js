@@ -90,7 +90,7 @@ const getComments = (req, res) => {
             if (like_count[item.comment_id]) {
                 item.like_count = like_count[item.comment_id];
             }
-            item.is_like = like_set.has(uid);
+            item.is_like = like_set.has(item.comment_id);
             if (!account) {
                 items.push({comment: item, user: {
                     username: '未知',
