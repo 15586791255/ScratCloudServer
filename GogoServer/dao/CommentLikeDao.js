@@ -33,8 +33,8 @@ function * isLikeSet(uid, comment_ids) {
     if (!uid) {
         return res;
     }
-    comment_ids.push(uid);
     const place_holder = Utils.getSqlPlaceHolder(comment_ids.length);
+    comment_ids.push(uid);
     const comment_id_datas = yield Conn.query(
         `select comment_id from comment_like where comment_id in (${place_holder}) and uid=?`,
         {replacements: comment_ids, type: Sequelize.QueryTypes.SELECT});
