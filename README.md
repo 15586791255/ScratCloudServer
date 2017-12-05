@@ -339,124 +339,6 @@ Res
 {"code":498,"msg":"请重新登录"}
 ```
 
-## 获取评论列表
-
-[GET] `/core/comments`
-
-### Param
-
-| param | type | require | description |
-| --- | :---: | :---: | --- |
-| index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
-| size | int | false | 返回数量，默认20, size>0 && size<=60 |
-| tp | string | true | 类型，首页列表的评论填 news ; 赛事评论填 race |
-| target_id | string | true | 如果是首页列表评论，对应的是news_id, 如果是赛事的评论，对应的是race_id |
-
-> 正常返回
-
-```
-curl 'http://localhost:8083/core/comments?index=0&size=20&tp=news&target_id=1'
-```
-
-Res
-
-```
-{
-    "code": 200,
-    "msg": "ok",
-    "data": {
-        "index": -1,
-        "items": [
-            {
-                "comment": {
-                    "comment_id": 5,
-                    "replay_comment_id": 0,
-                    "uid": "96008684",
-                    "tp": "news",
-                    "target_id": 1,
-                    "content": "测试评论",
-                    "create_ts": "1509263367999"
-                },
-                "user": {
-                    "username": "15018329815",
-                    "gender": "unknown",
-                    "uid": "96008684",
-                    "avatar": ""
-                }
-            },
-            {
-                "comment": {
-                    "comment_id": 4,
-                    "replay_comment_id": 0,
-                    "uid": "96008684",
-                    "tp": "news",
-                    "target_id": 1,
-                    "content": "测试评论",
-                    "create_ts": "1509263327004"
-                },
-                "user": {
-                    "username": "15018329815",
-                    "gender": "unknown",
-                    "uid": "96008684",
-                    "avatar": ""
-                }
-            },
-            {
-                "comment": {
-                    "comment_id": 3,
-                    "replay_comment_id": 0,
-                    "uid": "96008684",
-                    "tp": "news",
-                    "target_id": 1,
-                    "content": "测试评论",
-                    "create_ts": "1509263291729"
-                },
-                "user": {
-                    "username": "15018329815",
-                    "gender": "unknown",
-                    "uid": "96008684",
-                    "avatar": ""
-                }
-            },
-            {
-                "comment": {
-                    "comment_id": 2,
-                    "replay_comment_id": 0,
-                    "uid": "96008684",
-                    "tp": "news",
-                    "target_id": 1,
-                    "content": "测试评论",
-                    "create_ts": "1509263277942"
-                },
-                "user": {
-                    "username": "15018329815",
-                    "gender": "unknown",
-                    "uid": "96008684",
-                    "avatar": ""
-                }
-            },
-            {
-                "comment": {
-                    "comment_id": 1,
-                    "replay_comment_id": 0,
-                    "uid": "96008684",
-                    "tp": "news",
-                    "target_id": 1,
-                    "content": "测试评论",
-                    "create_ts": "1509263142027"
-                },
-                "user": {
-                    "username": "15018329815",
-                    "gender": "unknown",
-                    "uid": "96008684",
-                    "avatar": ""
-                }
-            }
-        ]
-    }
-}
-```
-
 ## 获取战队列表
 
 [GET] `/core/teams`
@@ -2006,3 +1888,130 @@ Res
 {"code":404,"msg":"没有找到相关数据"}
 ```
 
+## 获取评论列表 20171205
+
+[GET] `/core/comments`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
+| size | int | false | 返回数量，默认20, size>0 && size<=60 |
+| tp | string | true | 类型，首页列表的评论填 news ; 赛事评论填 race |
+| target_id | string | true | 如果是首页列表评论，对应的是news_id, 如果是赛事的评论，对应的是race_id |
+
+> 正常返回
+
+```
+curl 'http://localhost:8083/core/comments?index=0&size=20&tp=news&target_id=1'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "index": -1,
+        "items": [
+            {
+                "comment": {
+                    "comment_id": 5,
+                    "replay_comment_id": 0,
+                    "uid": "96008684",
+                    "tp": "news",
+                    "target_id": 1,
+                    "content": "测试评论",
+                    "create_ts": "1509263367999",
+                    "like_count": 0,
+                    "is_like": false
+                },
+                "user": {
+                    "username": "15018329815",
+                    "gender": "unknown",
+                    "uid": "96008684",
+                    "avatar": ""
+                }
+            },
+            {
+                "comment": {
+                    "comment_id": 4,
+                    "replay_comment_id": 0,
+                    "uid": "96008684",
+                    "tp": "news",
+                    "target_id": 1,
+                    "content": "测试评论",
+                    "create_ts": "1509263327004",
+                    "like_count": 0,
+                    "is_like": false
+                },
+                "user": {
+                    "username": "15018329815",
+                    "gender": "unknown",
+                    "uid": "96008684",
+                    "avatar": ""
+                }
+            },
+            {
+                "comment": {
+                    "comment_id": 3,
+                    "replay_comment_id": 0,
+                    "uid": "96008684",
+                    "tp": "news",
+                    "target_id": 1,
+                    "content": "测试评论",
+                    "create_ts": "1509263291729",
+                    "like_count": 0,
+                    "is_like": false
+                },
+                "user": {
+                    "username": "15018329815",
+                    "gender": "unknown",
+                    "uid": "96008684",
+                    "avatar": ""
+                }
+            },
+            {
+                "comment": {
+                    "comment_id": 2,
+                    "replay_comment_id": 0,
+                    "uid": "96008684",
+                    "tp": "news",
+                    "target_id": 1,
+                    "content": "测试评论",
+                    "create_ts": "1509263277942",
+                    "like_count": 0,
+                    "is_like": false
+                },
+                "user": {
+                    "username": "15018329815",
+                    "gender": "unknown",
+                    "uid": "96008684",
+                    "avatar": ""
+                }
+            },
+            {
+                "comment": {
+                    "comment_id": 1,
+                    "replay_comment_id": 0,
+                    "uid": "96008684",
+                    "tp": "news",
+                    "target_id": 1,
+                    "content": "测试评论",
+                    "create_ts": "1509263142027",
+                    "like_count": 0,
+                    "is_like": false
+                },
+                "user": {
+                    "username": "15018329815",
+                    "gender": "unknown",
+                    "uid": "96008684",
+                    "avatar": ""
+                }
+            }
+        ]
+    }
+}
+```

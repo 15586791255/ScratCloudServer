@@ -46,6 +46,7 @@ const addComment = (req, res) => {
 };
 
 const getComments = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
     let {index, size, tp, target_id} = req.query;
 
     if (!tp || !target_id) {
@@ -70,6 +71,14 @@ const getComments = (req, res) => {
         const comments = yield CommentDao.getComments(index, tp, target_id, parseInt(size));
         let minIndex = index;
         let items = [];
+
+        const comment_ids = [];
+        for (let item of comments) {
+            comment_ids.push(item.comment_id);
+        }
+
+        const like_count = yield CommentLikeDao.getLikeCounts(comment_ids);
+        const like_set = yield CommentLikeDao.isLikeSet(uid, comment_ids);
         for (let item of comments) {
             delete item.delete_ts;
             if (minIndex == 0 || minIndex > item.comment_id) {
@@ -77,6 +86,11 @@ const getComments = (req, res) => {
             }
             // TODO 此处可优化
             const [account] = yield AccountDao.findByUid(item.uid);
+            item.like_count = 0;
+            if (like_count[item.comment_id]) {
+                item.like_count = like_count[item.comment_id];
+            }
+            item.is_like = like_set.has(uid);
             if (!account) {
                 items.push({comment: item, user: {
                     username: '未知',
