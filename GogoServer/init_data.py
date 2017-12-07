@@ -150,7 +150,7 @@ def get_news(page):
 		dt = datetime.datetime.strptime(data.get('iInfoTime'), '%Y-%m-%d %H:%M:%S')
 		ts = '%.0f' % (time.mktime(dt.timetuple()) * 1000)
 		detail_url = 'http:' + urllib.unquote(data.get('sInfoDetail').replace('//pvp.qq.com/tgl/detail.shtml?dt=', ''))
-		detail_json_data = command("curl '%s'" % detail_url)[0].split('callback(')[1][:-1]
+		detail_json_data = command("curl --connect-timeout 10 '%s'" % detail_url)[0].split('callback(')[1][:-1]
 		detail_data = json.loads(detail_json_data)
 		jump_url = detail_data.get('infoJumpUrl')
 		video_id = detail_data.get('infoVid')
