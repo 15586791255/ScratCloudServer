@@ -22,7 +22,6 @@ const addSign = (req, res) => {
         if (!has_sign) {
             yield SignInDao.addSignIn(uid);
             const curr_coin = SIGN_IN_COIN_GIFT[day-1];
-            console.log(curr_coin);
             yield UserCoinDao.addCoin(uid, curr_coin);
         }
         const coin = yield getCurrCoin(uid);
