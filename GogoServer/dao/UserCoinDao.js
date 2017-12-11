@@ -8,6 +8,11 @@ function * decreaseCoin(uid, coin) {
         {replacements: [coin, uid], type: Sequelize.QueryTypes.UPDATE});
 }
 
+function * addCoin(uid, coin) {
+    yield Conn.query('update user_coin set coin_count=coin_count+? where uid=?',
+        {replacements: [coin, uid], type: Sequelize.QueryTypes.UPDATE});
+}
+
 module.exports = {
-    findByUid, decreaseCoin
+    findByUid, decreaseCoin, addCoin
 };

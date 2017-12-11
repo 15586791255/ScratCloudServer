@@ -334,3 +334,12 @@ create_ts bigint unsigned not null default 0,
 unique key (uid, comment_id),
 primary key(comment_like_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+create table sign_in (
+sign_in_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+dt char(8) not null default '',
+create_ts bigint unsigned not null default 0,
+unique key(uid, dt),
+primary key(sign_in_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

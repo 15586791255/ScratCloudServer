@@ -9,6 +9,7 @@ const TeamController = require('../controller/TeamController');
 const RaceController = require('../controller/RaceController');
 const CoinController = require('../controller/CoinController');
 const UserController = require('../controller/UserController');
+const SignInController = require('../controller/SignInController');
 
 router.get('/test', function (req, res) {
     res.send({
@@ -40,5 +41,7 @@ router.post('/address', UserController.updateAddress);
 router.get('/address', UserController.getAddress);
 router.get('/race2/:race_id/:tp', RaceController.getRaceTpDetail);
 router.get('/race2/:race_id', RaceController.getRacesDetail2);
+router.get('/coin', SignInController.coinInfo);
+router.get('/sign_in', SignInController.addSign);
 
 module.exports = router;

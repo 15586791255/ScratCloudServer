@@ -2015,3 +2015,73 @@ Res
     }
 }
 ```
+
+## 获取当前签到情况 20171211
+
+[GET] `/core/coin`
+
+### Response
+
+```
+curl -H 'uid:27008002' -H "access_token:rT843UYr4mhneBqW" 'http://localhost:8083/core/coin'
+```
+
+Res
+
+> gift_coin告诉你每天签到能够拿到的竞猜币，day代表当前是第几天签到
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "coin": 9202,
+        "sign_in": {
+            "has_sign": true,
+            "day": 1,
+            "gift_coin": [
+                1,
+                2,
+                4,
+                8,
+                16
+            ]
+        }
+    }
+}
+```
+
+## 签到 20171211
+
+[GET] `/core/sign_in`
+
+### Response
+
+```
+curl -H 'uid:27008002' -H "access_token:rT843UYr4mhneBqW" 'http://localhost:8083/core/sign_in'
+```
+
+Res
+
+> 注意： coin是当前用户的竞猜币，gift_coin告诉你每天签到能够拿到的竞猜币，day代表当前是第几天签到
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "coin": 9202,
+        "sign_in": {
+            "has_sign": true,
+            "day": 1,
+            "gift_coin": [
+                1,
+                2,
+                4,
+                8,
+                16
+            ]
+        }
+    }
+}
+```
