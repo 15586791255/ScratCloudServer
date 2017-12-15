@@ -81,8 +81,17 @@ def close_mysal_conn(conn, cursor):
 
 def command(cmd):
 	print cmd
-	lines = os.popen(cmd).readlines()
-	return lines
+	i = 0
+	while (i < 5):
+		try:
+			lines = os.popen(cmd).readlines()
+			return lines
+		except Exception, e:
+			print e
+			i += 1
+			print 'retry:', i
+			time.sleep(3)
+	return []
 
 def get_redis_conn(host, port, password):
 	return redis.StrictRedis(host=host, port=port, password=password)
