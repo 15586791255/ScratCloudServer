@@ -266,7 +266,7 @@ const createBetting = (req, res) => {
 
         const [coin_info] = yield UserCoinDao.findByUid(uid);
         if (!coin_info || coin_info.coin_count <= 0 || coin_info.coin_count < coin) {
-            return BaseRes.forbiddenError(res, '投注失败，竞猜币不足');
+            return BaseRes.error(res, 998, '投注失败，竞猜币不足');
         }
 
         const betting_items = yield BettingItemDao.getBettingItems(betting_item_id_list);
