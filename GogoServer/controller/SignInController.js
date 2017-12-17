@@ -22,7 +22,12 @@ const addSign = (req, res) => {
         if (!has_sign) {
             yield SignInDao.addSignIn(uid);
             const curr_coin = SIGN_IN_COIN_GIFT[day-1];
-            yield UserCoinDao.addCoin(uid, curr_coin);
+            const [coin_info] = yield UserCoinDao.findByUid(uid);
+            if (coin_info) {
+                yield UserCoinDao.addCoin(uid, curr_coin);
+            } else {
+                yield UserCoinDao.createCoin(uid, curr_coin);
+            }
         }
         const coin = yield getCurrCoin(uid);
         return BaseRes.success(res, {

@@ -13,6 +13,11 @@ function * addCoin(uid, coin) {
         {replacements: [coin, uid], type: Sequelize.QueryTypes.UPDATE});
 }
 
+function * createCoin(uid, coin) {
+    yield Conn.query('insert ignore into user_coin set uid=?,coin_count=?',
+        {replacements: [uid, coin], type: Sequelize.QueryTypes.INSERT});
+}
+
 module.exports = {
-    findByUid, decreaseCoin, addCoin
+    findByUid, decreaseCoin, addCoin, createCoin
 };
