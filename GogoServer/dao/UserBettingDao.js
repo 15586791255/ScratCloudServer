@@ -22,6 +22,16 @@ function * getUserBetting(uid, user_betting_id, size) {
         {replacements: [uid, user_betting_id, size], type: Sequelize.QueryTypes.SELECT})
 }
 
+function * getUserBettingList(betting_ids) {
+    if (!betting_ids || betting_ids.length == 0) {
+        return [];
+    }
+    const place_holder = Utils.getSqlPlaceHolder(betting_ids.length);
+    return yield Conn.query(
+        `select betting_item_ids,sum(coin) as total_coin from user_betting where betting_item_ids in (${place_holder}) group by betting_item_ids`,
+        {replacements: betting_ids, type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getUserBettingCoin, addUserBetting, getUserBetting
+    getUserBettingCoin, addUserBetting, getUserBetting, getUserBettingList
 };

@@ -138,6 +138,24 @@ const getRacesDetail = (req, res) => {
 
             let has_betting = false;
             const betting_items = yield BettingItemDao.getBettingItem(betting.betting_id);
+            const betting_item_ids = [];
+            for (let betting_item of betting_items) {
+                betting_item_ids.push(betting_item.betting_item_id);
+            }
+
+            const betting_coin_info_list = yield UserBettingDao.getUserBettingList(betting_item_ids);
+
+            let sum_coin = 0;
+            for (let betting_coin_info of betting_coin_info_list) {
+                sum_coin += parseInt(betting_coin_info.total_coin);
+            }
+            const odd_info = {};
+            if (sum_coin > 0) {
+                for (let betting_coin_info of betting_coin_info_list) {
+                    odd_info[betting_coin_info.betting_item_ids] = parseFloat(sum_coin) / parseFloat(betting_coin_info.total_coin);
+                }
+            }
+
             for (let betting_item of betting_items) {
                 delete betting_item.create_ts;
                 delete betting_item.update_ts;
@@ -146,6 +164,11 @@ const getRacesDetail = (req, res) => {
                 if (!uid) {
                     betting_item.coin = -1;
                     continue;
+                }
+
+                betting_item.odds = odd_info[betting_item.betting_item_id];
+                if (!betting_item.odds || betting.odds == '') {
+                    betting_item.odds = 1;
                 }
 
                 const [user_betting] = yield UserBettingDao.getUserBettingCoin(uid, betting_item.betting_item_id);
