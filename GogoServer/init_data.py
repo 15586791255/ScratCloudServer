@@ -586,7 +586,7 @@ def insert_into_game_by_name(conn, cursor, gid, title, logo, reward, rule, game_
 	return cursor.fetchone()[0]
 
 def get_user_betting(conn, cursor):
-	sql = "select user_betting_id,uid,betting_item_ids,coin,odds from user_betting where status='apply'"
+	sql = "select user_betting_id,uid,betting_item_ids,coin from user_betting where status='apply'"
 	cursor.execute(sql)
 	return cursor.fetchall()
 
@@ -613,6 +613,16 @@ def user_betting_status(conn, cursor, user_betting_id, status):
 	cursor.execute(sql, (status, user_betting_id,))
 	conn.commit()
 
+def get_betting_id_by_user_betting_status(cursor):
+	sql = "select betting_id,betting_item_id from betting_item where betting_id in (select distinct(betting_id) from betting_item where betting_item_id in (select distinct(betting_item_ids) from user_betting where status='apply'))"
+	cursor.execute(sql)
+	return cursor.fetchall()
+
+def get_sum_coin(cursor):
+	sql = "select betting_item_ids,sum(coin) from user_betting where betting_item_ids in (select betting_item_id from betting_item where betting_id in (select distinct(betting_id) from betting_item where betting_item_id in (select distinct(betting_item_ids) from user_betting where status='apply'))) group by betting_item_ids"
+	cursor.execute(sql)
+	return cursor.fetchall()
+
 def main_fanqie():
 	conn, cursor = get_mysql_conn(host, db, user, passwd)
 	
@@ -626,26 +636,61 @@ def main_fanqie():
 		print '正在解析', game_name
 		fanqie_game(conn, cursor, game_id, db_game_id)
 
+	# calc odds
+	
+	# [[betting_id,betting_item_id]]
+	betting_id_list = get_betting_id_by_user_betting_status(cursor)
+
+	# [[betting_item_id,sum(coin)]]
+	sum_coin_list = get_sum_coin(cursor)
+
+	# {betting_item_id: coin_sum}
+	betting_item_id_sum_coin_map = {}
+	for sum_coin in sum_coin_list:
+		betting_item_id_sum_coin_map[sum_coin[0]] = sum_coin[1]
+	print '{betting_item_id: coin_sum}'
+	print betting_item_id_sum_coin_map
+	# {betting_id: coin_sum}
+	betting_id_sum_coin_map = {}
+	for betting_id_item in betting_id_list:
+		betting_id =  str(betting_id_item[0])
+		betting_item_id = str(betting_id_item[1])
+		betting_id_sum_coin = betting_id_sum_coin_map.get(betting_id)
+		if not betting_id_sum_coin:
+			betting_id_sum_coin = 0
+		betting_item_id_sum_coin = betting_item_id_sum_coin_map.get(betting_item_id)
+		if not betting_item_id_sum_coin:
+			betting_item_id_sum_coin = 0
+		betting_id_sum_coin += betting_item_id_sum_coin
+		betting_id_sum_coin_map[betting_id] = betting_id_sum_coin
+	print '{betting_id: coin_sum}'
+	print betting_id_sum_coin_map
+
+	# {betting_item_id: odds}
+	betting_item_odds_map = {}
+	for cols in betting_id_list:
+		(betting_id, betting_item_id) = cols
+		total_betting_id_coin = betting_id_sum_coin_map.get(str(betting_id))
+		total_betting_item_id_coin = betting_item_id_sum_coin_map.get(str(betting_item_id))
+		odds = 1
+		if total_betting_id_coin and total_betting_item_id_coin and total_betting_item_id_coin > 0 and total_betting_id_coin > 0:
+			odds = total_betting_id_coin / total_betting_item_id_coin
+		betting_item_odds_map[str(betting_item_id)] = odds
+		print 'betting_id:',betting_id, 'betting_item_id:', betting_item_id, 'sum_coin:', total_betting_id_coin, 'sum_item_coin:', total_betting_item_id_coin, 'odds:', odds
+	print betting_item_odds_map
+
+	# 获取用户投注详情
 	user_betting_datas = get_user_betting(conn, cursor)
+	
 	for user_betting in user_betting_datas:
-		(user_betting_id,uid,betting_item_ids,coin,odds) = user_betting
-		betting_item_id_arr = betting_item_ids.split(',')
-		finally_result_status = 'unknown'
-		for betting_item_id in betting_item_id_arr:
-			betting_item_status = get_betting_status(conn, cursor, betting_item_id)
-			# print user_betting_id, betting_item_id, betting_item_status
-			if betting_item_status == 'lose':
-				finally_result_status = 'lose'
-				break
-			elif betting_item_status == 'unknown':
-				finally_result_status = 'unknown'
-				break
-			elif betting_item_status == 'win':
-				finally_result_status = 'win'
-		if finally_result_status == 'win':
+		(user_betting_id,uid,betting_item_id,coin) = user_betting
+		odds = betting_item_odds_map.get(str(betting_item_id))
+		betting_item_status = get_betting_status(conn, cursor, betting_item_id)
+		print uid, user_betting_id, betting_item_id, coin, odds, betting_item_status
+		if betting_item_status == 'win':
 			add_user_coin(conn, cursor, uid, int(coin*odds), user_betting_id)
-		elif finally_result_status == 'lose':
-			user_betting_status(conn, cursor, user_betting_id, 'win')
+		elif betting_item_status == 'lose':
+			user_betting_status(conn, cursor, user_betting_id, 'lose')
 			
 	close_mysal_conn(conn, cursor)
 
