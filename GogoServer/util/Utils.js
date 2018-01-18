@@ -7,6 +7,10 @@ const rand = (count) => {
     return code;
 };
 
+const randNum = (min, max) => {
+    return parseInt(Math.random()*(max-min)+min);
+};
+
 const randChar = (count) => {
     count = count || 6;
     let text = "";
@@ -49,5 +53,5 @@ Date.prototype.format = function (format) {
 };
 
 module.exports = {
-    rand, randChar, getSqlPlaceHolder
+    rand, randChar, getSqlPlaceHolder, randNum
 };
