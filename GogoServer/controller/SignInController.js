@@ -21,7 +21,8 @@ const addSign = (req, res) => {
         const {day, has_sign} = yield getSignDays(uid);
         if (!has_sign) {
             yield SignInDao.addSignIn(uid);
-            const curr_coin = SIGN_IN_COIN_GIFT[day-1];
+            // const curr_coin = SIGN_IN_COIN_GIFT[day-1];
+            const curr_coin = Utils.randNum(100, 999);
             const [coin_info] = yield UserCoinDao.findByUid(uid);
             if (coin_info) {
                 yield UserCoinDao.addCoin(uid, curr_coin);
@@ -42,38 +43,6 @@ const addSign = (req, res) => {
 };
 
 const SIGN_IN_COIN_GIFT = [1,2,4,8,16];
-
-const addRandomSign = (req, res) => {
-    const {app_key, pt, uid, access_token} = req.headers;
-    if (!uid || !access_token) {
-        return BaseRes.tokenError(res, '请登陆');
-    }
-    Co(function *() {
-        const [token] = yield AccessTokenDao.getToken(uid, access_token);
-        if (!token) {
-            return BaseRes.tokenError(res);
-        }
-
-        const now_ts = new Date().getTime();
-        if (token.expired_ts < now_ts) {
-            return BaseRes.tokenError(res);
-        }
-
-        const {day, has_sign} = yield getSignDays(uid);
-        if (!has_sign) {
-            yield SignInDao.addSignIn(uid);
-            const curr_coin = Utils.randNum(100, 999);
-            const [coin_info] = yield UserCoinDao.findByUid(uid);
-            if (coin_info) {
-                yield UserCoinDao.addCoin(uid, curr_coin);
-            } else {
-                yield UserCoinDao.createCoin(uid, curr_coin);
-            }
-            return BaseRes.success(res, {coin: curr_coin});
-        }
-        return BaseRes.success(res, {coin: 0});
-    });
-};
 
 const coinInfo = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
@@ -145,5 +114,5 @@ function * getSignDays(uid) {
 }
 
 module.exports = {
-    addSign, coinInfo, addRandomSign
+    addSign, coinInfo
 };
