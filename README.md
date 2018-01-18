@@ -2091,22 +2091,4 @@ Res
 {"code":998,"msg":"竞猜币不足"}
 ```
 
-## 签到 20180118
-
-[GET] `/core/sign_in2`
-
-### Response
-
-```
-curl -H 'uid:27008002' -H "access_token:rT843UYr4mhneBqW" 'http://localhost:8083/core/sign_in2'
-```
-
-Res
-
-> coin 为本次签到得到的竞猜币
-
-```
-{"code":200,"msg":"ok","data":{"coin":0}}
-```
-
 

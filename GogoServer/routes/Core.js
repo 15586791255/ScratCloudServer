@@ -43,6 +43,5 @@ router.get('/race2/:race_id/:tp', RaceController.getRaceTpDetail);
 router.get('/race2/:race_id', RaceController.getRacesDetail2);
 router.get('/coin', SignInController.coinInfo);
 router.get('/sign_in', SignInController.addSign);
-router.get('/sign_in2', SignInController.addRandomSign);
 
 module.exports = router;
