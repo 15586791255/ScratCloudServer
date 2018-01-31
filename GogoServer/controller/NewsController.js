@@ -145,14 +145,14 @@ const recommend = (req, res) => {
     const {news_id, game} = req.params;
     Co(function *() {
         const [news] = yield NewsDao.getNewsDetail(news_id);
-        let recommend_news = [];
+        let db_recommend_news = [];
         if (news) {
-            const db_recommend_news = yield NewsDao.getRecommend(news.news_id, news.tp, game);
-            recommend_news = getRecommendNews(db_recommend_news, 3);
+            db_recommend_news = yield NewsDao.getRecommend(news.news_id, news.tp, game);
         } else {
-            recommend_news = yield NewsDao.getNews(0, 3, game);
+            db_recommend_news = yield NewsDao.getRecommend(0, 'all', game);
         }
 
+        const recommend_news = getRecommendNews(db_recommend_news, 3);
         const news_ids = [];
         for (let item of recommend_news) {
             news_ids.push(item.news_id);
