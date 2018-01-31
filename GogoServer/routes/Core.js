@@ -21,6 +21,7 @@ router.get('/test', function (req, res) {
 router.get('/news/type', RaceController.getNewsTypes);
 router.post('/news/like', NewsController.addLike);
 router.post('/news/unlike', NewsController.unLike);
+router.get('/news/recommend/:game/:news_id', NewsController.recommend);
 router.get('/news/:news_id', NewsController.getNewsDetail);
 router.get('/news', NewsController.getNews);
 router.get('/banner', BannerController.getBanner);

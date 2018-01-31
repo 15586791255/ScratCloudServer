@@ -13,6 +13,12 @@ function * getNewsDetail(news_id) {
         {replacements: [news_id], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getRecommend(news_id, tp, game) {
+    return yield Conn.query(
+        'select * from news where news_id!=? and tp=? and video="" and game=? order by news_ts desc limit 30',
+        {replacements: [news_id, tp, game], type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getNews, getNewsDetail
+    getNews, getNewsDetail, getRecommend
 };

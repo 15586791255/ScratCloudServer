@@ -2091,4 +2091,70 @@ Res
 {"code":998,"msg":"竞猜币不足"}
 ```
 
+## 获取推荐新闻 20180131
 
+[GET] `/core/news/recommend/:game/:news_id`
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| game | string | false | wangzhe， chicken 属于URL参数|
+| news_id | int | true | 新闻ID，属于URL参数 |
+
+### Response
+
+```
+curl 'http://localhost:8083/core/news/recommend/wangzhe/1'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "index": -1,
+        "items": [
+            {
+                "news_id": 142,
+                "nid": 344579,
+                "title": "QGhappy赛前群访：迎战JC我们有秘密武器",
+                "tp": "资讯",
+                "news_ts": "1511060157000",
+                "view_count": 958,
+                "cover": "https://itea-cdn.qq.com/file/tgl/20171119/303.1511056738.bf22c4bff89aecf57fce1e579b15c419.360*203_21455.jpg",
+                "video": "",
+                "game": "wangzhe",
+                "comment_count": 0,
+                "like_count": 0
+            },
+            {
+                "news_id": 100,
+                "nid": 345690,
+                "title": "八强巡礼：eStar 不灭星辰，永恒荣耀",
+                "tp": "资讯",
+                "news_ts": "1511257787000",
+                "view_count": 462,
+                "cover": "https://itea-cdn.qq.com/file/tgl/20171121/1511254257.89467eae393da33c433f31059c525d9f.jpg",
+                "video": "",
+                "game": "wangzhe",
+                "comment_count": 0,
+                "like_count": 0
+            },
+            {
+                "news_id": 202,
+                "nid": 342324,
+                "title": "八强巡礼：QGhappy王朝将临",
+                "tp": "资讯",
+                "news_ts": "1510752473000",
+                "view_count": 987,
+                "cover": "https://itea-cdn.qq.com/file/tgl/20171115/30.1510748449.56e17fdc0cb0e65b2859a488adef7d56.360*203_24826.jpg",
+                "video": "",
+                "game": "wangzhe",
+                "comment_count": 0,
+                "like_count": 0
+            }
+        ]
+    }
+}
+```
