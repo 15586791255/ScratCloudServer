@@ -96,7 +96,8 @@ const getRaces = (req, res) => {
         if (res_items.length < size) {
             res_index = -1;
         }
-        return BaseRes.success(res, {index: res_index, items: res_items});
+        const total = yield RaceDao.getTotalRace();
+        return BaseRes.success(res, {index: res_index, items: res_items, total: total});
     });
 };
 

@@ -27,6 +27,14 @@ function * getRacesByDt(dt_list) {
         {replacements: dt_list, type: Sequelize.QueryTypes.SELECT})
 }
 
+function * getTotalRace() {
+    const [count] = yield Conn.query('select count(1) as total from race', {type: Sequelize.QueryTypes.SELECT});
+    if (count) {
+        return count.total;
+    }
+    return 0;
+}
+
 function * getRaceDtList() {
     return yield Conn.query(
         "select distinct dt from race where race_info_id in (select distinct race_info_id from race_info where race_name like '王者%') order by dt desc",
@@ -39,5 +47,5 @@ function * getRaceDetail(race_id) {
 }
 
 module.exports = {
-    getRaces, getRaceDtList, getRacesByDt, getRaceDetail
+    getRaces, getRaceDtList, getRacesByDt, getRaceDetail, getTotalRace
 };
