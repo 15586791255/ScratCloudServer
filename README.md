@@ -2159,3 +2159,49 @@ Res
 }
 ```
 
+# 获取热门比赛 20180203
+
+[GET] `/core/races/hot`
+
+### Response
+
+```
+curl http://localhost:8083/core/races/hot
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": [
+        {
+            "race_id": 602,
+            "race_info_id": 18,
+            "game_id": 10,
+            "score_a": "0",
+            "score_b": "0",
+            "race_ts": "1511416800000",
+            "create_ts": "1511272575967",
+            "status": "ready",
+            "is_hot": 1,
+            "team_a": {
+                "team_id": 329,
+                "team_name": "Kinguin",
+                "short_name": "Kinguin",
+                "logo": "http://dl2.img.3iuu.com/attachments/dd70/8020/a71a809d47d5cd1aede75920/1510915152464.jpg",
+                "create_ts": "1510936671564"
+            },
+            "team_b": {
+                "team_id": 330,
+                "team_name": "Vega",
+                "short_name": "Vega",
+                "logo": "http://dl2.img.3iuu.com/attachments/3d48/a694/56ae7bfc80046016664c9eec/1510042839004.jpg",
+                "create_ts": "1510936671895"
+            },
+            "race_name": "DOTA2-完美大师赛-胜者组四分之一决赛"
+        }
+    ]
+}
+```

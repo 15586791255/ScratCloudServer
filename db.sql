@@ -159,6 +159,7 @@ race_ts bigint unsigned not null default 0,
 dt int unsigned not null default 0 comment '如：20171101',
 create_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
+is_hot tinyint not null default 0 comment '是否热门比赛，1代表热门；0代表普通比赛',
 primary key(race_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 

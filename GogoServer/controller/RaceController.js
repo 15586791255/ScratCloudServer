@@ -101,6 +101,26 @@ const getRaces = (req, res) => {
     });
 };
 
+const getHotRaces = (req, res) => {
+    Co(function *() {
+        const races = yield RaceDao.getHotRaces();
+        for (let race of races) {
+            const [team_a] = yield TeamDao.getTeamByTid(race.team_id_a);
+            const [team_b] = yield TeamDao.getTeamByTid(race.team_id_b);
+            race.team_a = formatTeam(team_a);
+            race.team_b = formatTeam(team_b);
+            const curr_dt = race.dt;
+            const [race_info] = yield RaceInfoDao.getRaceInfo(race.race_info_id);
+            if (!race_info) {
+                continue;
+            }
+            race.race_name = race_info.race_name;
+            formatRace(race);
+        }
+        return BaseRes.success(res, races);
+    })
+};
+
 const getRacesDetail = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
     const {race_id} = req.params;
@@ -433,5 +453,5 @@ const getNewsTypes = (req, res) => {
 };
 
 module.exports = {
-    getRaces, getRacesDetail, createBetting, getBettingHistories, getRacesDetail2, getRaceTpDetail, getNewsTypes
+    getRaces, getHotRaces, getRacesDetail, createBetting, getBettingHistories, getRacesDetail2, getRaceTpDetail, getNewsTypes
 };

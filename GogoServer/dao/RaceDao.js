@@ -46,6 +46,10 @@ function * getRaceDetail(race_id) {
         {replacements: [race_id], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * getHotRaces() {
+    return yield Conn.query('select * from race where is_hot=1 and delete_ts=0', {type: Sequelize.QueryTypes.SELECT});
+}
+
 module.exports = {
-    getRaces, getRaceDtList, getRacesByDt, getRaceDetail, getTotalRace
+    getRaces, getRaceDtList, getRacesByDt, getRaceDetail, getTotalRace, getHotRaces
 };
