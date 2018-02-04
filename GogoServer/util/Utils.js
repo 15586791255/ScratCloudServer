@@ -33,6 +33,7 @@ const getSqlPlaceHolder = (size) => {
     return prepareStatement.substr(0, prepareStatement.length - 1);
 };
 
+// new Date().format('yyyyMMdd')
 Date.prototype.format = function (format) {
     const o = {
         "M+": this.getMonth() + 1, //month

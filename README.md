@@ -1979,7 +1979,7 @@ Res
 
 | param | type | require | description |
 | --- | :---: | :---: | --- |
-| index | int | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
+| index | String | false | 标识，首次传0, 之后根据上一次返回的index传过来即可, index=-1代表没有更多数据 |
 | size | int | false | 返回数量，默认7, size>0 && size<=60 |
 
 ### Response
@@ -2203,5 +2203,217 @@ Res
             "race_name": "DOTA2-完美大师赛-胜者组四分之一决赛"
         }
     ]
+}
+```
+
+# 获取竞猜列表 20180204
+
+[GET] `/core/races2`
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| index | String | false | 标识，首次传0, 之后根据上一次返回的index传过来即可 |
+| size | int | false | 返回数量，默认7, size>0 && size<=60 |
+| sort | String | true | asc 往后获取 desc 往前获取 |
+
+### Response
+
+```
+curl 'http://localhost:8083/core/races2?index=20180203_20171112&size=3&sort=desc'
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "index": "20180203_20171109",
+        "items": [
+            {
+                "race_id": 573,
+                "race_info_id": 14,
+                "game_id": 9,
+                "score_a": "0",
+                "score_b": "2",
+                "race_ts": "1510405200000",
+                "create_ts": "1510974730107",
+                "status": "end",
+                "is_hot": 0,
+                "team_a": {
+                    "team_id": 315,
+                    "team_name": "eStar",
+                    "short_name": "eStar",
+                    "logo": "http://dl2.img.3iuu.com/attachments/08e1/deb0/88599cbd82d7340b3bff4700/1494330774453.jpg",
+                    "create_ts": "1510936653385"
+                },
+                "team_b": {
+                    "team_id": 312,
+                    "team_name": "AG超玩会",
+                    "short_name": "AG超玩会",
+                    "logo": "http://dl2.img.3iuu.com/attachments/6678/ba8b/245f19cb039438e3086875e1/1494330494203.jpg",
+                    "create_ts": "1510936652735"
+                },
+                "race_name": "王者荣耀-KPL-胜者组第一轮"
+            },
+            {
+                "race_id": 574,
+                "race_info_id": 14,
+                "game_id": 9,
+                "score_a": "0",
+                "score_b": "2",
+                "race_ts": "1510399800000",
+                "create_ts": "1510974730783",
+                "status": "end",
+                "is_hot": 0,
+                "team_a": {
+                    "team_id": 311,
+                    "team_name": "GK",
+                    "short_name": "GK",
+                    "logo": "http://dl2.img.3iuu.com/attachments/b7cf/3ab1/7ba7a0e1048414655d5df2e4/1494330598458.jpg",
+                    "create_ts": "1510936652734"
+                },
+                "team_b": {
+                    "team_id": 316,
+                    "team_name": "AS仙阁",
+                    "short_name": "AS仙阁",
+                    "logo": "http://dl2.img.3iuu.com/attachments/120d/f55a/e0acda6cecad3f47b4f84b62/1494330505002.jpg",
+                    "create_ts": "1510936653758"
+                },
+                "race_name": "王者荣耀-KPL-胜者组第一轮"
+            },
+            {
+                "race_id": 575,
+                "race_info_id": 14,
+                "game_id": 9,
+                "score_a": "2",
+                "score_b": "0",
+                "race_ts": "1510394400000",
+                "create_ts": "1510974731404",
+                "status": "end",
+                "is_hot": 0,
+                "team_a": {
+                    "team_id": 309,
+                    "team_name": "EDG.M",
+                    "short_name": "EDG.M",
+                    "logo": "http://dl2.img.3iuu.com/attachments/e130/86a3/4de95b02b624b7c402b45166/1500625495702.jpg",
+                    "create_ts": "1510936652396"
+                },
+                "team_b": {
+                    "team_id": 313,
+                    "team_name": "YTG",
+                    "short_name": "YTG",
+                    "logo": "http://dl2.img.3iuu.com/attachments/713b/88ce/2cf91f25d894bdd8f77be2ae/1494330584659.jpg",
+                    "create_ts": "1510936653032"
+                },
+                "race_name": "王者荣耀-KPL-胜者组第一轮"
+            },
+            {
+                "race_id": 576,
+                "race_info_id": 14,
+                "game_id": 9,
+                "score_a": "1",
+                "score_b": "2",
+                "race_ts": "1510318800000",
+                "create_ts": "1510974732092",
+                "status": "end",
+                "is_hot": 0,
+                "team_a": {
+                    "team_id": 315,
+                    "team_name": "eStar",
+                    "short_name": "eStar",
+                    "logo": "http://dl2.img.3iuu.com/attachments/08e1/deb0/88599cbd82d7340b3bff4700/1494330774453.jpg",
+                    "create_ts": "1510936653385"
+                },
+                "team_b": {
+                    "team_id": 311,
+                    "team_name": "GK",
+                    "short_name": "GK",
+                    "logo": "http://dl2.img.3iuu.com/attachments/b7cf/3ab1/7ba7a0e1048414655d5df2e4/1494330598458.jpg",
+                    "create_ts": "1510936652734"
+                },
+                "race_name": "王者荣耀-KPL-胜者组第一轮"
+            },
+            {
+                "race_id": 577,
+                "race_info_id": 14,
+                "game_id": 9,
+                "score_a": "2",
+                "score_b": "0",
+                "race_ts": "1510313400000",
+                "create_ts": "1510974732828",
+                "status": "end",
+                "is_hot": 0,
+                "team_a": {
+                    "team_id": 317,
+                    "team_name": "XQ",
+                    "short_name": "XQ",
+                    "logo": "http://dl2.img.3iuu.com/attachments/4084/d609/4c8d5a37dce044d4b4fc3573/1494330757419.jpg",
+                    "create_ts": "1510936654723"
+                },
+                "team_b": {
+                    "team_id": 318,
+                    "team_name": "JC",
+                    "short_name": "JC",
+                    "logo": "http://dl2.img.3iuu.com/attachments/dd09/11d7/5416fe74d7f86a1b6082acf9/1494330570384.jpg",
+                    "create_ts": "1510936654724"
+                },
+                "race_name": "王者荣耀-KPL-胜者组第一轮"
+            },
+            {
+                "race_id": 578,
+                "race_info_id": 14,
+                "game_id": 9,
+                "score_a": "1",
+                "score_b": "2",
+                "race_ts": "1510308000000",
+                "create_ts": "1510974733501",
+                "status": "end",
+                "is_hot": 0,
+                "team_a": {
+                    "team_id": 319,
+                    "team_name": "SViper",
+                    "short_name": "SViper",
+                    "logo": "http://dl2.img.3iuu.com/attachments/2f06/ec15/4ea6dcab4305d9bdd17f47ce/1494330735369.jpg",
+                    "create_ts": "1510936665032"
+                },
+                "team_b": {
+                    "team_id": 313,
+                    "team_name": "YTG",
+                    "short_name": "YTG",
+                    "logo": "http://dl2.img.3iuu.com/attachments/713b/88ce/2cf91f25d894bdd8f77be2ae/1494330584659.jpg",
+                    "create_ts": "1510936653032"
+                },
+                "race_name": "王者荣耀-KPL-胜者组第一轮"
+            },
+            {
+                "race_id": 579,
+                "race_info_id": 14,
+                "game_id": 9,
+                "score_a": "0",
+                "score_b": "2",
+                "race_ts": "1510232400000",
+                "create_ts": "1510974734133",
+                "status": "end",
+                "is_hot": 0,
+                "team_a": {
+                    "team_id": 316,
+                    "team_name": "AS仙阁",
+                    "short_name": "AS仙阁",
+                    "logo": "http://dl2.img.3iuu.com/attachments/120d/f55a/e0acda6cecad3f47b4f84b62/1494330505002.jpg",
+                    "create_ts": "1510936653758"
+                },
+                "team_b": {
+                    "team_id": 317,
+                    "team_name": "XQ",
+                    "short_name": "XQ",
+                    "logo": "http://dl2.img.3iuu.com/attachments/4084/d609/4c8d5a37dce044d4b4fc3573/1494330757419.jpg",
+                    "create_ts": "1510936654723"
+                },
+                "race_name": "王者荣耀-KPL-胜者组第一轮"
+            }
+        ]
+    }
 }
 ```

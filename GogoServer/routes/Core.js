@@ -32,6 +32,7 @@ router.get('/comments', CommentController.getComments);
 router.get('/teams', TeamController.getTeams);
 router.get('/team/:team_id', TeamController.getTeam);
 router.get('/races', RaceController.getRaces);
+router.get('/races2', RaceController.getRaces2);
 router.get('/races/hot', RaceController.getHotRaces);
 router.get('/race/:race_id', RaceController.getRacesDetail);
 router.post('/betting', RaceController.createBetting);
