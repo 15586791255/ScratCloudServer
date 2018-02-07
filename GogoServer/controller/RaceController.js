@@ -31,13 +31,51 @@ const formatRace = (race) => {
     return race;
 };
 
+const get_dt_list = (dt_list, curr_dt, size, sort) => {
+    let check_abs_list = false;
+    if (!curr_dt || curr_dt == '' || curr_dt == 0) {
+        let not_ts = new Date().getTime();
+        if (sort == 'asc') {
+            not_ts -= 24*60*60*1000;
+        } else if (sort == 'desc') {
+            not_ts += 24*60*60*1000;
+        }
+        curr_dt = parseInt(new Date(not_ts).format('yyyyMMdd'));
+        check_abs_list = true;
+    }
+    if (sort == 'asc') {
+        dt_list.sort((a, b) => a - b);
+    } else if (sort == 'desc') {
+        dt_list.sort((a, b) => b - a);
+    }
+    let res_dt_list = [];
+    for (let dt of dt_list) {
+        if (sort == 'asc') {
+            if (curr_dt < dt) {
+                res_dt_list.push(dt);
+            }
+        } else if (sort == 'desc') {
+            if (curr_dt > dt) {
+                res_dt_list.push(dt);
+            }
+        }
+        if (res_dt_list.length >= size) {
+            break;
+        }
+    }
+    if (check_abs_list && res_dt_list.length == 0 && dt_list.length > 0 && sort == 'asc') {
+        return get_dt_list(dt_list, 0, size, 'desc');
+    }
+    res_dt_list.sort();
+    return res_dt_list;
+};
+
 const getRaces2 = (req, res) => {
     let {index, size, sort} = req.query;
     if (!sort) {
         sort = 'desc';
     }
 
-    let curr_index;
     let curr_asc_index;
     let curr_desc_index;
     if (!index || index == 0 || index == '') {
@@ -56,10 +94,13 @@ const getRaces2 = (req, res) => {
         curr_asc_index = asc_index;
         curr_desc_index = desc_index;
     }
-    if (sort == 'asc') {
-        curr_index = curr_asc_index;
-    } else {
-        curr_index = curr_desc_index;
+    let curr_index = index;
+    if (index.indexOf('_') != -1) {
+        if (sort == 'asc') {
+            curr_index = curr_asc_index;
+        } else {
+            curr_index = curr_desc_index;
+        }
     }
 
     if (!size) {
@@ -72,30 +113,21 @@ const getRaces2 = (req, res) => {
 
     Co(function *() {
         const race_dt_list = yield RaceDao.getRaceDtList();
-
-        if (sort == 'asc') {
-            race_dt_list.reverse();
+        const tmp_list = [];
+        for (let item of race_dt_list) {
+            tmp_list.push(item.dt);
         }
+        const dt_list = get_dt_list(tmp_list, curr_index, size, sort);
+        console.log(dt_list);
 
-        const dt_list = [];
         let min_index = curr_desc_index;
         let max_index = curr_asc_index;
-        for (let item of race_dt_list) {
-            if (sort == 'asc' && item.dt <= curr_index) {
-                continue;
+        for (let dt of dt_list) {
+            if (min_index > dt) {
+                min_index = dt;
             }
-            if (sort == 'desc' && item.dt >= curr_index) {
-                continue;
-            }
-            if (min_index > item.dt) {
-                min_index = item.dt;
-            }
-            if (max_index < item.dt) {
-                max_index = item.dt;
-            }
-            dt_list.push(item.dt);
-            if (dt_list.length >= size) {
-                break;
+            if (max_index < dt) {
+                max_index = dt;
             }
         }
 
@@ -113,9 +145,7 @@ const getRaces2 = (req, res) => {
             formatRace(race);
         }
 
-        if (sort == 'asc') {
-            races.reverse();
-        }
+        races.reverse();
         return BaseRes.success(res, {index: `${max_index}_${min_index}`, items: races});
     });
 };
