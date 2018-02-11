@@ -182,6 +182,56 @@ const exchangeHistory = (req, res) => {
     });
 };
 
+const updateGoods = (req, res) => {
+    // TODO auth
+    const {goods_id, tp, cover, title, description, coin, total, expired_ts, delete_ts} = req.body;
+    Co(function *() {
+        yield GoodsDao.updateGoods(goods_id, tp, cover, title, description, coin, total, expired_ts, delete_ts);
+        return BaseRes.success(res);
+    })
+};
+
+const addGoods = (req, res) => {
+    const {tp, cover, title, description, coin, total, expired_ts} = req.body;
+    Co(function *() {
+        yield GoodsDao.addGoods(tp, cover, title, description, coin, total, expired_ts);
+        return BaseRes.success(res);
+    })
+};
+
+const getAllGoods = (req, res) => {
+    let {index, size, tp} = req.query;
+
+    if (!index) {
+        index = 0
+    } else if (index < 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    if (!size) {
+        size = 20;
+    } else if (size > 60) {
+        size = 60;
+    } else if (size <= 0) {
+        return BaseRes.success(res, {index: -1, items: []});
+    }
+
+    Co(function *() {
+        const goods = yield GoodsDao.getAllGoods(tp, index, parseInt(size));
+        let min_index = index;
+        for (let good of goods) {
+            if (min_index == 0 || min_index > good.goods_id) {
+                min_index = good.goods_id;
+            }
+            delete good.description;
+        }
+        if (goods.length < size) {
+            min_index = -1;
+        }
+        BaseRes.success(res, {index: min_index, items: goods});
+    });
+};
+
 module.exports = {
-    getGoods, getGoodsDetail, bugGoods, exchangeHistory
+    getGoods, getGoodsDetail, bugGoods, exchangeHistory, getAllGoods, updateGoods, addGoods
 };
