@@ -13,5 +13,6 @@ router.get('/exchange/history', GoodsController.exchangeHistory);
 router.get('/admin/goods', GoodsController.getAllGoods);
 router.post('/admin/goods', GoodsController.updateGoods);
 router.put('/admin/goods', GoodsController.addGoods);
+router.delete('/admin/goods/:goods_id', GoodsController.deleteGoods);
 
 module.exports = router;

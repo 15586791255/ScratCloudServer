@@ -192,9 +192,19 @@ const updateGoods = (req, res) => {
 };
 
 const addGoods = (req, res) => {
+    // TODO auth
     const {tp, cover, title, description, coin, total, expired_ts} = req.body;
     Co(function *() {
         yield GoodsDao.addGoods(tp, cover, title, description, coin, total, expired_ts);
+        return BaseRes.success(res);
+    })
+};
+
+const deleteGoods = (req, res) => {
+    // TODO auth
+    const {goods_id} = req.params;
+    Co(function *() {
+        yield GoodsDao.updateDeleteState(goods_id, true);
         return BaseRes.success(res);
     })
 };
@@ -233,5 +243,5 @@ const getAllGoods = (req, res) => {
 };
 
 module.exports = {
-    getGoods, getGoodsDetail, bugGoods, exchangeHistory, getAllGoods, updateGoods, addGoods
+    getGoods, getGoodsDetail, bugGoods, exchangeHistory, getAllGoods, updateGoods, addGoods, deleteGoods
 };

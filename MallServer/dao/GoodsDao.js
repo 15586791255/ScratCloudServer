@@ -50,6 +50,17 @@ function * getGoodsDetail(goods_id) {
         {replacements: [goods_id], type: Sequelize.QueryTypes.SELECT});
 }
 
+function * updateDeleteState(goods_id, isDelete) {
+    const delete_ts = isDelete ? new Date().getTime() : 0;
+    yield Conn.query(
+        'update goods set delete_ts=? where goods_id=? limit 1',
+        {
+            replacements: [delete_ts, goods_id],
+            type: Sequelize.QueryTypes.UPDATE
+        }
+    )
+}
+
 module.exports = {
-    getGoods, getGoodsDetail, getAllGoods, updateGoods, addGoods
+    getGoods, getGoodsDetail, getAllGoods, updateGoods, addGoods, updateDeleteState
 };
