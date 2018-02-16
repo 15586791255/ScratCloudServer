@@ -46,8 +46,7 @@ const getGoodsDetail = (req, res) => {
         if (!goods) {
             return BaseRes.notFoundError(res);
         }
-
-        delete goods.delete_ts;
+        
         const [count_info] = yield GoodsOrderDao.getTotalOrders(goods_id);
         goods.total_apply = count_info.total;
         if (!uid || uid == '') {
