@@ -34,6 +34,9 @@ http {
     location /api/feedback/ {
         proxy_pass http://localhost:8088/feedback/;
     }
+    location /cms/ {
+        proxy_pass http://localhost:8089/;
+    }
 ```
 
 # Server API for Gogo
