@@ -106,7 +106,7 @@ def main():
 	conn, cursor = get_mysql_conn('localhost', 'scratcloud', 'root', '', 3306)
 	team_id_1 = add_team(conn, cursor, 'gogo1', 'TeamA', 'http://dl2.img.3iuu.com/attachments/7bbc/8b70/6f8edc68855a0eb50b1156de/1494419398920.jpg')
 	team_id_2 = add_team(conn, cursor, 'gogo2', 'TeamB', 'http://dl2.img.3iuu.com/attachments/ea03/61a9/a087353719ac49f29b563c9f/1494419408721.jpg')
-	race_info_id = add_race_info(conn, cursor, 'gogo1', '内测比赛')
+	race_info_id = add_race_info(conn, cursor, 'gogo1', '王者内测比赛')
 	race_id = add_race(conn, cursor, race_info_id, 'gogo1', 'gogo1', 'gogo2', '20180401')
 	
 	betting_id_1 = add_betting(conn, cursor, race_id, '对局总数')
