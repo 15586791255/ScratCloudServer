@@ -1,5 +1,10 @@
 # gogo_cms
 
+```
+npm run build
+cp -r -f dist/* /usr/share/nginx/html/gogo_cms/
+```
+
 > A Vue.js project
 
 ## Build Setup
