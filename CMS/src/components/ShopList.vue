@@ -42,7 +42,7 @@
     },
     created: function () {
       this.tp = this.$route.query.tp
-      this.title = this.$global.shopType[this.tp]
+      this.title = this.shopType[this.tp]
       this.loadData(true)
     },
     methods: {
@@ -55,7 +55,7 @@
           return
         }
         const that = this
-        this.$http.get(`${this.$global.apiHost}/api/mall/admin/goods`, {params: {tp: this.tp, index: this.index}})
+        this.$http.get(`${this.apiHost}/api/mall/admin/goods`, {params: {tp: this.tp, index: this.index}})
           .then(function (response) {
             console.dir(response)
             that.loading = false

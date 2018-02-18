@@ -4,8 +4,6 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
-import Global from '../static/global'
-import Utils from '../static/utils'
 import DateFormat from '../static/date'
 import Home from './components/HelloFromVux'
 import ShopMgr from './components/ShopMgr'
@@ -24,9 +22,15 @@ Vue.prototype.$showAlert = function (title, msg) {
     content: msg
   })
 }
-Vue.prototype.$global = Global
-Vue.prototype.$utils = Utils
 Vue.prototype.$dateFormat = DateFormat
+
+Vue.prototype.apiHost = 'http://localhost:8081'
+Vue.prototype.shopType = {
+  equipment: '游戏装备',
+  lucky_money: '红包',
+  game_around: '游戏周边',
+  virtual: '虚拟物品'
+}
 
 const routes = [{
   path: '/',

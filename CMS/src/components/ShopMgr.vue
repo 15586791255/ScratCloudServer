@@ -18,7 +18,7 @@
     },
     data () {
       return {
-        shopType: this.$global.shopType
+        shopType: this.shopType
       }
     }
   }

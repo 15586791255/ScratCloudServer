@@ -58,8 +58,8 @@
     },
     created: function () {
       const tpKeyList = []
-      for (var tp in this.$global.shopType) {
-        tpKeyList.push(this.$global.shopType[tp])
+      for (var tp in this.shopType) {
+        tpKeyList.push(this.shopType[tp])
       }
       this.tpList = [tpKeyList]
       this.goodsId = this.$route.query.goods_id
@@ -70,7 +70,7 @@
         return
       }
       const that = this
-      this.$http.get(`${this.$global.apiHost}/api/mall/goods/${this.goodsId}`)
+      this.$http.get(`${this.apiHost}/api/mall/goods/${this.goodsId}`)
         .then(response => {
           console.log(response)
           that.loading = false
@@ -89,10 +89,10 @@
           that.coin = data.coin
           that.deleteTs = data.delete_ts ? data.delete_ts : 0
           that.description = data.description
-          that.typeStr = [that.$global.shopType[data.tp]]
+          that.typeStr = [that.shopType[data.tp]]
           const createTs = parseFloat(data.create_ts)
           if (createTs > 0) {
-            that.createDatetime = that.$dateFormat.toDatetimeStr(new Date(createTs))
+            that.createDatetime = that.$dateFormat.toStr(new Date(createTs), 'yyyy-MM-dd hh:mm:ss')
           }
           const expiredTs = parseFloat(data.expired_ts)
           if (expiredTs > 0) {
@@ -112,7 +112,7 @@
       add () {
         const expiredTs = new Date(this.expiredDatetime).getTime()
         const that = this
-        this.$http.put(`${this.$global.apiHost}/api/mall/admin/goods`,
+        this.$http.put(`${this.apiHost}/api/mall/admin/goods`,
           {
             tp: this.getSelectedType(this.typeStr[0]),
             cover: this.cover,
@@ -130,8 +130,8 @@
           })
       },
       getSelectedType (tpStr) {
-        for (var tp in this.$global.shopType) {
-          if (this.$global.shopType[tp] === tpStr) {
+        for (var tp in this.shopType) {
+          if (this.shopType[tp] === tpStr) {
             return tp
           }
         }
@@ -140,7 +140,7 @@
       update () {
         const that = this
         that.loading = true
-        this.$http.post(`${this.$global.apiHost}/api/mall/admin/goods`,
+        this.$http.post(`${this.apiHost}/api/mall/admin/goods`,
           {
             goods_id: this.goodsId,
             tp: this.getSelectedType(this.typeStr[0]),
@@ -171,11 +171,11 @@
         }
         const that = this
         that.loading = true
-        this.$http.get(`${this.$global.apiHost}/api/file/qiniu_token`)
+        this.$http.get(`${this.apiHost}/api/file/qiniu_token`)
           .then(res => {
             that.loading = false
-            if (!that.$utils.isResSuccess(res)) {
-              that.$utils.errLoog(res)
+            if (res.data.code !== 200) {
+              console.dir(res)
               return
             }
             const {upload_token, domain} = res.data.data
@@ -208,7 +208,7 @@
       },
       deleteGoods () {
         const that = this
-        this.$http.delete(`${this.$global.apiHost}/api/mall/admin/goods/${this.goodsId}`)
+        this.$http.delete(`${this.apiHost}/api/mall/admin/goods/${this.goodsId}`)
           .then(res => {
             that.$router.go(-1)
           }, err => {
