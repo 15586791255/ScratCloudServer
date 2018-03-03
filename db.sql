@@ -176,6 +176,8 @@ fee int unsigned not null default 0 comment '单位分',
 coin_count int unsigned not null default 0,
 create_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
+gift_name varchar(16) not null default '' comment '礼物名字',
+gift_count int unsigned not null default 1 comment '数量',
 primary key(coin_plan_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -183,6 +185,22 @@ insert ignore into coin_plan set fee=600,coin_count=400,create_ts=unix_timestamp
 insert ignore into coin_plan set fee=3000,coin_count=600,create_ts=unix_timestamp(now())*1000;
 insert ignore into coin_plan set fee=6800,coin_count=1000,create_ts=unix_timestamp(now())*1000;
 insert ignore into coin_plan set fee=12800,coin_count=30000,create_ts=unix_timestamp(now())*1000;
+alter table coin_plan add gift_name varchar(16) not null default '' comment '礼物名字';
+alter table coin_plan add gift_count int unsigned not null default 1 comment '数量';
+update coin_plan set gift_name='鲜花' where fee=600;
+update coin_plan set gift_name='砖石' where fee=3000;
+update coin_plan set gift_name='豪车' where fee=6800;
+update coin_plan set gift_name='邮轮' where fee=12800;
+
+create table coin_plan_gift (
+coin_plan_gift_id int unsigned not null auto_increment comment '自增主键',
+uid char(16) not null default '',
+coin_plan_id int unsigned not null default 0,
+total_gift int unsigned not null default 0 comment '礼物数量',
+create_ts bigint unsigned not null default 0,
+unique key(uid, coin_plan_id),
+primary key(coin_plan_gift_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 create table order_info (
 order_id int unsigned not null auto_increment comment '自增主键',

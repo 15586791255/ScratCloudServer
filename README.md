@@ -610,22 +610,30 @@ Res
         {
             "coin_plan_id": 1,
             "fee": 600,
-            "coin_count": 400
+            "coin_count": 400,
+            "gift_name": "鲜花",
+            "gift_count": 1
         },
         {
             "coin_plan_id": 2,
             "fee": 3000,
-            "coin_count": 600
+            "coin_count": 600,
+            "gift_name": "砖石",
+            "gift_count": 1
         },
         {
             "coin_plan_id": 3,
             "fee": 6800,
-            "coin_count": 1000
+            "coin_count": 1000,
+            "gift_name": "豪车",
+            "gift_count": 1
         },
         {
             "coin_plan_id": 4,
             "fee": 12800,
-            "coin_count": 30000
+            "coin_count": 30000,
+            "gift_name": "邮轮",
+            "gift_count": 1
         }
     ]
 }
@@ -646,32 +654,6 @@ Res
 
 ```
 {"code":200,"msg":"ok","data":"支付宝的orderInfo"}
-```
-
-## 获取用户信息
-
-[GET] `/core/user`
-
-### Response
-
-```
-curl -H 'app_key: test_key' -H 'pt: app' -H 'uid: 27008002' -H 'access_token:rT843UYr4mhneBqW' http://localhost:8083/core/user
-```
-
-Res
-
-```
-{
-    "code": 200,
-    "msg": "ok",
-    "data": {
-        "uid": "27008002",
-        "coin": 0,
-        "username": "18924212953",
-        "gender": "male",
-        "avatar": "http://wx.qlogo.cn/mmopen/vi_32/9icoOxiatBlS91mriaJWBvCGHEsw1N8XibwJPNLAQdyYHic7bdqUG4TqbIDX58KmP7InBWdHPU8tEQU0WdgH8tGmB5A/0"
-    }
-}
 ```
 
 ## 退出登录接口
@@ -2415,6 +2397,55 @@ Res
                     "create_ts": "1510936654723"
                 },
                 "race_name": "王者荣耀-KPL-胜者组第一轮"
+            }
+        ]
+    }
+}
+```
+
+## 获取用户信息 20180303
+
+[GET] `/core/user`
+
+### Response
+
+```
+curl -H 'app_key: test_key' -H 'pt: app' -H 'uid: 27008002' -H 'access_token:rT843UYr4mhneBqW' http://localhost:8083/core/user
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "uid": "27008002",
+        "coin": 9702,
+        "tel": "",
+        "username": "hh",
+        "gender": "female",
+        "avatar": "http://wx.qlogo.cn/mmopen/vi_32/9icoOxiatBlS91mriaJWBvCGHEsw1N8XibwJPNLAQdyYHic7bdqUG4TqbIDX58KmP7InBWdHPU8tEQU0WdgH8tGmB5A/0",
+        "coin_gift": [
+            {
+                "coin_plan_id": 1,
+                "gift_name": "鲜花",
+                "total_gift": 0
+            },
+            {
+                "coin_plan_id": 2,
+                "gift_name": "砖石",
+                "total_gift": 0
+            },
+            {
+                "coin_plan_id": 3,
+                "gift_name": "豪车",
+                "total_gift": 0
+            },
+            {
+                "coin_plan_id": 4,
+                "gift_name": "邮轮",
+                "total_gift": 0
             }
         ]
     }

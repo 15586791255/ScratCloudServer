@@ -2,6 +2,8 @@ const AccessTokenDao = require('../dao/AccessTokenDao');
 const AccountDao = require('../dao/AccountDao');
 const UserCoinDao = require('../dao/UserCoinDao');
 const AddressDao = require('../dao/AddressDao');
+const CoinPlanGiftDao = require('../dao/CoinPlanGiftDao');
+const CoinPlanDao = require('../dao/CoinPlanDao');
 
 const getUserInfo = (req, res) => {
     const {app_key, pt, uid, access_token} = req.headers;
@@ -35,6 +37,18 @@ const getUserInfo = (req, res) => {
         if (coin_info) {
             coin = coin_info.coin_count;
         }
+        
+        const coinPlanGiftMap = yield CoinPlanGiftDao.getCoinPlanGiftMap(uid);
+        const coinPlains = yield CoinPlanDao.getPlans();
+        const coinPlanGiftList = [];
+        for (let item of coinPlains) {
+            const coinItem = {
+                coin_plan_id: item.coin_plan_id,
+                gift_name: item.gift_name,
+                total_gift: coinPlanGiftMap[item.coin_plan_id] ? coinPlanGiftMap[item.coin_plan_id] : 0
+            };
+            coinPlanGiftList.push(coinItem);
+        }
 
         BaseRes.success(res, {
             uid,
@@ -42,7 +56,8 @@ const getUserInfo = (req, res) => {
             tel: account.tel,
             username: account.username,
             gender: account.gender,
-            avatar: account.avatar
+            avatar: account.avatar,
+            coin_gift: coinPlanGiftList
         });
     });
 };
