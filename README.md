@@ -2648,3 +2648,28 @@ Res
     }
 }
 ```
+
+# 给比赛加礼物 20180303
+
+[POST] **application/json** `/core/race2/coin_gift`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| coin_plan_id | int | true | 套餐ID |
+| total_gift | int | true | 赠送数量 (>0) |
+| race_id | string | true | 赛事ID |
+| team_id | string | true | 战队ID |
+
+### Response
+
+```
+curl -X POST -H "Content-type: application/json" -H 'app_key: test_key' -H 'pt: app' -H 'uid: 27008002' -H 'access_token:rT843UYr4mhneBqW' -d '{"coin_plan_id": 1, "total_gift": 1, "race_id": "516", "team_id": "299"}' http://localhost:8083/core/race2/coin_gift
+```
+
+Res
+
+```
+{"code":200,"msg":"ok"}
+```

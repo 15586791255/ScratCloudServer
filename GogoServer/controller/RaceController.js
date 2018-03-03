@@ -9,6 +9,7 @@ const CoinHistoryDao = require('../dao/CoinHistoryDao');
 const AccessTokenDao = require('../dao/AccessTokenDao');
 const RaceGiftDao = require('../dao/RaceGiftDao');
 const CoinPlanDao = require('../dao/CoinPlanDao');
+const CoinPlanGiftDao = require('../dao/CoinPlanGiftDao');
 
 const formatTeam = (team) => {
     if (!team) {
@@ -38,9 +39,9 @@ const get_dt_list = (dt_list, curr_dt, size, sort) => {
     if (!curr_dt || curr_dt == '' || curr_dt == 0) {
         let not_ts = new Date().getTime();
         if (sort == 'asc') {
-            not_ts -= 24*60*60*1000;
+            not_ts -= 24 * 60 * 60 * 1000;
         } else if (sort == 'desc') {
-            not_ts += 24*60*60*1000;
+            not_ts += 24 * 60 * 60 * 1000;
         }
         curr_dt = parseInt(new Date(not_ts).format('yyyyMMdd'));
         check_abs_list = true;
@@ -83,12 +84,12 @@ const getRaces2 = (req, res) => {
     if (!index || index == 0 || index == '') {
         let ts = new Date().getTime();
         if (sort == 'asc') {
-            ts -= 24*60*60*1000;
+            ts -= 24 * 60 * 60 * 1000;
         } else {
-            ts += 24*60*60*1000;
+            ts += 24 * 60 * 60 * 1000;
         }
-        curr_asc_index = new Date(ts-24*60*60*1000).format('yyyyMMdd');
-        curr_desc_index = new Date(ts+24*60*60*1000).format('yyyyMMdd');
+        curr_asc_index = new Date(ts - 24 * 60 * 60 * 1000).format('yyyyMMdd');
+        curr_desc_index = new Date(ts + 24 * 60 * 60 * 1000).format('yyyyMMdd');
     } else if (index.indexOf('_') == -1) {
         return BaseRes.success(res, {index: -1, items: []});
     } else {
@@ -359,9 +360,9 @@ const getRaceTpDetail = (req, res) => {
             for (let betting_item of betting_items) {
                 betting_item_ids.push(betting_item.betting_item_id);
             }
-            
+
             const betting_coin_info_list = yield UserBettingDao.getUserBettingList(betting_item_ids);
-            
+
             let sum_coin = 0;
             for (let betting_coin_info of betting_coin_info_list) {
                 sum_coin += parseInt(betting_coin_info.total_coin);
@@ -372,7 +373,7 @@ const getRaceTpDetail = (req, res) => {
                     odd_info[betting_coin_info.betting_item_ids] = parseFloat(sum_coin) / parseFloat(betting_coin_info.total_coin);
                 }
             }
-            
+
             for (let betting_item of betting_items) {
                 betting_item.odds = odd_info[betting_item.betting_item_id];
                 if (!betting_item.odds || betting.odds == '') {
@@ -404,7 +405,7 @@ const getRacesDetail2 = (req, res) => {
         race.team_b = formatTeam(team_b);
         formatRace(race);
         const coinPlains = yield CoinPlanDao.getPlans();
-        const raceGiftA = yield RaceGiftDao.getRaceGift(race_id, team_a.team_id);
+        const raceGiftA = yield RaceGiftDao.getRaceGiftMap(race_id, team_a.team_id);
         let coinPlanGiftAList = [];
         for (let item of coinPlains) {
             const coinItem = {
@@ -415,7 +416,7 @@ const getRacesDetail2 = (req, res) => {
             coinPlanGiftAList.push(coinItem);
         }
         race.team_a_gift = coinPlanGiftAList;
-        const raceGiftB = yield RaceGiftDao.getRaceGift(race_id, team_b.team_id);
+        const raceGiftB = yield RaceGiftDao.getRaceGiftMap(race_id, team_b.team_id);
         let coinPlanGiftBList = [];
         for (let item of coinPlains) {
             const coinItem = {
@@ -472,7 +473,7 @@ const createBetting = (req, res) => {
         if (!token) {
             return BaseRes.tokenError(res);
         }
-        
+
         const now_ts = new Date().getTime();
         if (token.expired_ts < now_ts) {
             return BaseRes.tokenError(res);
@@ -498,7 +499,7 @@ const createBetting = (req, res) => {
         if (betting_id_set.size < betting_item_id_list.length) {
             return BaseRes.forbiddenError(res, '投注失败，每个竞猜项目只能选一项');
         }
-        
+
         for (let betting_id of betting_id_set) {
             const [betting] = yield BettingDao.getBettingDetail(betting_id);
             if (!betting) {
@@ -528,7 +529,7 @@ const getBettingHistories = (req, res) => {
     if (!uid || !access_token) {
         return BaseRes.tokenError(res);
     }
-    
+
     let {index, size} = req.query;
     if (!index) {
         index = 0
@@ -554,7 +555,7 @@ const getBettingHistories = (req, res) => {
         if (token.expired_ts < now_ts) {
             return BaseRes.tokenError(res);
         }
-        
+
         const user_bettings = yield UserBettingDao.getUserBetting(uid, index, parseInt(size));
         let min_index = index;
         for (let user_betting of user_bettings) {
@@ -581,7 +582,7 @@ const getBettingHistories = (req, res) => {
                 race_name: race_info.race_name,
                 description: race_info.description
             };
-            
+
             if (min_index == 0 || min_index > user_betting.user_betting_id) {
                 min_index = user_betting.user_betting_id;
             }
@@ -597,6 +598,57 @@ const getNewsTypes = (req, res) => {
     BaseRes.success(res, Config.games);
 };
 
+const addRaceGift = (req, res) => {
+    const {app_key, pt, uid, access_token} = req.headers;
+    if (!uid || !access_token) {
+        return BaseRes.tokenError(res);
+    }
+
+    const {coin_plan_id, total_gift, race_id, team_id} = req.body;
+
+    if (!total_gift || total_gift <= 0) {
+        return BaseRes.paramError(res);
+    }
+
+    Co(function *() {
+        const [token] = yield AccessTokenDao.getToken(uid, access_token);
+        if (!token) {
+            return BaseRes.tokenError(res);
+        }
+
+        const now_ts = new Date().getTime();
+        if (token.expired_ts < now_ts) {
+            return BaseRes.tokenError(res);
+        }
+
+        const [user_total_gift] = yield CoinPlanGiftDao.getTotalCoinPlanGift(uid, coin_plan_id);
+        if (!user_total_gift || user_total_gift < total_gift) {
+            return BaseRes.forbiddenError(res, '礼物数额不足');
+        }
+
+        const [race_total_gift] = yield RaceGiftDao.getRaceTotalGift(race_id, team_id, coin_plan_id);
+        if (!race_total_gift || !race_total_gift.total_gift) {
+            yield RaceGiftDao.addRaceGift(race_id, team_id, coin_plan_id, total_gift);
+        } else {
+            yield RaceGiftDao.updateRaceGift(race_id, team_id, coin_plan_id, race_total_gift.total_gift + total_gift);
+        }
+
+        yield CoinPlanGiftDao.updateCoinPlanGift(uid, coin_plan_id, user_total_gift.total_gift - total_gift);
+
+        BaseRes.success(res);
+    });
+
+};
+
 module.exports = {
-    getRaces, getRaces2, getHotRaces, getRacesDetail, createBetting, getBettingHistories, getRacesDetail2, getRaceTpDetail, getNewsTypes
+    getRaces,
+    getRaces2,
+    getHotRaces,
+    getRacesDetail,
+    createBetting,
+    getBettingHistories,
+    getRacesDetail2,
+    getRaceTpDetail,
+    getNewsTypes,
+    addRaceGift
 };

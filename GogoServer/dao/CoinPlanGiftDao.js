@@ -8,6 +8,16 @@ function * getCoinPlanGiftMap(uid) {
     return res;
 }
 
+function * getTotalCoinPlanGift(uid, coin_plan_id) {
+    return yield Conn.query('select total_gift from coin_plan_gift where uid=? and coin_plan_id=? limit 1',
+        {replacements: [uid, coin_plan_id], type: Sequelize.QueryTypes.SELECT});
+}
+
+function * updateCoinPlanGift(uid, coin_plan_id, total_gift) {
+    yield Conn.query('update coin_plan_gift set total_gift=? where uid=? and coin_plan_id=?',
+        {replacements: [total_gift, uid, coin_plan_id], type: Sequelize.QueryTypes.UPDATE})
+}
+
 module.exports = {
-    getCoinPlanGiftMap
+    getCoinPlanGiftMap, getTotalCoinPlanGift, updateCoinPlanGift
 };

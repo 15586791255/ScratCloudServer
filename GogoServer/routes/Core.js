@@ -44,6 +44,7 @@ router.post('/address', UserController.updateAddress);
 router.get('/address', UserController.getAddress);
 router.get('/race2/:race_id/:tp', RaceController.getRaceTpDetail);
 router.get('/race2/:race_id', RaceController.getRacesDetail2);
+router.post('/race2/coin_gift', RaceController.addRaceGift);
 router.get('/coin', SignInController.coinInfo);
 router.get('/sign_in', SignInController.addSign);
 
