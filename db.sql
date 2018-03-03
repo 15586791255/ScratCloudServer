@@ -163,6 +163,17 @@ is_hot tinyint not null default 0 comment '是否热门比赛，1代表热门；
 primary key(race_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
+create table race_gift (
+race_gift_id int unsigned not null auto_increment comment '自增主键',
+race_id int unsigned not null default 0,
+team_id varchar(16) not null default '',
+coin_plan_id int unsigned not null default 0,
+total_gift int unsigned not null default 0 comment '礼物数量',
+create_ts bigint unsigned not null default 0,
+unique key(race_id, coin_plan_id, team_id),
+primary key(race_gift_id)
+) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
 create table coin (
 coin_id int unsigned not null auto_increment comment '自增主键',
 uid char(16) not null default '',

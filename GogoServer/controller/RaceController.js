@@ -7,6 +7,8 @@ const RaceInfoDao = require('../dao/RaceInfoDao');
 const UserCoinDao = require('../dao/UserCoinDao');
 const CoinHistoryDao = require('../dao/CoinHistoryDao');
 const AccessTokenDao = require('../dao/AccessTokenDao');
+const RaceGiftDao = require('../dao/RaceGiftDao');
+const CoinPlanDao = require('../dao/CoinPlanDao');
 
 const formatTeam = (team) => {
     if (!team) {
@@ -401,6 +403,30 @@ const getRacesDetail2 = (req, res) => {
         race.team_a = formatTeam(team_a);
         race.team_b = formatTeam(team_b);
         formatRace(race);
+        const coinPlains = yield CoinPlanDao.getPlans();
+        const raceGiftA = yield RaceGiftDao.getRaceGift(race_id, team_a.team_id);
+        let coinPlanGiftAList = [];
+        for (let item of coinPlains) {
+            const coinItem = {
+                coin_plan_id: item.coin_plan_id,
+                gift_name: item.gift_name,
+                total_gift: raceGiftA[item.coin_plan_id] ? raceGiftA[item.coin_plan_id] : 0
+            };
+            coinPlanGiftAList.push(coinItem);
+        }
+        race.team_a_gift = coinPlanGiftAList;
+        const raceGiftB = yield RaceGiftDao.getRaceGift(race_id, team_b.team_id);
+        let coinPlanGiftBList = [];
+        for (let item of coinPlains) {
+            const coinItem = {
+                coin_plan_id: item.coin_plan_id,
+                gift_name: item.gift_name,
+                total_gift: raceGiftB[item.coin_plan_id] ? raceGiftB[item.coin_plan_id] : 0
+            };
+            coinPlanGiftBList.push(coinItem);
+        }
+        race.team_b_gift = coinPlanGiftBList;
+
 
         const [race_info] = yield RaceInfoDao.getRaceInfo(race.race_info_id);
         race.description = race_info.description;
