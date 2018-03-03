@@ -586,60 +586,6 @@ Res
 }
 ```
 
-## 获取竞猜币套餐
-
-[GET] `/core/coin/plans`
-
-### Response
-
-注意：fee 的单位为分
-
-> 正常返回
-
-```
-curl http://localhost:8083/core/coin/plans
-```
-
-Res
-
-```
-{
-    "code": 200,
-    "msg": "ok",
-    "data": [
-        {
-            "coin_plan_id": 1,
-            "fee": 600,
-            "coin_count": 400,
-            "gift_name": "鲜花",
-            "gift_count": 1
-        },
-        {
-            "coin_plan_id": 2,
-            "fee": 3000,
-            "coin_count": 600,
-            "gift_name": "砖石",
-            "gift_count": 1
-        },
-        {
-            "coin_plan_id": 3,
-            "fee": 6800,
-            "coin_count": 1000,
-            "gift_name": "豪车",
-            "gift_count": 1
-        },
-        {
-            "coin_plan_id": 4,
-            "fee": 12800,
-            "coin_count": 30000,
-            "gift_name": "邮轮",
-            "gift_count": 1
-        }
-    ]
-}
-```
-
-
 ## 生成支付宝订单
 
 [POST] **application/json** `/pay/alipay/order/coin_plan/:id`
@@ -2400,6 +2346,59 @@ Res
             }
         ]
     }
+}
+```
+
+## 获取竞猜币套餐 20180302
+
+[GET] `/core/coin/plans`
+
+### Response
+
+注意：fee 的单位为分
+
+> 正常返回
+
+```
+curl http://localhost:8083/core/coin/plans
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": [
+        {
+            "coin_plan_id": 1,
+            "fee": 600,
+            "coin_count": 400,
+            "gift_name": "鲜花",
+            "gift_count": 1
+        },
+        {
+            "coin_plan_id": 2,
+            "fee": 3000,
+            "coin_count": 600,
+            "gift_name": "砖石",
+            "gift_count": 1
+        },
+        {
+            "coin_plan_id": 3,
+            "fee": 6800,
+            "coin_count": 1000,
+            "gift_name": "豪车",
+            "gift_count": 1
+        },
+        {
+            "coin_plan_id": 4,
+            "fee": 12800,
+            "coin_count": 30000,
+            "gift_name": "邮轮",
+            "gift_count": 1
+        }
+    ]
 }
 ```
 
