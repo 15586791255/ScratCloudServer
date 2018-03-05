@@ -6,6 +6,7 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
+import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.scrat.server.gogo.base.BaseController;
 import com.scrat.server.gogo.base.BaseRowObj;
@@ -54,7 +55,7 @@ public class PayController extends BaseController {
 
 //    curl -X POST -H 'Content-type: application/json' -H 'uid:27008002' -H 'access_token: rT843UYr4mhneBqW'  http://localhost:8080/alipay/order/coin_plan/1
     @RequestMapping(value = "/order/coin_plan/{coinPlanId}", method = RequestMethod.POST)
-    public Map<String, Object> bugCoin(@RequestHeader String uid,
+    public Map<String, Object> buyCoin(@RequestHeader String uid,
                                        @RequestHeader(value = "access_token") String accessToken,
                                        @PathVariable String coinPlanId) {
 //        BaseRowObj params = new BaseRowObj(paramObj);
@@ -197,5 +198,61 @@ public class PayController extends BaseController {
     @RequestMapping("/test")
     public String test() {
         return "ok";
+    }
+
+//    curl -X POST -H 'Content-type: application/json' -H 'uid:27008002' -H 'access_token: rT843UYr4mhneBqW'  http://localhost:8085/alipay/phone/order/coin_plan/1
+    @RequestMapping(value = "/phone/order/coin_plan/{coinPlanId}", method = RequestMethod.POST)
+    public Map<String, Object> createPhoneWebPay(@RequestHeader String uid,
+                                                 @RequestHeader(value = "access_token") String accessToken,
+                                                 @PathVariable String coinPlanId) {
+
+        BaseRowObj tokenInfo = accessTokenDao.getToken(uid, accessToken);
+        if (tokenInfo.isEmpty()) {
+            return res().code(498).msg("请重新登录").build();
+        }
+
+        long nowTs = new Date().getTime();
+        if (tokenInfo.optLong("expired_ts") < nowTs) {
+            return res().code(498).msg("请重新登录").build();
+        }
+
+        BaseRowObj planInfo = coinPlanDao.getCoinPlan(coinPlanId);
+        if (planInfo.isEmpty()) {
+            return res().code(404).msg("没有找到相应数据").build();
+        }
+
+        long fee = debug ? 1L : planInfo.opt("fee", 0L);
+        String outTradNo = createOutTradeNo(nowTs, coinPlanId);
+        long orderId = orderDao.addOrder(uid, outTradNo, "coin_plan", coinPlanId, fee, OrderDao.PLATFORM_ALIPAY, nowTs);
+        if (orderId < 0L) {
+            return res().code(500).msg("创建订单失败").build();
+        }
+
+        AlipayClient alipayClient = new DefaultAlipayClient(
+                "https://openapi.alipay.com/gateway.do",
+                appId,
+                appPrivateKey,
+                "json",
+                "utf-8",
+                appPublicKey,
+                "RSA2");
+        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
+        String url = String.format(notifyUrl, orderId);
+        alipayRequest.setReturnUrl(url);
+        alipayRequest.setNotifyUrl(url);
+        alipayRequest.setBizContent("{" +
+                " \"out_trade_no\":\"" + outTradNo + "\"," +
+                " \"total_amount\":\"" + fee + "\"," +
+                " \"subject\":\"" + createSubject(planInfo) + "\"," +
+                " \"product_code\":\"QUICK_WAP_PAY\"" +
+                " }");
+        try {
+            String form = alipayClient.pageExecute(alipayRequest).getBody(); //调用SDK生成表单
+            return res().data(form).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return res().code(500).msg("生成支付宝订单失败").build();
+        }
+
     }
 }

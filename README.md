@@ -2673,3 +2673,34 @@ Res
 ```
 {"code":200,"msg":"ok"}
 ```
+
+# 支付宝生成订单接口 (手机网站支付) 20180305
+
+[POST] `/pay/phone/alipay/order/coin_plan/:id`
+
+### Param
+
+| param | type | require | description |
+| --- | :---: | :---: | --- |
+| id | string | true | coin_plan_id, URL参数 |
+
+### Response
+
+```
+curl -X POST -H 'Content-type: application/json' -H 'uid:27008002' -H 'access_token: rT843UYr4mhneBqW'  http://localhost:8085/alipay/phone/order/coin_plan/1
+```
+
+Res
+
+```
+{
+    "msg": "ok",
+    "code": 200,
+    "data": "<form name=\"punchout_form\" method=\"post\" action=\"https://openapi.alipay.com/gateway.do?charset=utf-8&method=alipay.trade.wap.pay&sign=b7DZJhK5JeJVK2%2B5SUwtiH%2BzWho6BpWOgLsKZd6AGwGc4Lk1CdMPezgfQwFDSytxNgwf%2F63Tj8rXqOqdtdwDoZ9%2F2zY7Um%2F%2BqaC2h4mkEK7iOIawOQlQlXByWEbewS%2B3yECj93Kc%2FxFqHBQyeuktRy9SWyy3T1%2Fa3SNZhRMS1WpQbr9j181lO3U3KM9X5gtundWpGdnWEw1q6bC12Es8TOsEjjSoDO2n1W6JRxuzbFoc7SHTZy1psokdkk%2Br%2Fy2Ii9pW5Y0JHziJab4%2BMxgQGcNWUrLeuv13J6TsPV%2Bk4opNl7tyBZYOvgHic0OVPbbGobGxlD8ZHwESIEa5e35LWg%3D%3D&return_url=https%3A%2F%2Fgogo.scrats.cn%2Fapi%2Fpay%2Falipay%2Fnotify%2F8¬ify_url=https%3A%2F%2Fgogo.scrats.cn%2Fapi%2Fpay%2Falipay%2Fnotify%2F8&version=1.0&app_id=2017102009400482&sign_type=RSA2×tamp=2018-03-05+22%3A39%3A48&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json\">
+<input type=\"hidden\" name=\"biz_content\" value=\"{ "out_trade_no":"15202607885914731", "total_amount":"600", "subject":"400竞猜币", "product_code":"QUICK_WAP_PAY" }\">
+<input type=\"submit\" value=\"立即支付\" style=\"display:none\" >
+</form>
+<script>document.forms[0].submit();</script>"
+}
+```
+
