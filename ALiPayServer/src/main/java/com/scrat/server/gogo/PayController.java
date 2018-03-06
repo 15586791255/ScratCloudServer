@@ -52,6 +52,8 @@ public class PayController extends BaseController {
     private CoinHistoryDao coinHistoryDao;
     @Autowired
     private UserCoinDao userCoinDao;
+    @Autowired
+    private CoinPlanGiftDao coinPlanGiftDao;
 
 //    curl -X POST -H 'Content-type: application/json' -H 'uid:27008002' -H 'access_token: rT843UYr4mhneBqW'  http://localhost:8080/alipay/order/coin_plan/1
     @RequestMapping(value = "/order/coin_plan/{coinPlanId}", method = RequestMethod.POST)
@@ -181,6 +183,7 @@ public class PayController extends BaseController {
         }
         String uid = orderInfo.optString("uid");
         int coinCount = coinPlanInfo.optInt("coin_count");
+        int giftCount = coinPlanInfo.optInt("gift_count");
 
         coinHistoryDao.addCoinHistory(uid, coinCount, CoinHistoryDao.TYPE_BUG_COIN, orderId);
         BaseRowObj userCoin = userCoinDao.getUserCoin(uid);
@@ -189,6 +192,13 @@ public class PayController extends BaseController {
         } else {
             coinCount += userCoin.optInt("coin_count");
             userCoinDao.updateUserCoin(uid, coinCount);
+        }
+        BaseRowObj giftInfo = coinPlanGiftDao.getCoinPlanGift(uid, coinPlanId);
+        if (giftInfo.isEmpty()) {
+            coinPlanGiftDao.addTotalGift(uid, coinPlanId, giftCount);
+        } else {
+            int currGiftFount = giftInfo.optInt("total_gift");
+            coinPlanGiftDao.updateTotalGift(uid, coinPlanId, giftCount + currGiftFount);
         }
         orderDao.updateOrder(orderId, OrderDao.STATUS_PAID);
 
