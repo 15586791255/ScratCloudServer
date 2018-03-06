@@ -2267,183 +2267,6 @@ Res
 }
 ```
 
-## 获取用户信息 20180303
-
-[GET] `/core/user`
-
-### Response
-
-```
-curl -H 'app_key: test_key' -H 'pt: app' -H 'uid: 27008002' -H 'access_token:rT843UYr4mhneBqW' http://localhost:8083/core/user
-```
-
-Res
-
-```
-{
-    "code": 200,
-    "msg": "ok",
-    "data": {
-        "uid": "27008002",
-        "coin": 9702,
-        "tel": "",
-        "username": "hh",
-        "gender": "female",
-        "avatar": "http://wx.qlogo.cn/mmopen/vi_32/9icoOxiatBlS91mriaJWBvCGHEsw1N8XibwJPNLAQdyYHic7bdqUG4TqbIDX58KmP7InBWdHPU8tEQU0WdgH8tGmB5A/0",
-        "coin_gift": [
-            {
-                "coin_plan_id": 1,
-                "gift_name": "鲜花",
-                "total_gift": 0
-            },
-            {
-                "coin_plan_id": 2,
-                "gift_name": "砖石",
-                "total_gift": 0
-            },
-            {
-                "coin_plan_id": 3,
-                "gift_name": "豪车",
-                "total_gift": 0
-            },
-            {
-                "coin_plan_id": 4,
-                "gift_name": "邮轮",
-                "total_gift": 0
-            }
-        ]{
-             "code": 200,
-             "msg": "ok",
-             "data": {
-                 "race": {
-                     "race_id": 516,
-                     "race_info_id": 13,
-                     "game_id": 8,
-                     "score_a": "3",
-                     "score_b": "2",
-                     "race_ts": "1508659200000",
-                     "create_ts": "1510974462003",
-                     "status": "end",
-                     "is_hot": 0,
-                     "team_a": {
-                         "team_id": 299,
-                         "team_name": "WE",
-                         "short_name": "WE",
-                         "logo": "http://dl2.img.3iuu.com/attachments/419d/0729/127eb4ce77a24386036e8a04/1494484019963.jpg",
-                         "create_ts": "1510936456368"
-                     },
-                     "team_b": {
-                         "team_id": 301,
-                         "team_name": "C9",
-                         "short_name": "C9",
-                         "logo": "http://dl2.img.3iuu.com/attachments/43be/1a27/ca950a5db1f4d16ac308e8c2/1503925576338.jpg",
-                         "create_ts": "1510936648418"
-                     },
-                     "team_a_gift": [
-                         {
-                             "coin_plan_id": 1,
-                             "gift_name": "鲜花",
-                             "total_gift": 0
-                         },
-                         {
-                             "coin_plan_id": 2,
-                             "gift_name": "砖石",
-                             "total_gift": 0
-                         },
-                         {
-                             "coin_plan_id": 3,
-                             "gift_name": "豪车",
-                             "total_gift": 0
-                         },
-                         {
-                             "coin_plan_id": 4,
-                             "gift_name": "邮轮",
-                             "total_gift": 0
-                         }
-                     ],
-                     "team_b_gift": [
-                         {
-                             "coin_plan_id": 1,
-                             "gift_name": "鲜花",
-                             "total_gift": 0
-                         },
-                         {
-                             "coin_plan_id": 2,
-                             "gift_name": "砖石",
-                             "total_gift": 0
-                         },
-                         {
-                             "coin_plan_id": 3,
-                             "gift_name": "豪车",
-                             "total_gift": 0
-                         },
-                         {
-                             "coin_plan_id": 4,
-                             "gift_name": "邮轮",
-                             "total_gift": 0
-                         }
-                     ],
-                     "description": "",
-                     "race_name": "英雄联盟-全球总决赛-淘汰赛第四天",
-                     "start_ts": "0",
-                     "end_ts": "0"
-                 },
-                 "betting_tps": [
-                     {
-                         "tp": "0",
-                         "tp_name": "总局"
-                     },
-                     {
-                         "tp": "总局",
-                         "tp_name": "第总局局"
-                     },
-                     {
-                         "tp": "第1局",
-                         "tp_name": "第第1局局"
-                     },
-                     {
-                         "tp": "第2局",
-                         "tp_name": "第第2局局"
-                     },
-                     {
-                         "tp": "第3局",
-                         "tp_name": "第第3局局"
-                     },
-                     {
-                         "tp": "第4局",
-                         "tp_name": "第第4局局"
-                     },
-                     {
-                         "tp": "第5局",
-                         "tp_name": "第第5局局"
-                     },
-                     {
-                         "tp": "1",
-                         "tp_name": "第1局"
-                     },
-                     {
-                         "tp": "2",
-                         "tp_name": "第2局"
-                     },
-                     {
-                         "tp": "3",
-                         "tp_name": "第3局"
-                     },
-                     {
-                         "tp": "4",
-                         "tp_name": "第4局"
-                     },
-                     {
-                         "tp": "5",
-                         "tp_name": "第5局"
-                     }
-                 ]
-             }
-         }
-    }
-}
-```
-
 ## 获取比赛详情数据（v2）20180303
 
 [GET] `/core/race2/:race_id`
@@ -2708,3 +2531,55 @@ Res
 }
 ```
 
+## 获取用户信息 20180307
+
+[GET] `/core/user`
+
+### Response
+
+```
+curl -H 'app_key: test_key' -H 'pt: app' -H 'uid: 27008002' -H 'access_token:rT843UYr4mhneBqW' http://localhost:8083/core/user
+```
+
+Res
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "uid": "27008002",
+        "coin": 9702,
+        "tel": "",
+        "username": "hh",
+        "gender": "female",
+        "avatar": "http://wx.qlogo.cn/mmopen/vi_32/9icoOxiatBlS91mriaJWBvCGHEsw1N8XibwJPNLAQdyYHic7bdqUG4TqbIDX58KmP7InBWdHPU8tEQU0WdgH8tGmB5A/0",
+        "coin_gift": [
+            {
+                "coin_plan_id": 1,
+                "gift_name": "鲜花",
+                "gift_icon": "http://biuugames.huya.com/gogo_gift_flowers.20180306.png",
+                "total_gift": 99
+            },
+            {
+                "coin_plan_id": 2,
+                "gift_name": "砖石",
+                "gift_icon": "http://biuugames.huya.com/gogo_gift_diamond.20180306.png",
+                "total_gift": 0
+            },
+            {
+                "coin_plan_id": 3,
+                "gift_name": "豪车",
+                "gift_icon": "http://biuugames.huya.com/gogo_gift_car.20180306.png",
+                "total_gift": 0
+            },
+            {
+                "coin_plan_id": 4,
+                "gift_name": "邮轮",
+                "gift_icon": "http://biuugames.huya.com/gogo_gift_cruise.20180306.png",
+                "total_gift": 0
+            }
+        ]
+    }
+}
+```

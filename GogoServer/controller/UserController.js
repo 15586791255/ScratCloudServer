@@ -45,6 +45,7 @@ const getUserInfo = (req, res) => {
             const coinItem = {
                 coin_plan_id: item.coin_plan_id,
                 gift_name: item.gift_name,
+                gift_icon: item.gift_icon,
                 total_gift: coinPlanGiftMap[item.coin_plan_id] ? coinPlanGiftMap[item.coin_plan_id] : 0
             };
             coinPlanGiftList.push(coinItem);
