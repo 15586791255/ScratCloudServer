@@ -189,6 +189,7 @@ create_ts bigint unsigned not null default 0,
 delete_ts bigint unsigned not null default 0,
 gift_name varchar(16) not null default '' comment '礼物名字',
 gift_count int unsigned not null default 1 comment '数量',
+gift_icon varchar(128) not null default '' comment '图标地址',
 primary key(coin_plan_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -202,6 +203,11 @@ update coin_plan set gift_name='鲜花' where fee=600;
 update coin_plan set gift_name='砖石' where fee=3000;
 update coin_plan set gift_name='豪车' where fee=6800;
 update coin_plan set gift_name='邮轮' where fee=12800;
+alter table coin_plan add gift_icon varchar(128) not null default '' comment '图标地址';
+update coin_plan set gift_icon='http://biuugames.huya.com/gogo_gift_flowers.20180306.png' where fee=600;
+update coin_plan set gift_icon='http://biuugames.huya.com/gogo_gift_diamond.20180306.png' where fee=3000;
+update coin_plan set gift_icon='http://biuugames.huya.com/gogo_gift_car.20180306.png' where fee=6800;
+update coin_plan set gift_icon='http://biuugames.huya.com/gogo_gift_cruise.20180306.png' where fee=12800;
 
 create table coin_plan_gift (
 coin_plan_gift_id int unsigned not null auto_increment comment '自增主键',
