@@ -27,6 +27,15 @@ public abstract class BaseDao {
         }
     }
 
+    protected long queryForLong(String sql, Object... objects) {
+        try {
+            return jdbcTemplate.queryForObject(sql, objects, Long.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
     protected long insert(String sql, String autoIncrement, Object... objects) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
