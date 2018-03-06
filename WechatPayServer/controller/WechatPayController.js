@@ -6,6 +6,7 @@ const CoinPlanDao = require('../dao/CoinPlanDao');
 const OrderInfoDao = require('../dao/OrderInfoDao');
 const CoinHistoryDao = require('../dao/CoinHistoryDao');
 const UserCoinDao = require('../dao/UserCoinDao');
+const CoinPlanGiftDao = require('../dao/CoinPlanGiftDao');
 
 Date.prototype.format = function (format) {
     const o = {
@@ -219,13 +220,19 @@ const notifyOrder = (req, res) => {
             return successXmlResponse(res);
         }
 
-        const {coin_count} = coin_plan;
+        const {coin_plan_id, coin_count, gift_count} = coin_plan;
         yield CoinHistoryDao.addCoinHistory(order_info.uid, coin_count, 'buy_coin', order_info.order_id);
         const [user_coin] = yield UserCoinDao.findByUid(order_info.uid);
         if (!user_coin) {
             yield UserCoinDao.addUserCoin(order_info.uid, coin_count);
         } else {
             yield UserCoinDao.addCoin(order_info.uid, coin_count);
+        }
+        const [coin_plan_gift] = yield CoinPlanGiftDao.getCoinPlanGiftDetail(order_info.uid, coin_plan_id);
+        if (coin_plan_gift) {
+            yield CoinPlanGiftDao.updateTotalGift(order_info.uid, coin_plan_id, parseInt(gift_count) + parseInt(coin_plan_gift.total_gift))
+        } else {
+            yield CoinPlanGiftDao.addTotalGift(order_info.uid, coin_plan_id, gift_count);
         }
         yield OrderInfoDao.updateOrderStatus(order_info.order_id, 'paid');
         console.log(`pay success ${xml.out_trade_no}`);
