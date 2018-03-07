@@ -98,7 +98,8 @@ public class PayController extends BaseController {
     }
 
     private String createSubject(BaseRowObj planInfo) {
-        return planInfo.optString("coin_count") + "竞猜币";
+        return planInfo.optString("gift_name") + "x" + planInfo.optString("gift_count")
+                + "（赠送 " + planInfo.optString("coin_count") + " 竞猜币）";
     }
 
     private int getRandomInt(int min, int max) {
