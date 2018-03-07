@@ -81,7 +81,7 @@ const createOrder = (req, res) => {
         const params = {
             appid: Config.wechatPayAppId,
             attach: 'GoGo',
-            body: `${coin_plan.coin_count}竞猜币`,
+            body: `${coin_plan.gift_name}x${coin_plan.gift_count}（赠送 ${coin_plan.coin_count} 竞猜币）`,
             mch_id: Config.wechatPayMchId,
             nonce_str: rand(32),
             notify_url: Config.wechatPayNotifyUrl,
